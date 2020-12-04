@@ -1,0 +1,8 @@
+# Ignore compiled bytecode files.
+*.pyc
+
+# Ignore mypy cache.
+.mypy_cache
+
+# Ignore test coverage.
+.coverage
