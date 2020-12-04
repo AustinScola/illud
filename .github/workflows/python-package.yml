@@ -1,0 +1,33 @@
+name: Python package
+
+on: [push]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.6
+
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip setuptools wheel
+        python3 -m pip install -r requirements/test_requirements.txt
+
+    - name: Test with pytest
+      run: |
+        ./scripts/coverage.sh
+
+    - name: Lint with pylint
+      run: |
+        ./scripts/lint.sh
+
+    - name: Type Check with mypy
+      run: |
+        ./scripts/type_check.sh
