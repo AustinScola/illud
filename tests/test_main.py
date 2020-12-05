@@ -56,21 +56,21 @@ def test_parse_arguments(argument_parser: argparse.ArgumentParser, arguments: Li
     assert parsed_arguments == expected_parsed_arguments
 
 
-# yapf: disable # pylint: disable=line-too-long
+# yapf: disable
 @pytest.mark.parametrize('parsed_arguments', [
     (argparse.Namespace()),
 ])
-# yapf: enable # pylint: enable=line-too-long
+# yapf: enable
 def test_run_illud(parsed_arguments: argparse.Namespace) -> None:
     """Test illud.main._run_illud."""
     _run_illud(parsed_arguments)
 
 
-# yapf: disable # pylint: disable=line-too-long
+# yapf: disable
 @pytest.mark.parametrize('arguments, expected_return_value', [
     ([], 0),
 ])
-# yapf: enable # pylint: enable=line-too-long
+# yapf: enable
 def test_main(arguments: List[str], expected_return_value: int) -> None:
     """Test illud.main.main."""
     with patch('illud.main._set_up_argument_parser') as set_up_argument_parser_mock, \
