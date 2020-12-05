@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 import pytest
 
-from illud.main import _parse_arguments, _set_up_argument_parser, main
+from illud.main import _parse_arguments, _run_illud, _set_up_argument_parser, main
 
 
 def test_set_up_argument_parser() -> None:
@@ -57,6 +57,16 @@ def test_parse_arguments(argument_parser: argparse.ArgumentParser, arguments: Li
 
 
 # yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('parsed_arguments', [
+    (argparse.Namespace()),
+])
+# yapf: enable # pylint: enable=line-too-long
+def test_run_illud(parsed_arguments: argparse.Namespace) -> None:
+    """Test illud.main._run_illud."""
+    _run_illud(parsed_arguments)
+
+
+# yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('arguments, expected_return_value', [
     ([], 0),
 ])
@@ -64,10 +74,12 @@ def test_parse_arguments(argument_parser: argparse.ArgumentParser, arguments: Li
 def test_main(arguments: List[str], expected_return_value: int) -> None:
     """Test illud.main.main."""
     with patch('illud.main._set_up_argument_parser') as set_up_argument_parser_mock, \
-        patch('illud.main._parse_arguments') as parse_arguments_mock:
+        patch('illud.main._parse_arguments') as parse_arguments_mock, \
+        patch('illud.main._run_illud') as run_illud_mock:
         return_value: int = main(arguments)
 
         set_up_argument_parser_mock.assert_called_once()
         parse_arguments_mock.assert_called_once()
+        run_illud_mock.assert_called_once()
 
     assert return_value == expected_return_value
