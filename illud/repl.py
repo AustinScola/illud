@@ -10,17 +10,17 @@ class REPL():
         """Read, evaluate, print, and then loop."""
         while True:
             try:
-                self.read()
-                self.evaluate()
-                self.print()
+                input_: Any = self.read()
+                result: Any = self.evaluate(input_)
+                self.print(result)
             except BreakException:
                 return
 
     def read(self) -> Any:
         """Return the next input."""
 
-    def evaluate(self) -> Any:
+    def evaluate(self, input_: Any) -> Any:
         """Return the evaluated result of the input."""
 
-    def print(self) -> None:
+    def print(self, result: Any) -> None:
         """Output the result of evaluation."""
