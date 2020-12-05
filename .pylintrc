@@ -1,2 +1,5 @@
+[MESSAGE CONTROL]
+enable=useless-suppression
+
 [SIMILARITIES]
 ignore-imports=yes
