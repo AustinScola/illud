@@ -63,10 +63,10 @@ def test_parse_arguments(argument_parser: argparse.ArgumentParser, arguments: Li
 # yapf: enable
 def test_run_illud(parsed_arguments: argparse.Namespace) -> None:
     """Test illud.main._run_illud."""
-    with patch('illud.illud.Illud.run') as illud_run_mock:
+    with patch('illud.illud.Illud.__call__') as illud_call_mock:
         _run_illud(parsed_arguments)
 
-        illud_run_mock.assert_called_once()
+        illud_call_mock.assert_called_once()
 
 
 # yapf: disable

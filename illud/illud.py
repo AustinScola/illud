@@ -1,7 +1,6 @@
 """A text buffer editor and terminal viewer."""
+from illud.repl import REPL
 
 
-class Illud():  # pylint: disable=too-few-public-methods
+class Illud(REPL):
     """A text buffer editor and terminal viewer."""
-    def run(self) -> None:
-        """Run Illud."""
