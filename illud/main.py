@@ -22,7 +22,7 @@ def _parse_arguments(argument_parser: argparse.ArgumentParser,
 def _run_illud(parsed_arguments: argparse.Namespace) -> None:  # pylint: disable=unused-argument
     """Run Illud."""
     illud: Illud = Illud()
-    illud.run()
+    illud()
 
 
 def main(arguments: List[str]) -> int:
