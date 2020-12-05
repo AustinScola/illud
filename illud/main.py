@@ -17,8 +17,13 @@ def _parse_arguments(argument_parser: argparse.ArgumentParser,
     return parsed_arguments
 
 
+def _run_illud(parsed_arguments: argparse.Namespace) -> None:  # pylint: disable=unused-argument
+    """Run Illud."""
+
+
 def main(arguments: List[str]) -> int:  # pylint: disable=unused-argument
     """Main entry point."""
     argument_parser: argparse.ArgumentParser = _set_up_argument_parser()
     parsed_arguments: argparse.Namespace = _parse_arguments(argument_parser, arguments)  # pylint: disable=unused-variable
+    _run_illud(parsed_arguments)
     return 0
