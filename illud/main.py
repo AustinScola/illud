@@ -10,7 +10,15 @@ def _set_up_argument_parser() -> argparse.ArgumentParser:
     return argument_parser
 
 
+def _parse_arguments(argument_parser: argparse.ArgumentParser,
+                     arguments: List[str]) -> argparse.Namespace:
+    """Return parsed arguments."""
+    parsed_arguments: argparse.Namespace = argument_parser.parse_args(arguments)
+    return parsed_arguments
+
+
 def main(arguments: List[str]) -> int:  # pylint: disable=unused-argument
     """Main entry point."""
-    argument_parser: argparse.ArgumentParser = _set_up_argument_parser()  # pylint: disable=unused-variable
+    argument_parser: argparse.ArgumentParser = _set_up_argument_parser()
+    parsed_arguments: argparse.Namespace = _parse_arguments(argument_parser, arguments)  # pylint: disable=unused-variable
     return 0
