@@ -2,6 +2,8 @@
 import argparse
 from typing import List
 
+from illud.illud import Illud
+
 
 def _set_up_argument_parser() -> argparse.ArgumentParser:
     """Set up an argument parser."""
@@ -19,6 +21,8 @@ def _parse_arguments(argument_parser: argparse.ArgumentParser,
 
 def _run_illud(parsed_arguments: argparse.Namespace) -> None:  # pylint: disable=unused-argument
     """Run Illud."""
+    illud: Illud = Illud()
+    illud.run()
 
 
 def main(arguments: List[str]) -> int:
