@@ -6,6 +6,7 @@ import pytest
 from illud.character import Character
 from illud.command import Command
 from illud.illud import Illud
+from illud.illud_state import IlludState
 from illud.repl import REPL
 
 
@@ -14,7 +15,12 @@ def test_inheritance() -> None:
     assert issubclass(Illud, REPL)
 
 
-def test_init() -> None:
+# yapf: disable
+@pytest.mark.parametrize('illud_state', [
+    (IlludState()),
+])
+# yapf: enable
+def test_init(illud_state: IlludState) -> None:
     """Test illud.illud.Illud.__init__."""
     terminal_mock = MagicMock()
 
@@ -22,6 +28,7 @@ def test_init() -> None:
         illud: Illud = Illud()
 
         assert illud._terminal == terminal_mock  # pylint: disable=protected-access
+        assert illud._state == illud_state  # pylint: disable=protected-access
 
 
 # yapf: disable
