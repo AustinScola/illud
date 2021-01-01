@@ -1,10 +1,11 @@
 """Test illud.main"""
 import argparse
 from typing import Any, Dict, List, Union
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
+from illud.illud import Illud
 from illud.main import _parse_arguments, _run_illud, _set_up_argument_parser, main
 
 
@@ -63,10 +64,12 @@ def test_parse_arguments(argument_parser: argparse.ArgumentParser, arguments: Li
 # yapf: enable
 def test_run_illud(parsed_arguments: argparse.Namespace) -> None:
     """Test illud.main._run_illud."""
-    with patch('illud.illud.Illud.__call__') as illud_call_mock:
+    illud_mock = MagicMock(Illud, autospec=True)
+    with patch('illud.main.Illud', return_value=illud_mock):
+
         _run_illud(parsed_arguments)
 
-        illud_call_mock.assert_called_once()
+        illud_mock.assert_called_once()
 
 
 # yapf: disable
