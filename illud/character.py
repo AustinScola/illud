@@ -1,5 +1,5 @@
 """A single string character."""
-from typing import Any
+from typing import Any, Iterator
 
 
 class Character():  # pylint: disable=too-few-public-methods
@@ -11,3 +11,6 @@ class Character():  # pylint: disable=too-few-public-methods
         if not isinstance(other, Character):
             return False
         return self.value == other.value
+
+
+CharacterIterator = Iterator[Character]
