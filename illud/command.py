@@ -1,5 +1,6 @@
 """A key command."""
 from typing import Any
+
 from illud.character import Character
 
 
