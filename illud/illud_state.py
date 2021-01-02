@@ -15,4 +15,10 @@ class IlludState(State):  # pylint: disable=too-few-public-methods
             self.buffer = buffer_
 
     def __eq__(self, other: Any) -> bool:
-        return isinstance(other, IlludState)
+        if not isinstance(other, IlludState):
+            return False
+
+        if self.buffer != other.buffer:
+            return False
+
+        return True
