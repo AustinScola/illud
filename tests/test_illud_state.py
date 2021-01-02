@@ -36,6 +36,9 @@ def test_init(buffer_: Optional[Buffer], pass_buffer: bool, expected_buffer: Buf
 @pytest.mark.parametrize('illud_state, other, expected_equality', [
     (IlludState(), 'foo', False),
     (IlludState(), IlludState(), True),
+    (IlludState(Buffer('foo')), IlludState(), False),
+    (IlludState(Buffer('foo')), IlludState(Buffer('bar')), False),
+    (IlludState(Buffer('foo')), IlludState(Buffer('foo')), True),
 ])
 # yapf: enable
 def test_eq(illud_state: IlludState, other: Any, expected_equality: bool) -> None:
