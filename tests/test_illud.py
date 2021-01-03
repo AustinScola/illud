@@ -1,8 +1,10 @@
 """Test illud.illud."""
+from typing import Any, Dict, Optional
 from unittest.mock import MagicMock, patch
 
 import pytest
 
+from illud.buffer import Buffer
 from illud.character import Character
 from illud.command import Command
 from illud.illud import Illud
@@ -16,19 +18,25 @@ def test_inheritance() -> None:
 
 
 # yapf: disable
-@pytest.mark.parametrize('illud_state', [
-    (IlludState()),
+@pytest.mark.parametrize('illud_initial_state, pass_illud_initial_state, expected_illud_state', [
+    (None, False, IlludState()),
+    (IlludState(), True, IlludState()),
+    (IlludState(Buffer('foo')), True, IlludState(Buffer('foo'))),
 ])
 # yapf: enable
-def test_init(illud_state: IlludState) -> None:
+def test_init(illud_initial_state: Optional[IlludState], pass_illud_initial_state: bool,
+              expected_illud_state: IlludState) -> None:
     """Test illud.illud.Illud.__init__."""
-    terminal_mock = MagicMock()
+    keyword_arguments: Dict[str, Any] = {}
+    if pass_illud_initial_state:
+        keyword_arguments['initial_state'] = illud_initial_state
 
+    terminal_mock = MagicMock()
     with patch('illud.illud.Terminal', return_value=terminal_mock):
-        illud: Illud = Illud()
+        illud: Illud = Illud(**keyword_arguments)
 
         assert illud._terminal == terminal_mock  # pylint: disable=protected-access
-        assert illud._state == illud_state  # pylint: disable=protected-access
+        assert illud._state == expected_illud_state  # pylint: disable=protected-access
 
 
 # yapf: disable
