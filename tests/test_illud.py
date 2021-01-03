@@ -9,6 +9,7 @@ from illud.character import Character
 from illud.command import Command
 from illud.illud import Illud
 from illud.illud_state import IlludState
+from illud.modes.insert import Insert
 from illud.repl import REPL
 
 
@@ -54,3 +55,20 @@ def test_read(character: Character, expected_command: Command) -> None:
         command: Command = illud.read()
 
     assert command == expected_command
+
+
+# yapf: disable
+@pytest.mark.parametrize('initial_state, input_, expected_state_after', [
+    (IlludState(), Command(Character('i')), IlludState(mode=Insert())),
+])
+# yapf: enable
+def test_evaluate(initial_state: IlludState, input_: Command,
+                  expected_state_after: IlludState) -> None:
+    """Test illud.illud.Illud.evaluate."""
+
+    with patch('illud.illud.Terminal'):
+        illud: Illud = Illud(initial_state)
+
+    illud.evaluate(input_)
+
+    assert illud._state == expected_state_after  # pylint: disable=protected-access

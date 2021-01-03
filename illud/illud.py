@@ -4,6 +4,7 @@ from typing import Optional
 from illud.character import Character
 from illud.command import Command
 from illud.illud_state import IlludState
+from illud.mode import Mode
 from illud.repl import REPL
 from illud.terminal import Terminal
 
@@ -23,3 +24,8 @@ class Illud(REPL):
         character: Character = self._terminal.get_character()
         command: Command = Command(character)
         return command
+
+    def evaluate(self, input_: Command) -> None:
+        command: Command = input_
+        mode: Mode = self._state.mode
+        mode.evaluate(self._state, command)
