@@ -18,12 +18,12 @@ def test_inheritance() -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('buffer_, mode, pass_buffer, pass_mode, expected_buffer, expected_mode', [
-    (None, None, False, False, Buffer(''), Normal()),
-    (None, Normal(), False, True, Buffer(''), Normal()),
-    (Buffer(''), None, True, False, Buffer(''), Normal()),
-    (Buffer(''), Normal(), True, True, Buffer(''), Normal()),
-    (None, None, True, False, Buffer(''), Normal()),
-    (None, Normal(), True, True, Buffer(''), Normal()),
+    (None, None, False, False, Buffer(), Normal()),
+    (None, Normal(), False, True, Buffer(), Normal()),
+    (Buffer(), None, True, False, Buffer(), Normal()),
+    (Buffer(), Normal(), True, True, Buffer(), Normal()),
+    (None, None, True, False, Buffer(), Normal()),
+    (None, Normal(), True, True, Buffer(), Normal()),
     (Buffer('foo'), None, True, False, Buffer('foo'), Normal()),
     (Buffer('foo'), Normal(), True, True, Buffer('foo'), Normal()),
 ])

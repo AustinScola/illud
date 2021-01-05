@@ -12,7 +12,7 @@ class IlludState(State):  # pylint: disable=too-few-public-methods
     def __init__(self, buffer_: Optional[Buffer] = None, mode: Mode = None):
         self.buffer: Buffer
         if buffer_ is None:
-            self.buffer = Buffer('')
+            self.buffer = Buffer()
         else:
             self.buffer = buffer_
 
