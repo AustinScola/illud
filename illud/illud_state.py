@@ -1,10 +1,10 @@
 """Persistent information of Illud."""
 from typing import Any, Optional
 
-from illud.state import State
 from illud.buffer import Buffer
 from illud.mode import Mode
 from illud.modes.normal import Normal
+from illud.state import State
 
 
 class IlludState(State):  # pylint: disable=too-few-public-methods
