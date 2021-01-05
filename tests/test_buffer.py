@@ -26,9 +26,9 @@ def test_init(string: Optional[str], expected_string: str) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('buffer_, other, expected_equality', [
-    (Buffer(''), 'foo', False),
-    (Buffer(''), Buffer('foo'), False),
-    (Buffer(''), Buffer(''), True),
+    (Buffer(), 'foo', False),
+    (Buffer(), Buffer('foo'), False),
+    (Buffer(), Buffer(), True),
     (Buffer('foo'), Buffer('foo'), True),
 ])
 # yapf: enable

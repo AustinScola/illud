@@ -7,7 +7,7 @@ from illud.window import Window
 
 # yapf: disable
 @pytest.mark.parametrize('x, y, width, height, buffer_', [
-    (0, 0, 0, 0, Buffer('')),
+    (0, 0, 0, 0, Buffer()),
 ])
 # yapf: enable
 # pylint: disable=invalid-name
