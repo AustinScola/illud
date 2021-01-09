@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from illud.ansi.escape_codes.erase import CLEAR_SCREEN
 from illud.character import Character
 from illud.inputs.standard_input import StandardInput
 from illud.outputs.standard_output import StandardOutput
@@ -38,3 +39,17 @@ def test_get_character(next_character: Character, expected_character: Character)
         character: Character = terminal.get_character()
 
         assert character == expected_character
+
+
+def test_clear_screen() -> None:
+    """Test illud.terminal.Terminal.get_character."""
+    standard_output_mock = MagicMock(StandardOutput)
+    terminal: Terminal
+    with patch('illud.terminal.StandardInput'), \
+        patch('illud.terminal.StandardOutput', return_value=standard_output_mock):
+
+        terminal = Terminal()
+
+    terminal.clear_screen()
+
+    standard_output_mock.write.assert_called_once_with(CLEAR_SCREEN)
