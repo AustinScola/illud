@@ -5,18 +5,22 @@ import pytest
 
 from illud.character import Character
 from illud.inputs.standard_input import StandardInput
+from illud.outputs.standard_output import StandardOutput
 from illud.terminal import Terminal
 
 
 def test_init() -> None:
     """Test illud.terminal.Terminal.__init__."""
     standard_input_mock = MagicMock(StandardInput)
+    standard_output_mock = MagicMock(StandardOutput)
 
-    with patch('illud.terminal.StandardInput', return_value=standard_input_mock):
+    with patch('illud.terminal.StandardInput', return_value=standard_input_mock), \
+        patch('illud.terminal.StandardOutput', return_value=standard_output_mock):
 
         terminal: Terminal = Terminal()
 
     assert terminal._standard_input == standard_input_mock  # pylint: disable=protected-access
+    assert terminal._standard_output == standard_output_mock  # pylint: disable=protected-access
 
 
 # yapf: disable
