@@ -37,6 +37,8 @@ def test_init(illud_initial_state: Optional[IlludState], pass_illud_initial_stat
         illud: Illud = Illud(**keyword_arguments)
 
         assert illud._terminal == terminal_mock  # pylint: disable=protected-access
+        terminal_mock.clear_screen.assert_called_once()
+
         assert illud._state == expected_illud_state  # pylint: disable=protected-access
 
 
