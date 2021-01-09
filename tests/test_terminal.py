@@ -53,3 +53,4 @@ def test_clear_screen() -> None:
     terminal.clear_screen()
 
     standard_output_mock.write.assert_called_once_with(CLEAR_SCREEN)
+    standard_output_mock.flush.assert_called_once()

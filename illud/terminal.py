@@ -19,3 +19,4 @@ class Terminal():
     def clear_screen(self) -> None:
         """Clear the terminal of all characters."""
         self._standard_output.write(CLEAR_SCREEN)
+        self._standard_output.flush()
