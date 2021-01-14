@@ -18,6 +18,8 @@ class StandardInput(Input):
 
         self._use_raw_mode()
 
+        self._buffer: str = ''
+
     def _get_attributes(self) -> TeletypeAttributes:
         """Return the teletype attributes of the standard input."""
         return termios.tcgetattr(self._stdin)
@@ -27,8 +29,21 @@ class StandardInput(Input):
         tty.setraw(self._stdin.fileno())
 
     def __next__(self) -> Character:
-        character: Character = Character(self._stdin.read(1))
+        character: Character = Character(self.read(1))
         return character
+
+    def read(self, length: int) -> str:
+        """Return input of the given length."""
+        if not length:
+            return ''
+
+        buffer_length: int = len(self._buffer)
+        if length <= len(self._buffer):
+            string, self._buffer = self._buffer[:length], self._buffer[length:]
+            return string
+
+        string, self._buffer = self._buffer + self._stdin.read(length - buffer_length), ''
+        return string
 
     def __iter__(self) -> CharacterIterator:
         raise NotImplementedError
@@ -38,3 +53,17 @@ class StandardInput(Input):
 
     def _reset_attributes(self) -> None:
         termios.tcsetattr(self._stdin, termios.TCSADRAIN, self._attributes_before)
+
+    def peek(self, length: int) -> str:
+        """Return a peek of the next characters."""
+        if not length:
+            return ''
+
+        buffer_length: int = len(self._buffer)
+
+        if length <= len(self._buffer):
+            return self._buffer[:length]
+
+        new_input: str = self._stdin.read(length - buffer_length)
+        self._buffer = self._buffer + new_input
+        return self._buffer

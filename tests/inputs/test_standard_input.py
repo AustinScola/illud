@@ -1,6 +1,7 @@
 """Test illud.inputs.standard_input."""
 import sys
 import termios
+from io import StringIO
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -78,22 +79,53 @@ def test_use_raw_mode(standard_input_file_number: int) -> None:
 
 
 # yapf: disable
-@pytest.mark.parametrize('standard_input_file_number, stdin, expected_next_input', [
+@pytest.mark.parametrize('standard_input_file_number, read_input, expected_next_input', [
     (1, 'i', Character('i')),
 ])
 # yapf: enable
-def test_next(standard_input_file_number: int, stdin: str, expected_next_input: Character) -> None:
+def test_next(standard_input_file_number: int, read_input: str,
+              expected_next_input: Character) -> None:
     """Test illud.inputs.standard_input.StandardInput.__next__."""
-    stdin_mock = MagicMock(sys.stdin,
-                           read=lambda n: stdin,
-                           fileno=lambda: standard_input_file_number)
+    stdin_mock = MagicMock(sys.stdin, fileno=lambda: standard_input_file_number)
+    read_mock = MagicMock(return_value=read_input)
     standard_input_mock = MagicMock(StandardInput,
                                     _stdin=stdin_mock,
+                                    read=read_mock,
                                     __next__=StandardInput.__next__)
 
     next_input: Character = next(standard_input_mock)
 
     assert next_input == expected_next_input
+
+
+# yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('input_, buffer_before, length, expected_read_input, expected_buffer_after', [
+    ('', '', 0, '', ''),
+    ('', 'f', 0, '', 'f'),
+    ('', 'foo', 0, '', 'foo'),
+    ('', 'f', 1, 'f', ''),
+    ('', 'foo', 1, 'f', 'oo'),
+    ('f', '', 1, 'f', ''),
+    ('foo', '', 3, 'foo', ''),
+    ('o', 'fo', 3, 'foo', ''),
+    ('oo', 'f', 3, 'foo', ''),
+])
+# yapf: enable # pylint: enable=line-too-long
+def test_read(input_: str, buffer_before: str, length: int, expected_read_input: str,
+              expected_buffer_after: str) -> None:
+    """Test illud.inputs.standard_input.StandardInput.read."""
+    with patch('sys.stdin', StringIO(input_)), \
+        patch.object(StandardInput, '_get_attributes'), \
+        patch('illud.inputs.standard_input.StandardInput._reset_attributes'), \
+        patch.object(StandardInput, '_use_raw_mode'):
+
+        standard_input: StandardInput = StandardInput()
+        standard_input._buffer = buffer_before  # pylint: disable=protected-access
+
+        read_input: str = standard_input.read(length)
+
+        assert read_input == expected_read_input
+        assert standard_input._buffer == expected_buffer_after  # pylint: disable=protected-access
 
 
 # yapf: disable
@@ -140,3 +172,34 @@ def test_reset_attributes(standard_input_file_number: int,
         StandardInput._reset_attributes(standard_input_mock)  # pylint: disable=protected-access
 
         tcsetattr_mock.assert_called_once_with(stdin_mock, termios.TCSADRAIN, attributes_before)
+
+
+# yapf: disable
+@pytest.mark.parametrize('input_, buffer_before, length, expected_peek, expected_buffer_after', [
+    ('', '', 0, '', ''),
+    ('', 'f', 0, '', 'f'),
+    ('', 'f', 1, 'f', 'f'),
+    ('', 'foo', 0, '', 'foo'),
+    ('', 'foo', 1, 'f', 'foo'),
+    ('', 'foo', 3, 'foo', 'foo'),
+    ('o', 'f', 2, 'fo', 'fo'),
+    ('oo', 'f', 3, 'foo', 'foo'),
+    ('', 'fo', 2, 'fo', 'fo'),
+    ('o', 'fo', 3, 'foo', 'foo'),
+])
+# yapf: enable
+def test_peek(input_: str, buffer_before: str, length: int, expected_peek: str,
+              expected_buffer_after: str) -> None:
+    """Test illud.inputs.standard_input.StandardInput.peek."""
+    with patch('sys.stdin', StringIO(input_)), \
+        patch.object(StandardInput, '_get_attributes'), \
+        patch('illud.inputs.standard_input.StandardInput._reset_attributes'), \
+        patch.object(StandardInput, '_use_raw_mode'):
+
+        standard_input: StandardInput = StandardInput()
+        standard_input._buffer = buffer_before  # pylint: disable=protected-access
+
+        peek: str = standard_input.peek(length)
+
+        assert peek == expected_peek
+        assert standard_input._buffer == expected_buffer_after  # pylint: disable=protected-access
