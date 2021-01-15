@@ -283,7 +283,7 @@ def test_read_integer(peeked_input: List[str], expected_integer: int,
 # yapf: enable
 def test_maybe_read_integer(read_integer: Optional[int], read_exception: Type[IlludException],
                             default: Optional[int], expected_maybe_integer: Optional[int]) -> None:
-    """Test illud.inputs.standard_input.StandardInput.read_integer."""
+    """Test illud.inputs.standard_input.StandardInput.maybe_read_integer."""
     standard_input: StandardInput
 
 
