@@ -67,3 +67,18 @@ class StandardInput(Input):
         new_input: str = self._stdin.read(length - buffer_length)
         self._buffer = self._buffer + new_input
         return self._buffer
+
+    def pop(self, length: int) -> None:
+        """Discard input of the given length."""
+        if length == 0:
+            return
+
+        buffer_length: int = len(self._buffer)
+
+        if length < len(self._buffer):
+            self._buffer = self._buffer[length:]
+        elif length == len(self._buffer):
+            self._buffer = ''
+        else:
+            self._buffer = ''
+            self._stdin.read(length - buffer_length)

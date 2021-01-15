@@ -203,3 +203,34 @@ def test_peek(input_: str, buffer_before: str, length: int, expected_peek: str,
 
         assert peek == expected_peek
         assert standard_input._buffer == expected_buffer_after  # pylint: disable=protected-access
+
+
+# yapf: disable
+@pytest.mark.parametrize('input_, buffer_before, length, expected_buffer_after', [
+    ('', '', 0, ''),
+    ('', 'f', 0, 'f'),
+    ('', 'foo', 0, 'foo'),
+    ('', 'f', 1, ''),
+    ('', 'foo', 1, 'oo'),
+    ('', 'foo', 3, ''),
+    ('f', '', 1, ''),
+    ('foo', '', 3, ''),
+    ('oo', 'f', 3, ''),
+    ('o', 'fo', 3, ''),
+])
+# yapf: enable
+def test_pop(input_: str, buffer_before: str, length: int, expected_buffer_after: str) -> None:
+    """Test illud.inputs.standard_input.StandardInput.pop."""
+    standard_input: StandardInput
+    with patch('sys.stdin', StringIO(input_)), \
+        patch.object(StandardInput, '_get_attributes'), \
+        patch.object(StandardInput, '_reset_attributes'), \
+        patch.object(StandardInput, '_use_raw_mode'):
+
+        standard_input = StandardInput()
+
+        standard_input._buffer = buffer_before  # pylint: disable=protected-access
+
+        standard_input.pop(length)
+
+        assert standard_input._buffer == expected_buffer_after  # pylint: disable=protected-access
