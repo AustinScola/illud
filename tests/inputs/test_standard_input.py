@@ -268,3 +268,33 @@ def test_read_integer(peeked_input: List[str], expected_integer: int,
 
             assert integer == expected_integer
             assert pop_mock.call_count == len(peeked_input) - 1
+
+
+# yapf: disable
+@pytest.mark.parametrize('read_integer, read_exception, default, expected_maybe_integer', [
+    (0, None, None, 0),
+    (42, None, None, 42),
+    (0, None, 42, 0),
+    (42, None, 0, 42),
+    (None, InvalidNumberException, None, None),
+    (None, InvalidNumberException, 0, 0),
+    (None, InvalidNumberException, 42, 42),
+])
+# yapf: enable
+def test_maybe_read_integer(read_integer: Optional[int], read_exception: Type[IlludException],
+                            default: Optional[int], expected_maybe_integer: Optional[int]) -> None:
+    """Test illud.inputs.standard_input.StandardInput.read_integer."""
+    standard_input: StandardInput
+
+
+    with patch.object(StandardInput, '_get_attributes'), \
+        patch.object(StandardInput, '_use_raw_mode'), \
+        patch.object(StandardInput, '_reset_attributes'), \
+        patch.object(StandardInput, 'read_integer', return_value=read_integer,
+            side_effect=read_exception):
+
+        standard_input = StandardInput()
+
+        maybe_integer: Optional[int] = standard_input.maybe_read_integer(default=default)
+
+        assert maybe_integer == expected_maybe_integer
