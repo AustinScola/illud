@@ -2,7 +2,7 @@
 import sys
 import termios
 from io import StringIO
-from typing import List, Optional, Type
+from typing import List, Optional, Type, Union
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -10,6 +10,7 @@ import pytest
 from illud.character import Character, CharacterIterator
 from illud.exception import IlludException
 from illud.exceptions.invalid_number_exception import InvalidNumberException
+from illud.exceptions.unexpected_input_exception import UnexpectedInputException
 from illud.input import Input
 from illud.inputs.standard_input import StandardInput, TeletypeAttributes
 
@@ -237,6 +238,44 @@ def test_pop(input_: str, buffer_before: str, length: int, expected_buffer_after
         standard_input.pop(length)
 
         assert standard_input._buffer == expected_buffer_after  # pylint: disable=protected-access
+
+
+# yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('input_, buffer_before, string, expected_exception, expected_buffer_after', [
+    ('', 'f', 'f', None, ''),
+    ('', 'foo', 'foo', None, ''),
+    ('foo', '', 'foo', None, ''),
+    ('oo', 'f', 'foo', None, ''),
+    ('o', 'fo', 'foo', None, ''),
+    ('', 'f', 'b', UnexpectedInputException, ''),
+    ('f', '', 'b', UnexpectedInputException, ''),
+    ('baz', '', 'bar', UnexpectedInputException, ''),
+    ('az', 'b', 'bar', UnexpectedInputException, ''),
+    ('z', 'ba', 'bar', UnexpectedInputException, ''),
+    ('', 'baz', 'bar', UnexpectedInputException, ''),
+])
+# yapf: enable # pylint: enable=line-too-long
+def test_expect(input_: str, buffer_before: str, string: str,
+                expected_exception: Union[None, Type[IlludException]],
+                expected_buffer_after: str) -> None:
+    """Test illud.inputs.standard_input.StandardInput.expect."""
+    standard_input: StandardInput
+    with patch('sys.stdin', StringIO(input_)), \
+        patch.object(StandardInput, '_get_attributes'), \
+        patch.object(StandardInput, '_reset_attributes'), \
+        patch.object(StandardInput, '_use_raw_mode'):
+
+        standard_input = StandardInput()
+
+        standard_input._buffer = buffer_before  # pylint: disable=protected-access
+
+        if expected_exception is not None:
+            with pytest.raises(expected_exception):
+                standard_input.expect(string)
+        else:
+            standard_input.expect(string)
+
+            assert standard_input._buffer == expected_buffer_after  # pylint: disable=protected-access
 
 
 # yapf: disable

@@ -6,6 +6,7 @@ from typing import Any, List, Optional, TextIO
 
 from illud.character import Character, CharacterIterator
 from illud.exceptions.invalid_number_exception import InvalidNumberException
+from illud.exceptions.unexpected_input_exception import UnexpectedInputException
 from illud.input import Input
 
 TeletypeAttributes = List[Any]
@@ -83,6 +84,13 @@ class StandardInput(Input):
         else:
             self._buffer = ''
             self._stdin.read(length - buffer_length)
+
+    def expect(self, string: str) -> None:
+        """Asserts that the input matches the expected string."""
+        for expected_character in string:
+            character: str = self.read(1)
+            if character != expected_character:
+                raise UnexpectedInputException
 
     def read_integer(self) -> int:
         """Return an integer."""
