@@ -2,11 +2,14 @@
 import sys
 import termios
 from io import StringIO
+from typing import List, Optional, Type
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 from illud.character import Character, CharacterIterator
+from illud.exception import IlludException
+from illud.exceptions.invalid_number_exception import InvalidNumberException
 from illud.input import Input
 from illud.inputs.standard_input import StandardInput, TeletypeAttributes
 
@@ -234,3 +237,34 @@ def test_pop(input_: str, buffer_before: str, length: int, expected_buffer_after
         standard_input.pop(length)
 
         assert standard_input._buffer == expected_buffer_after  # pylint: disable=protected-access
+
+
+# yapf: disable
+@pytest.mark.parametrize('peeked_input, expected_integer, expected_exception', [
+    (['0', ';'], 0, None),
+    (['a'], 0, InvalidNumberException),
+    (['4', '2', ';'], 42, None),
+    (['0', '4', '2', ','], 42, None),
+])
+# yapf: enable
+def test_read_integer(peeked_input: List[str], expected_integer: int,
+                      expected_exception: Optional[Type[IlludException]]) -> None:
+    """Test illud.inputs.standard_input.StandardInput.read_integer."""
+    standard_input: StandardInput
+    with patch('sys.stdin'), \
+        patch.object(StandardInput, '_get_attributes'), \
+        patch.object(StandardInput, '_use_raw_mode'), \
+        patch.object(StandardInput, '_reset_attributes'), \
+        patch.object(StandardInput, 'peek', side_effect=peeked_input), \
+        patch.object(StandardInput, 'pop') as pop_mock:
+
+        standard_input = StandardInput()
+
+        if expected_exception:
+            with pytest.raises(expected_exception):
+                standard_input.read_integer()
+        else:
+            integer: int = standard_input.read_integer()
+
+            assert integer == expected_integer
+            assert pop_mock.call_count == len(peeked_input) - 1

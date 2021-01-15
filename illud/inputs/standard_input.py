@@ -5,6 +5,7 @@ import tty
 from typing import Any, List, TextIO
 
 from illud.character import Character, CharacterIterator
+from illud.exceptions.invalid_number_exception import InvalidNumberException
 from illud.input import Input
 
 TeletypeAttributes = List[Any]
@@ -82,3 +83,20 @@ class StandardInput(Input):
         else:
             self._buffer = ''
             self._stdin.read(length - buffer_length)
+
+    def read_integer(self) -> int:
+        """Return an integer."""
+        string: str = ''
+
+        while True:
+            character: str = self.peek(1)
+            if character.isdigit():
+                self.pop(1)
+                string += character
+            else:
+                break
+
+        try:
+            return int(string)
+        except ValueError as value_error:
+            raise InvalidNumberException from value_error
