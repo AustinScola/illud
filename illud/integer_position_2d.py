@@ -16,3 +16,9 @@ class IntegerPosition2D():
 
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}(x={self.x}, y={self.y})'
+
+    def __add__(self, other_position: 'IntegerPosition2D') -> 'IntegerPosition2D':
+        x: int = self.x + other_position.x  # pylint: disable=invalid-name
+        y: int = self.y + other_position.y  # pylint: disable=invalid-name
+        sum_ = IntegerPosition2D(x, y)
+        return sum_
