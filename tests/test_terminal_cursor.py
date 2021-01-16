@@ -1,6 +1,6 @@
 """Test illud.terminal_cursor."""
 from io import StringIO
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, call, patch
 
 import pytest
 
@@ -56,3 +56,29 @@ def test_get_position_from_terminal(cursor_position_report: str,
 
         assert position == expected_position
         standard_output_write_mock.assert_called_once_with(DEVICE_STATUS_REPORT)
+
+
+# yapf: disable
+@pytest.mark.parametrize('position, expected_output', [
+    (IntegerPosition2D(0,0), '\x1b[;H'),
+    (IntegerPosition2D(0,1), '\x1b[2;H'),
+    (IntegerPosition2D(1,0), '\x1b[;2H'),
+    (IntegerPosition2D(1,1), '\x1b[2;2H'),
+    (IntegerPosition2D(1,7), '\x1b[8;2H'),
+    (IntegerPosition2D(7,1), '\x1b[2;8H'),
+    (IntegerPosition2D(7,7), '\x1b[8;8H'),
+])
+# yapf: enable
+def test_move(position: IntegerPosition2D, expected_output: str) -> None:
+    """Test illud.terminal_cursor.TerminalCursor.move."""
+    standard_input: StandardInput = MagicMock(StandardInput)
+
+    with patch('illud.outputs.standard_output.StandardOutput.write') as standard_output_write_mock:
+        standard_output: StandardOutput = StandardOutput()
+
+        terminal_cursor: TerminalCursor = TerminalCursor(standard_input, standard_output)
+        terminal_cursor.move(position)
+
+        standard_output_write_mock.assert_has_calls(
+            [call(DEVICE_STATUS_REPORT), call(expected_output)])
+        assert terminal_cursor._position == position  # pylint: disable=protected-access
