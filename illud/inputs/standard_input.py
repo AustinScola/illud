@@ -2,7 +2,7 @@
 import sys
 import termios
 import tty
-from typing import Any, List, Optional, TextIO
+from typing import Any, List, Optional, TextIO, overload
 
 from illud.character import Character, CharacterIterator
 from illud.exceptions.invalid_number_exception import InvalidNumberException
@@ -108,6 +108,14 @@ class StandardInput(Input):
             return int(string)
         except ValueError as value_error:
             raise InvalidNumberException from value_error
+
+    @overload
+    def maybe_read_integer(self, default: int) -> int:
+        ...
+
+    @overload
+    def maybe_read_integer(self, default: None) -> None:
+        ...
 
     def maybe_read_integer(self, default: Optional[int] = None) -> Optional[int]:
         """Return an integer or a default value."""
