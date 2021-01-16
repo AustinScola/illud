@@ -54,3 +54,31 @@ def test_repr(integer_position_2d: IntegerPosition2D, expected_string: str) -> N
     string: str = repr(integer_position_2d)
 
     assert string == expected_string
+
+
+# yapf: disable
+@pytest.mark.parametrize('position, other_position, expected_sum', [
+    (IntegerPosition2D(0, 0), IntegerPosition2D(0, 0), IntegerPosition2D(0, 0)),
+    (IntegerPosition2D(0, 0), IntegerPosition2D(0, 1), IntegerPosition2D(0, 1)),
+    (IntegerPosition2D(0, 0), IntegerPosition2D(1, 0), IntegerPosition2D(1, 0)),
+    (IntegerPosition2D(0, 0), IntegerPosition2D(1, 1), IntegerPosition2D(1, 1)),
+    (IntegerPosition2D(0, 1), IntegerPosition2D(0, 0), IntegerPosition2D(0, 1)),
+    (IntegerPosition2D(0, 1), IntegerPosition2D(0, 1), IntegerPosition2D(0, 2)),
+    (IntegerPosition2D(0, 1), IntegerPosition2D(1, 0), IntegerPosition2D(1, 1)),
+    (IntegerPosition2D(0, 1), IntegerPosition2D(1, 1), IntegerPosition2D(1, 2)),
+    (IntegerPosition2D(1, 0), IntegerPosition2D(0, 0), IntegerPosition2D(1, 0)),
+    (IntegerPosition2D(1, 0), IntegerPosition2D(0, 1), IntegerPosition2D(1, 1)),
+    (IntegerPosition2D(1, 0), IntegerPosition2D(1, 0), IntegerPosition2D(2, 0)),
+    (IntegerPosition2D(1, 0), IntegerPosition2D(1, 1), IntegerPosition2D(2, 1)),
+    (IntegerPosition2D(1, 1), IntegerPosition2D(0, 0), IntegerPosition2D(1, 1)),
+    (IntegerPosition2D(1, 1), IntegerPosition2D(0, 1), IntegerPosition2D(1, 2)),
+    (IntegerPosition2D(1, 1), IntegerPosition2D(0, 0), IntegerPosition2D(1, 1)),
+    (IntegerPosition2D(1, 1), IntegerPosition2D(0, 1), IntegerPosition2D(1, 2)),
+])
+# yapf: enable
+def test_add(position: IntegerPosition2D, other_position: IntegerPosition2D,
+             expected_sum: IntegerPosition2D) -> None:
+    """Test illud.integer_position_2d.IntegerPosition2D.__add__."""
+    sum_ = position + other_position
+
+    assert sum_ == expected_sum
