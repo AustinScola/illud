@@ -1,5 +1,6 @@
 """Test illud.terminal_cursor."""
 from io import StringIO
+from typing import Any
 from unittest.mock import MagicMock, call, patch
 
 import pytest
@@ -56,6 +57,30 @@ def test_get_position_from_terminal(cursor_position_report: str,
 
         assert position == expected_position
         standard_output_write_mock.assert_called_once_with(DEVICE_STATUS_REPORT)
+
+
+def _get_terminal_cursor(position: IntegerPosition2D) -> TerminalCursor:
+    """Return a terminal cursor with the given position."""
+    with patch('illud.inputs.standard_input.StandardInput') as standard_input_mock, \
+        patch('illud.outputs.standard_output.StandardOutput') as standard_output_mock, \
+        patch('illud.terminal_cursor.TerminalCursor._get_position_from_terminal',
+               return_value=position):
+        terminal_cursor: TerminalCursor = TerminalCursor(standard_input_mock, standard_output_mock)
+    return terminal_cursor
+
+
+# yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('terminal_cursor, other, expected_equality', [
+    (_get_terminal_cursor(IntegerPosition2D(0,0)), 'foo', False),
+    (_get_terminal_cursor(IntegerPosition2D(0,0)), _get_terminal_cursor(IntegerPosition2D(1,0)), False),
+    (_get_terminal_cursor(IntegerPosition2D(0,0)), _get_terminal_cursor(IntegerPosition2D(0,0)), True),
+])
+# yapf: enable # pylint: enable=line-too-long
+def test_eq(terminal_cursor: TerminalCursor, other: Any, expected_equality: bool) -> None:
+    """Test illud.terminal_cursor.TerminalCursor.__eq__."""
+    equality: bool = terminal_cursor == other
+
+    assert equality == expected_equality
 
 
 # yapf: disable
