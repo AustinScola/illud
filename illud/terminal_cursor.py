@@ -1,11 +1,13 @@
 """The cursor of a terminal."""
+from typing import Any
+
 from illud.ansi.escape_codes.cursor import DEVICE_STATUS_REPORT, get_move_cursor
 from illud.inputs.standard_input import StandardInput
 from illud.integer_position_2d import IntegerPosition2D
 from illud.outputs.standard_output import StandardOutput
 
 
-class TerminalCursor():  # pylint: disable=too-few-public-methods
+class TerminalCursor():
     """The cursor of a terminal."""
     def __init__(self, standard_input: StandardInput, standard_output: StandardOutput):
         self._standard_input: StandardInput = standard_input
@@ -23,6 +25,11 @@ class TerminalCursor():  # pylint: disable=too-few-public-methods
         self._standard_input.expect('R')
 
         return IntegerPosition2D(x, y)
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, TerminalCursor):
+            return False
+        return self._position == other._position
 
     def move(self, position: IntegerPosition2D) -> None:
         """Move the terminal cursor to the position."""
