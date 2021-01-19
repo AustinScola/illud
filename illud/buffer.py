@@ -1,8 +1,8 @@
 """A string buffer."""
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 
-class Buffer():  # pylint: disable=too-few-public-methods
+class Buffer():
     """A string buffer."""
     def __init__(self, string: Optional[str] = None):
         self.string: str
@@ -16,3 +16,6 @@ class Buffer():  # pylint: disable=too-few-public-methods
             return False
 
         return self.string == other.string
+
+    def __getitem__(self, index: Union[int, slice]) -> str:
+        return self.string.__getitem__(index)
