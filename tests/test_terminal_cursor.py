@@ -4,6 +4,7 @@ from typing import Any
 from unittest.mock import MagicMock, call, patch
 
 import pytest
+from pytest import CaptureFixture
 
 from illud.ansi.escape_codes.cursor import DEVICE_STATUS_REPORT
 from illud.inputs.standard_input import StandardInput
@@ -39,7 +40,7 @@ def test_init(position: IntegerPosition2D, expected_position: IntegerPosition2D)
     ('1;1R', IntegerPosition2D(1, 1)),
 ])
 # yapf: enable
-def test_get_position_from_terminal(cursor_position_report: str,
+def test_get_position_from_terminal(capsys: CaptureFixture, cursor_position_report: str,
                                     expected_position: IntegerPosition2D) -> None:
     """Test illud.terminal_cursor.TerminalCursor._get_position_from_terminal."""
     with patch('sys.stdin', StringIO(cursor_position_report)), \
@@ -48,16 +49,17 @@ def test_get_position_from_terminal(cursor_position_report: str,
 
         standard_input: StandardInput = StandardInput()
 
-    with patch('illud.outputs.standard_output.StandardOutput.write') as standard_output_write_mock:
-        standard_output: StandardOutput = StandardOutput()
+    standard_output: StandardOutput = StandardOutput()
 
-        with patch('illud.terminal_cursor.TerminalCursor._get_position_from_terminal'):
-            terminal_cursor: TerminalCursor = TerminalCursor(standard_input, standard_output)
+    with patch('illud.terminal_cursor.TerminalCursor._get_position_from_terminal'):
+        terminal_cursor: TerminalCursor = TerminalCursor(standard_input, standard_output)
 
-        position: IntegerPosition2D = terminal_cursor._get_position_from_terminal()  # pylint: disable=protected-access
+    position: IntegerPosition2D = terminal_cursor._get_position_from_terminal()  # pylint: disable=protected-access
 
-        assert position == expected_position
-        standard_output_write_mock.assert_called_once_with(DEVICE_STATUS_REPORT)
+    assert position == expected_position
+
+    captured_output: str = capsys.readouterr().out
+    assert captured_output == DEVICE_STATUS_REPORT
 
 
 # yapf: disable # pylint: disable=line-too-long

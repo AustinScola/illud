@@ -18,6 +18,7 @@ class TerminalCursor():
     def _get_position_from_terminal(self) -> IntegerPosition2D:
         """Return the position of the cursor as reported by the terminal."""
         self._standard_output.write(DEVICE_STATUS_REPORT)
+        self._standard_output.flush()
 
         y: int = self._standard_input.maybe_read_integer(default=0)  # pylint: disable=invalid-name
         self._standard_input.expect(';')
