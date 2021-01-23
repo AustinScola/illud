@@ -1,8 +1,9 @@
 """A single string character."""
+import string
 from typing import Any, Iterator
 
 
-class Character():  # pylint: disable=too-few-public-methods
+class Character():
     """A single string character."""
     def __init__(self, value: str):
         self.value: str = value
@@ -11,6 +12,11 @@ class Character():  # pylint: disable=too-few-public-methods
         if not isinstance(other, Character):
             return False
         return self.value == other.value
+
+    @property
+    def printable(self) -> bool:
+        """Return if the character is a printable character or not."""
+        return self.value in string.printable
 
 
 CharacterIterator = Iterator[Character]

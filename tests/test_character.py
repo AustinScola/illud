@@ -29,3 +29,16 @@ def test_eq(character: Character, other: Any, expected_equality: bool) -> None:
     """Test illud.character.Character.__eq__."""
     equality: bool = character == other
     assert equality == expected_equality
+
+
+# yapf: disable
+@pytest.mark.parametrize('character, expected_printable', [
+    (Character('a'), True),
+    (Character('\x07'), False),
+])
+# yapf: enable
+def test_printable(character: Character, expected_printable: bool) -> None:
+    """Test illud.character.Character.printable."""
+    printable: bool = character.printable
+
+    assert printable == expected_printable
