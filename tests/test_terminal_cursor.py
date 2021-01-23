@@ -34,10 +34,10 @@ def test_init(position: IntegerPosition2D, expected_position: IntegerPosition2D)
 
 # yapf: disable
 @pytest.mark.parametrize('cursor_position_report, expected_position', [
-    (';R', IntegerPosition2D(0, 0)),
-    ('1;R', IntegerPosition2D(0, 1)),
-    (';1R', IntegerPosition2D(1, 0)),
-    ('1;1R', IntegerPosition2D(1, 1)),
+    ('\x1b[;R', IntegerPosition2D(0, 0)),
+    ('\x1b[1;R', IntegerPosition2D(0, 1)),
+    ('\x1b[;1R', IntegerPosition2D(1, 0)),
+    ('\x1b[1;1R', IntegerPosition2D(1, 1)),
 ])
 # yapf: enable
 def test_get_position_from_terminal(capsys: CaptureFixture, cursor_position_report: str,
