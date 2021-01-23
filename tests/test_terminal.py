@@ -67,7 +67,7 @@ def test_clear_screen() -> None:
     terminal.clear_screen()
 
     standard_output_mock.write.assert_has_calls([call(DEVICE_STATUS_REPORT), call(CLEAR_SCREEN)])
-    standard_output_mock.flush.assert_called_once()
+    assert len(standard_output_mock.flush.mock_calls) == 2
 
 
 # yapf: disable # pylint: disable=line-too-long
