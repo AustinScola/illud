@@ -1,4 +1,6 @@
 """Test illud.cursor."""
+from typing import Any
+
 import pytest
 
 from illud.buffer import Buffer
@@ -17,3 +19,18 @@ def test_init(buffer_: Buffer, position: int) -> None:
 
     assert cursor.position == position
     assert cursor.buffer is buffer_
+
+
+# yapf: disable
+@pytest.mark.parametrize('cursor, other, expected_equality', [
+    (Cursor(Buffer(), 0), 'foo', False),
+    (Cursor(Buffer('foo'), 0), Cursor(Buffer('foo'), 1), False),
+    (Cursor(Buffer('foo'), 0), Cursor(Buffer('bar'), 1), False),
+    (Cursor(Buffer('foo'), 0), Cursor(Buffer('foo'), 0), True),
+])
+# yapf: enable
+def test_eq(cursor: Cursor, other: Any, expected_equality: bool) -> None:
+    """Test illud.cursor.Cursor.__eq__."""
+    equality: bool = cursor == other
+
+    assert equality == expected_equality
