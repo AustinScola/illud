@@ -17,6 +17,21 @@ class Buffer():
 
         return self.string == other.string
 
+    def __repr__(self) -> str:
+        class_name: str = self.__class__.__name__
+
+        if self.string:
+
+            string_representation: str
+            if "'" in self.string:
+                string_representation = f'"{self.string}"'
+            else:
+                string_representation = f"'{self.string}'"
+
+            return f'{class_name}({string_representation})'
+
+        return f'{class_name}()'
+
     def __getitem__(self, index: Union[int, slice]) -> str:
         return self.string.__getitem__(index)
 
