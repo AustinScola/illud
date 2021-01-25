@@ -22,3 +22,8 @@ class Cursor():
         position_representation: str = str(self.position)
 
         return f'{class_name}({buffer_representation}, {position_representation})'
+
+    def insert(self, string: str) -> None:
+        """"Insert a string in the buffer at the current position."""
+        self.buffer.insert(string, self.position)
+        self.position += len(string)
