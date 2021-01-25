@@ -40,6 +40,21 @@ def test_eq(buffer_: Buffer, other: Any, expected_equality: bool) -> None:
 
 
 # yapf: disable
+@pytest.mark.parametrize('buffer_, expected_representation', [
+    (Buffer(), 'Buffer()'),
+    (Buffer('foo'), "Buffer('foo')"),
+    (Buffer("'"), 'Buffer("\'")'),
+    (Buffer('"'), 'Buffer(\'"\')'),
+])
+# yapf: enable
+def test_repr(buffer_: Buffer, expected_representation: str) -> None:
+    """Test illud.buffer.Buffer.__repr__."""
+    representation: str = repr(buffer_)
+
+    assert representation == expected_representation
+
+
+# yapf: disable
 @pytest.mark.parametrize('buffer_, index_or_slice, expected_item, expected_exception', [
     (Buffer(''), 0, None, IndexError),
     (Buffer('f'), 0, 'f', None),
