@@ -47,3 +47,21 @@ def test_repr(cursor: Cursor, expected_representation: str) -> None:
     representation: str = repr(cursor)
 
     assert representation == expected_representation
+
+
+# yapf: disable
+@pytest.mark.parametrize('cursor, string, expected_cursor_after', [
+    (Cursor(Buffer(), 0), '', Cursor(Buffer(), 0)),
+    (Cursor(Buffer(), 0), 'f', Cursor(Buffer('f'), 1)),
+    (Cursor(Buffer(), 0), 'foo', Cursor(Buffer('foo'), 3)),
+    (Cursor(Buffer('bar'), 0), 'foo', Cursor(Buffer('foobar'), 3)),
+    (Cursor(Buffer('foo'), 1), '', Cursor(Buffer('foo'), 1)),
+    (Cursor(Buffer('fo'), 1), 'o', Cursor(Buffer('foo'), 2)),
+    (Cursor(Buffer('foo'), 3), 'bar', Cursor(Buffer('foobar'), 6)),
+])
+# yapf: enable
+def test_insert(cursor: Cursor, string: str, expected_cursor_after: Cursor) -> None:
+    """Test illud.cursor.Cursor.insert."""
+    cursor.insert(string)
+
+    assert cursor == expected_cursor_after
