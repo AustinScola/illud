@@ -34,3 +34,16 @@ def test_eq(cursor: Cursor, other: Any, expected_equality: bool) -> None:
     equality: bool = cursor == other
 
     assert equality == expected_equality
+
+
+# yapf: disable
+@pytest.mark.parametrize('cursor, expected_representation', [
+    (Cursor(Buffer(), 0), 'Cursor(Buffer(), 0)'),
+    (Cursor(Buffer('foo'), 0), "Cursor(Buffer('foo'), 0)"),
+])
+# yapf: enable
+def test_repr(cursor: Cursor, expected_representation: str) -> None:
+    """Test illud.cursor.Cursor.__repr__."""
+    representation: str = repr(cursor)
+
+    assert representation == expected_representation
