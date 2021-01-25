@@ -123,3 +123,21 @@ def test_index(buffer_: Buffer, substring: str, start: Optional[int], pass_start
 
 
 # pylint: enable=too-many-arguments
+
+
+# yapf: disable
+@pytest.mark.parametrize('buffer_, string, position, expected_buffer_after', [
+    (Buffer(), '', 0, Buffer()),
+    (Buffer(), 'f', 0, Buffer('f')),
+    (Buffer(), 'foo', 0, Buffer('foo')),
+    (Buffer('bar'), 'foo', 0, Buffer('foobar')),
+    (Buffer('foo'), '', 1, Buffer('foo')),
+    (Buffer('fo'), 'o', 1, Buffer('foo')),
+    (Buffer('foo'), 'bar', 3, Buffer('foobar')),
+])
+# yapf: enable
+def test_insert(buffer_: Buffer, string: str, position: int, expected_buffer_after: str) -> None:
+    """Test illud.buffer.Buffer.insert."""
+    buffer_.insert(string, position)
+
+    assert buffer_ == expected_buffer_after

@@ -40,3 +40,7 @@ class Buffer():
            if the substring is not found."""
         index: int = self.string.index(substring, start, end)
         return index
+
+    def insert(self, string: str, position: int) -> None:
+        """Insert a string at the given position in the buffer."""
+        self.string = self.string[:position] + string + self.string[position:]
