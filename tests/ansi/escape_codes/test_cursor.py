@@ -2,7 +2,7 @@
 import pytest
 
 from illud.ansi.escape_codes.cursor import DEVICE_STATUS_REPORT, get_move_cursor
-from illud.integer_position_2d import IntegerPosition2D
+from illud.math.integer_position_2d import IntegerPosition2D
 
 
 def test_clear_screen() -> None:

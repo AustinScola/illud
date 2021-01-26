@@ -1,9 +1,9 @@
-"""Test illud.integer_position_2d."""
+"""Test illud.math.integer_position_2d."""
 from typing import Any
 
 import pytest
 
-from illud.integer_position_2d import IntegerPosition2D
+from illud.math.integer_position_2d import IntegerPosition2D
 
 
 # yapf: disable
@@ -15,7 +15,7 @@ from illud.integer_position_2d import IntegerPosition2D
 ])  # pylint: disable=invalid-name
 # yapf: enable
 def test_init(x: int, y: int) -> None:
-    """Test illud.integer_position_2d.IntegerPosition2D.__init__."""
+    """Test illud.math.integer_position_2d.IntegerPosition2D.__init__."""
     integer_position_2d = IntegerPosition2D(x, y)
 
     assert integer_position_2d.x == x
@@ -35,7 +35,7 @@ def test_init(x: int, y: int) -> None:
 ])
 # yapf: enable
 def test_eq(integer_position_2d: IntegerPosition2D, other: Any, expected_equality: bool) -> None:
-    """Test illud.integer_position_2d.IntegerPosition2D.__eq__."""
+    """Test illud.math.integer_position_2d.IntegerPosition2D.__eq__."""
     equality: bool = integer_position_2d == other
 
     assert equality == expected_equality
@@ -50,7 +50,7 @@ def test_eq(integer_position_2d: IntegerPosition2D, other: Any, expected_equalit
 ])
 # yapf: enable
 def test_repr(integer_position_2d: IntegerPosition2D, expected_string: str) -> None:
-    """Test illud.integer_position_2d.IntegerPosition2D.__repr__."""
+    """Test illud.math.integer_position_2d.IntegerPosition2D.__repr__."""
     string: str = repr(integer_position_2d)
 
     assert string == expected_string
@@ -78,7 +78,7 @@ def test_repr(integer_position_2d: IntegerPosition2D, expected_string: str) -> N
 # yapf: enable
 def test_add(position: IntegerPosition2D, other_position: IntegerPosition2D,
              expected_sum: IntegerPosition2D) -> None:
-    """Test illud.integer_position_2d.IntegerPosition2D.__add__."""
+    """Test illud.math.integer_position_2d.IntegerPosition2D.__add__."""
     sum_ = position + other_position
 
     assert sum_ == expected_sum

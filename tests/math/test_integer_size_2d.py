@@ -1,9 +1,9 @@
-"""Test illud.integer_size_2d."""
+"""Test illud.math.integer_size_2d."""
 from typing import Any
 
 import pytest
 
-from illud.integer_size_2d import IntegerSize2D
+from illud.math.integer_size_2d import IntegerSize2D
 
 
 # yapf: disable
@@ -15,7 +15,7 @@ from illud.integer_size_2d import IntegerSize2D
 ])
 # yapf: enable
 def test_init(width: int, height: int) -> None:
-    """Test illud.integer_size_2d.IntegerSize2D.__init__."""
+    """Test illud.math.integer_size_2d.IntegerSize2D.__init__."""
     integer_size_2d = IntegerSize2D(width, height)
 
     assert integer_size_2d.width == width

@@ -4,7 +4,7 @@ from typing import Iterable
 from illud.buffer import Buffer
 from illud.exceptions.no_columns_exception import NoColumnsException
 from illud.exceptions.no_rows_exception import NoRowsException
-from illud.integer_position_2d import IntegerPosition2D
+from illud.math.integer_position_2d import IntegerPosition2D
 
 
 class Window():

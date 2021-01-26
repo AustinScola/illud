@@ -8,7 +8,7 @@ from pytest import CaptureFixture
 
 from illud.ansi.escape_codes.cursor import DEVICE_STATUS_REPORT
 from illud.inputs.standard_input import StandardInput
-from illud.integer_position_2d import IntegerPosition2D
+from illud.math.integer_position_2d import IntegerPosition2D
 from illud.outputs.standard_output import StandardOutput
 from illud.terminal_cursor import TerminalCursor
 from mocks.terminal_cursor import get_terminal_cursor_mock

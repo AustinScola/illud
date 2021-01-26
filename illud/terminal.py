@@ -4,7 +4,7 @@ from typing import Iterable, Iterator
 from illud.ansi.escape_codes.erase import CLEAR_SCREEN
 from illud.character import Character
 from illud.inputs.standard_input import StandardInput
-from illud.integer_position_2d import IntegerPosition2D
+from illud.math.integer_position_2d import IntegerPosition2D
 from illud.outputs.standard_output import StandardOutput
 from illud.terminal_cursor import TerminalCursor
 from illud.window import Window
