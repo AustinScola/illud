@@ -9,7 +9,7 @@ from illud.ansi.escape_codes.erase import CLEAR_SCREEN
 from illud.buffer import Buffer
 from illud.character import Character
 from illud.inputs.standard_input import StandardInput
-from illud.integer_position_2d import IntegerPosition2D
+from illud.math.integer_position_2d import IntegerPosition2D
 from illud.outputs.standard_output import StandardOutput
 from illud.terminal import Terminal
 from illud.terminal_cursor import TerminalCursor

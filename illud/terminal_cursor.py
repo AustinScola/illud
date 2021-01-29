@@ -4,7 +4,7 @@ from typing import Any
 from illud.ansi.escape_codes.control import CONTROL_SEQUENCE_INTRODUCER
 from illud.ansi.escape_codes.cursor import DEVICE_STATUS_REPORT, get_move_cursor
 from illud.inputs.standard_input import StandardInput
-from illud.integer_position_2d import IntegerPosition2D
+from illud.math.integer_position_2d import IntegerPosition2D
 from illud.outputs.standard_output import StandardOutput
 
 

@@ -1,6 +1,6 @@
 """ANSI escape codes for the cursor position."""
 from illud.ansi.escape_codes.control import CONTROL_SEQUENCE_INTRODUCER
-from illud.integer_position_2d import IntegerPosition2D
+from illud.math.integer_position_2d import IntegerPosition2D
 
 DEVICE_STATUS_REPORT = CONTROL_SEQUENCE_INTRODUCER + '6n'
 
