@@ -1,24 +1,29 @@
 """A size in the two-dimensional integer lattice."""
-from typing import Any
+from illud.math.vector_2 import Vector2
 
 
-class IntegerSize2D():
+class IntegerSize2D(Vector2[int]):
     """A size in the two-dimensional integer lattice."""
-    def __init__(self, width: int, height: int):
-        self.width: int = width
-        self.height: int = height
+    def __init__(self, width: int, height: int):  # pylint: disable=useless-super-delegation
+        super().__init__(width, height)
 
-    def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, IntegerSize2D):
-            return False
+    @property
+    def width(self) -> int:
+        """Return the width."""
+        return self.x
 
-        return self.width == other.width and self.height == other.height
+    @width.setter
+    def width(self, width: int) -> None:
+        self.x = width  # pylint: disable=invalid-name
+
+    @property
+    def height(self) -> int:
+        """Return the height."""
+        return self.y
+
+    @height.setter
+    def height(self, height: int) -> None:
+        self.y = height  # pylint: disable=invalid-name
 
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}(width={self.width}, height={self.height})'
-
-    def __add__(self, other_size: 'IntegerSize2D') -> 'IntegerSize2D':
-        width: int = self.width + other_size.width
-        height: int = self.height + other_size.height
-        sum_ = IntegerSize2D(width, height)
-        return sum_

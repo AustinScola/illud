@@ -1,9 +1,14 @@
 """Test illud.math.integer_size_2d."""
-from typing import Any
-
 import pytest
 
 from illud.math.integer_size_2d import IntegerSize2D
+from illud.math.vector_2 import Vector2
+from testing.helpers.is_subclass_of_generic import is_subclass_of_generic
+
+
+def test_inheritance() -> None:
+    """Test illud.math.integer_size_2d.IntegerSize2D inheritance."""
+    assert is_subclass_of_generic(IntegerSize2D, Vector2[int])
 
 
 # yapf: disable
@@ -18,27 +23,38 @@ def test_init(width: int, height: int) -> None:
     """Test illud.math.integer_size_2d.IntegerSize2D.__init__."""
     integer_size_2d = IntegerSize2D(width, height)
 
-    assert integer_size_2d.width == width
-    assert integer_size_2d.height == height
+    assert integer_size_2d.x == width
+    assert integer_size_2d.y == height
 
 
 # yapf: disable
-@pytest.mark.parametrize('integer_size_2d, other, expected_equality', [
-    (IntegerSize2D(0, 0), 'foo', False),
-    (IntegerSize2D(0, 0), IntegerSize2D(0, 1), False),
-    (IntegerSize2D(0, 0), IntegerSize2D(1, 0), False),
-    (IntegerSize2D(0, 0), IntegerSize2D(1, 1), False),
-    (IntegerSize2D(0, 0), IntegerSize2D(0, 0), True),
-    (IntegerSize2D(0, 1), IntegerSize2D(0, 1), True),
-    (IntegerSize2D(1, 0), IntegerSize2D(1, 0), True),
-    (IntegerSize2D(1, 1), IntegerSize2D(1, 1), True),
+@pytest.mark.parametrize('integer_size_2d, width', [
+    (IntegerSize2D(0, 0), 0),
+    (IntegerSize2D(0, 0), 1),
+    (IntegerSize2D(0, 0), 3),
+    (IntegerSize2D(1, 0), 3),
 ])
 # yapf: enable
-def test_eq(integer_size_2d: IntegerSize2D, other: Any, expected_equality: bool) -> None:
-    """Test illud.integer_size_2d.IntegerSize2D.__eq__."""
-    equality: bool = integer_size_2d == other
+def test_width(integer_size_2d: IntegerSize2D, width: int) -> None:
+    """Test illud.math.integer_size_2d.IntegerSize2D.width."""
+    integer_size_2d.width = width
 
-    assert equality == expected_equality
+    assert integer_size_2d.width == width
+
+
+# yapf: disable
+@pytest.mark.parametrize('integer_size_2d, height', [
+    (IntegerSize2D(0, 0), 0),
+    (IntegerSize2D(0, 0), 1),
+    (IntegerSize2D(0, 0), 3),
+    (IntegerSize2D(1, 0), 3),
+])
+# yapf: enable
+def test_height(integer_size_2d: IntegerSize2D, height: int) -> None:
+    """Test illud.math.integer_size_2d.IntegerSize2D.height."""
+    integer_size_2d.height = height
+
+    assert integer_size_2d.height == height
 
 
 # yapf: disable
@@ -54,30 +70,3 @@ def test_repr(integer_size_2d: IntegerSize2D, expected_string: str) -> None:
     string: str = repr(integer_size_2d)
 
     assert string == expected_string
-
-
-# yapf: disable
-@pytest.mark.parametrize('size, other_size, expected_sum', [
-    (IntegerSize2D(0, 0), IntegerSize2D(0, 0), IntegerSize2D(0, 0)),
-    (IntegerSize2D(0, 0), IntegerSize2D(0, 1), IntegerSize2D(0, 1)),
-    (IntegerSize2D(0, 0), IntegerSize2D(1, 0), IntegerSize2D(1, 0)),
-    (IntegerSize2D(0, 0), IntegerSize2D(1, 1), IntegerSize2D(1, 1)),
-    (IntegerSize2D(0, 1), IntegerSize2D(0, 0), IntegerSize2D(0, 1)),
-    (IntegerSize2D(0, 1), IntegerSize2D(0, 1), IntegerSize2D(0, 2)),
-    (IntegerSize2D(0, 1), IntegerSize2D(1, 0), IntegerSize2D(1, 1)),
-    (IntegerSize2D(0, 1), IntegerSize2D(1, 1), IntegerSize2D(1, 2)),
-    (IntegerSize2D(1, 0), IntegerSize2D(0, 0), IntegerSize2D(1, 0)),
-    (IntegerSize2D(1, 0), IntegerSize2D(0, 1), IntegerSize2D(1, 1)),
-    (IntegerSize2D(1, 0), IntegerSize2D(1, 0), IntegerSize2D(2, 0)),
-    (IntegerSize2D(1, 0), IntegerSize2D(1, 1), IntegerSize2D(2, 1)),
-    (IntegerSize2D(1, 1), IntegerSize2D(0, 0), IntegerSize2D(1, 1)),
-    (IntegerSize2D(1, 1), IntegerSize2D(0, 1), IntegerSize2D(1, 2)),
-    (IntegerSize2D(1, 1), IntegerSize2D(0, 0), IntegerSize2D(1, 1)),
-    (IntegerSize2D(1, 1), IntegerSize2D(0, 1), IntegerSize2D(1, 2)),
-])
-# yapf: enable
-def test_add(size: IntegerSize2D, other_size: IntegerSize2D, expected_sum: IntegerSize2D) -> None:
-    """Test illud.integer_size_2d.IntegerSize2D.__add__."""
-    sum_ = size + other_size
-
-    assert sum_ == expected_sum
