@@ -1,4 +1,5 @@
 """Test illud.terminal."""
+import os
 from unittest.mock import MagicMock, call, patch
 
 import pytest
@@ -10,6 +11,7 @@ from illud.buffer import Buffer
 from illud.character import Character
 from illud.inputs.standard_input import StandardInput
 from illud.math.integer_position_2d import IntegerPosition2D
+from illud.math.integer_size_2d import IntegerSize2D
 from illud.outputs.standard_output import StandardOutput
 from illud.terminal import Terminal
 from illud.terminal_cursor import TerminalCursor
@@ -36,6 +38,24 @@ def test_init(cursor: TerminalCursor) -> None:
     assert terminal._standard_input == standard_input_mock  # pylint: disable=protected-access
     assert terminal._standard_output == standard_output_mock  # pylint: disable=protected-access
     assert terminal._cursor == cursor  # pylint: disable=protected-access
+
+
+# yapf: disable
+@pytest.mark.parametrize('mock_terminal_size, expected_size', [
+    (os.terminal_size([0, 0]), IntegerSize2D(0, 0)),
+    (os.terminal_size([1, 1]), IntegerSize2D(1, 1)),
+    (os.terminal_size([3, 7]), IntegerSize2D(3, 7)),
+])
+# yapf: enable
+def test_get_size(mock_terminal_size: os.terminal_size, expected_size: IntegerSize2D) -> None:
+    """Test illud.terminal.Terminal.get_size."""
+    with patch('illud.terminal.StandardInput'), patch('illud.terminal.StandardOutput'):
+        terminal: Terminal = Terminal()
+
+    with patch('os.get_terminal_size', return_value=mock_terminal_size):
+        size: IntegerSize2D = terminal.get_size()
+
+    assert size == expected_size
 
 
 # yapf: disable

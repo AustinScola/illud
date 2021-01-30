@@ -1,10 +1,12 @@
 """A text terminal."""
+import os
 from typing import Iterable, Iterator
 
 from illud.ansi.escape_codes.erase import CLEAR_SCREEN
 from illud.character import Character
 from illud.inputs.standard_input import StandardInput
 from illud.math.integer_position_2d import IntegerPosition2D
+from illud.math.integer_size_2d import IntegerSize2D
 from illud.outputs.standard_output import StandardOutput
 from illud.terminal_cursor import TerminalCursor
 from illud.window import Window
@@ -16,6 +18,15 @@ class Terminal():
         self._standard_input: StandardInput = StandardInput()
         self._standard_output: StandardOutput = StandardOutput()
         self._cursor = TerminalCursor(self._standard_input, self._standard_output)
+
+    @staticmethod
+    def get_size() -> IntegerSize2D:
+        """Return the size of the terminal."""
+        os_terminal_size: os.terminal_size = os.get_terminal_size()
+        width: int = os_terminal_size.columns
+        height: int = os_terminal_size.lines
+        size: IntegerSize2D = IntegerSize2D(width, height)
+        return size
 
     def get_character(self) -> Character:
         """Return the next character input from the terminal."""
