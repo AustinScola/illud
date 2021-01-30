@@ -40,7 +40,7 @@ class Terminal():
 
     def draw_window(self, window: Window) -> None:
         """Draw a window on the terminal."""
-        if not window.width or not window.height:
+        if not window.size.width or not window.size.height:
             return
 
         buffer_index: int = 0
@@ -70,6 +70,6 @@ class Terminal():
             remaining_columns = window.right_column - column + 1
             self._standard_output.write(' ' * remaining_columns)
 
-            for row in range(row + 1, window.position.y + window.height):
+            for row in range(row + 1, window.position.y + window.size.height):
                 self._cursor.move(IntegerPosition2D(window.position.x, row))
-                self._standard_output.write(' ' * window.width)
+                self._standard_output.write(' ' * window.size.width)
