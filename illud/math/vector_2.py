@@ -17,6 +17,9 @@ class Vector2(Generic[T]):
         equality: bool = self.x == other.x and self.y == other.y
         return equality
 
+    def __bool__(self) -> bool:
+        return bool(self.x) or bool(self.y)
+
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}(x={self.x}, y={self.y})'
 
