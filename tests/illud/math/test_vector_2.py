@@ -45,6 +45,21 @@ def test_eq(vector2: Vector2, other: Any, expected_equality: bool) -> None:
 
 
 # yapf: disable
+@pytest.mark.parametrize('vector2, expected_truthiness', [
+    (Vector2(0, 0), False),
+    (Vector2(0, 1), True),
+    (Vector2(1, 0), True),
+    (Vector2(1, 1), True),
+])
+# yapf: enable
+def test_bool(vector2: Vector2, expected_truthiness: bool) -> None:
+    """Test illud.math.vector2.Vector2.__bool__."""
+    truthy: bool = bool(vector2)
+
+    assert truthy == expected_truthiness
+
+
+# yapf: disable
 @pytest.mark.parametrize('vector_2, expected_string', [
     (Vector2(0, 0), 'Vector2(x=0, y=0)'),
     (Vector2(0, 1), 'Vector2(x=0, y=1)'),
