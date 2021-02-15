@@ -4,8 +4,7 @@ set -eu
 
 HERE="$(dirname "$(readlink -f "$BASH_SOURCE")")"
 
-pushd "${HERE}" > /dev/null
-trap "popd > /dev/null" EXIT
+cd "${HERE}"
 
 ./format.sh
 
