@@ -2,3 +2,4 @@ mypy==0.790
 pylint==2.6.0
 pytest==6.2.1
 pytest-cov==2.10.1
+seligimus==0.2.0

@@ -1,5 +1,5 @@
 """Test illud.window."""
-from typing import Iterable, Optional, Type
+from typing import Any, Iterable, Optional, Type
 
 import pytest
 
@@ -157,3 +157,19 @@ def test_bottom_row(window: Window, expected_bottom_row: Optional[int],
         bottom_row: int = window.bottom_row
 
         assert bottom_row == expected_bottom_row
+
+
+# yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('window, other, expected_equality', [
+    (Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer()), 'foo', False),
+    (Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer('foo')), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer('bar')), False),
+    (Window(IntegerPosition2D(0, 0), IntegerSize2D(3, 7), Buffer('foo')), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer('foo')), False),
+    (Window(IntegerPosition2D(1, 4), IntegerSize2D(0, 0), Buffer('foo')), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer('foo')), False),
+    (Window(IntegerPosition2D(1, 4), IntegerSize2D(3, 7), Buffer('foo')), Window(IntegerPosition2D(1, 4), IntegerSize2D(3, 7), Buffer('foo')), True),
+])
+# yapf: enable # pylint: enable=line-too-long
+def test_eq(window: Window, other: Any, expected_equality: bool) -> None:
+    """Test illud.window.Window.__eq__."""
+    equality: bool = window == other
+
+    assert equality == expected_equality

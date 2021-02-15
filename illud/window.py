@@ -1,5 +1,9 @@
 """A rectangular view of a string buffer."""
-from typing import Iterable
+from typing import Any, Iterable
+
+from seligimus.python.decorators.operators.equality.equal_instance_attributes import \
+    equal_instance_attributes
+from seligimus.python.decorators.operators.equality.equal_type import equal_type
 
 from illud.buffer import Buffer
 from illud.exceptions.no_columns_exception import NoColumnsException
@@ -60,3 +64,8 @@ class Window():
             raise NoRowsException
 
         return self.position.y + self.size.height - 1
+
+    @equal_type
+    @equal_instance_attributes
+    def __eq__(self, other: Any) -> bool:
+        return True
