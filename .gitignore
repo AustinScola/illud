@@ -1,6 +1,10 @@
 # Ignore compiled bytecode files.
 *.pyc
 
+# Ignore the virtual environments used by testing and building scripts.
+venvs/*
+!venvs/.gitkeep
+
 # Ignore mypy cache.
 .mypy_cache
 

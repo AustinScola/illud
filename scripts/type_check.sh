@@ -8,4 +8,7 @@ ILLUD="$(realpath "${HERE}/..")"
 pushd "${ILLUD}" > /dev/null
 trap "popd > /dev/null" EXIT
 
+source "${ILLUD}/scripts/library/venv.sh"
+use_venv "test" frozen_test_requirements.txt
+
 python3 -m mypy

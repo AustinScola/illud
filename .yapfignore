@@ -1,0 +1,2 @@
+# Ignore the virtual environments used by testing and building scripts.
+venvs
