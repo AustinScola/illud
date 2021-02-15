@@ -1,6 +1,10 @@
 """A position in a string buffer."""
 from typing import Any
 
+from seligimus.python.decorators.operators.equality.equal_instance_attributes import \
+    equal_instance_attributes
+from seligimus.python.decorators.operators.equality.equal_type import equal_type
+
 from illud.buffer import Buffer
 
 
@@ -10,11 +14,10 @@ class Cursor():
         self.buffer: Buffer = buffer_
         self.position: int = position
 
+    @equal_type
+    @equal_instance_attributes
     def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, Cursor):
-            return False
-
-        return self.buffer == other.buffer and self.position == other.position
+        return True
 
     def __repr__(self) -> str:
         class_name: str = self.__class__.__name__

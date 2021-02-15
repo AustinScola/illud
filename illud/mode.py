@@ -1,6 +1,8 @@
 """A manner of operation."""
 from typing import TYPE_CHECKING, Any
 
+from seligimus.python.decorators.operators.equality.equal_type import equal_type
+
 from illud.command import Command
 
 if TYPE_CHECKING:
@@ -9,8 +11,9 @@ if TYPE_CHECKING:
 
 class Mode():
     """A manner of operation."""
+    @equal_type
     def __eq__(self, other: Any) -> bool:
-        return type(self) is type(other)
+        return True
 
     @staticmethod
     def evaluate(state: 'IlludState', command: Command) -> None:

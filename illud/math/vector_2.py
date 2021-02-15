@@ -1,6 +1,10 @@
 """A two-dimensional vector."""
 from typing import Any, Generic, TypeVar
 
+from seligimus.python.decorators.operators.equality.equal_instance_attributes import \
+    equal_instance_attributes
+from seligimus.python.decorators.operators.equality.equal_type import equal_type
+
 T = TypeVar('T', int, float, complex)  # pylint: disable=invalid-name
 
 
@@ -10,12 +14,10 @@ class Vector2(Generic[T]):
         self.x: T = x  # pylint: disable=invalid-name
         self.y: T = y  # pylint: disable=invalid-name
 
+    @equal_type
+    @equal_instance_attributes
     def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, Vector2):
-            return False
-
-        equality: bool = self.x == other.x and self.y == other.y
-        return equality
+        return True
 
     def __bool__(self) -> bool:
         return bool(self.x) or bool(self.y)
