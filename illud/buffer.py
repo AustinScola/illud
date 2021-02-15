@@ -1,6 +1,10 @@
 """A string buffer."""
 from typing import Any, Optional, Union
 
+from seligimus.python.decorators.operators.equality.equal_instance_attributes import \
+    equal_instance_attributes
+from seligimus.python.decorators.operators.equality.equal_type import equal_type
+
 
 class Buffer():
     """A string buffer."""
@@ -11,11 +15,10 @@ class Buffer():
         else:
             self.string = string
 
+    @equal_type
+    @equal_instance_attributes
     def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, Buffer):
-            return False
-
-        return self.string == other.string
+        return True
 
     def __repr__(self) -> str:
         class_name: str = self.__class__.__name__

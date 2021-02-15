@@ -1,6 +1,8 @@
 """Persistent information of Illud."""
 from typing import Any, Optional
 
+from seligimus.python.decorators.operators.equality.equal_type import equal_type
+
 from illud.buffer import Buffer
 from illud.cursor import Cursor
 from illud.mode import Mode
@@ -32,10 +34,8 @@ class IlludState(State):  # pylint: disable=too-few-public-methods
         else:
             self.mode = mode
 
+    @equal_type
     def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, IlludState):
-            return False
-
         if self.buffer != other.buffer:
             return False
 

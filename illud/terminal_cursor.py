@@ -1,6 +1,8 @@
 """The cursor of a terminal."""
 from typing import Any
 
+from seligimus.python.decorators.operators.equality.equal_type import equal_type
+
 from illud.ansi.escape_codes.control import CONTROL_SEQUENCE_INTRODUCER
 from illud.ansi.escape_codes.cursor import DEVICE_STATUS_REPORT, get_move_cursor
 from illud.inputs.standard_input import StandardInput
@@ -29,10 +31,10 @@ class TerminalCursor():
 
         return IntegerPosition2D(x, y)
 
+    @equal_type
     def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, TerminalCursor):
-            return False
-        return self._position == other._position
+        equality: bool = self._position == other._position
+        return equality
 
     def move(self, position: IntegerPosition2D) -> None:
         """Move the terminal cursor to the position."""
