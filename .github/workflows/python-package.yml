@@ -15,11 +15,6 @@ jobs:
       with:
         python-version: 3.6
 
-    - name: Install dependencies
-      run: |
-        python3 -m pip install --upgrade pip setuptools wheel
-        python3 -m pip install -r requirements/test_requirements.txt
-
     - name: Test with pytest
       run: |
         ./scripts/coverage.sh
