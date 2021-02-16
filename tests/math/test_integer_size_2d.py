@@ -1,9 +1,9 @@
 """Test illud.math.integer_size_2d."""
 import pytest
+from seligimus.python.classes.is_subclass_of_generic import is_subclass_of_generic
 
 from illud.math.integer_size_2d import IntegerSize2D
 from illud.math.vector_2 import Vector2
-from testing.helpers.is_subclass_of_generic import is_subclass_of_generic
 
 
 def test_inheritance() -> None:
