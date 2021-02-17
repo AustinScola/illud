@@ -1,6 +1,8 @@
 """A rectangular view of a string buffer."""
 from typing import Any, Iterable
 
+from seligimus.maths.integer_position_2d import IntegerPosition2D
+from seligimus.maths.integer_size_2d import IntegerSize2D
 from seligimus.python.decorators.operators.equality.equal_instance_attributes import \
     equal_instance_attributes
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
@@ -8,8 +10,6 @@ from seligimus.python.decorators.operators.equality.equal_type import equal_type
 from illud.buffer import Buffer
 from illud.exceptions.no_columns_exception import NoColumnsException
 from illud.exceptions.no_rows_exception import NoRowsException
-from illud.math.integer_position_2d import IntegerPosition2D
-from illud.math.integer_size_2d import IntegerSize2D
 
 
 class Window():

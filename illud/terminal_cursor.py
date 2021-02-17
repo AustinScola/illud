@@ -1,12 +1,12 @@
 """The cursor of a terminal."""
 from typing import Any
 
+from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
 
 from illud.ansi.escape_codes.control import CONTROL_SEQUENCE_INTRODUCER
 from illud.ansi.escape_codes.cursor import DEVICE_STATUS_REPORT, get_move_cursor
 from illud.inputs.standard_input import StandardInput
-from illud.math.integer_position_2d import IntegerPosition2D
 from illud.outputs.standard_output import StandardOutput
 
 

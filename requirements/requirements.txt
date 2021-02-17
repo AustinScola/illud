@@ -1,1 +1,1 @@
-seligimus==0.3.0
+seligimus==0.4.0

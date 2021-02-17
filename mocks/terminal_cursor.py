@@ -1,7 +1,8 @@
 """A mock terminal cursor."""
 from unittest.mock import patch
 
-from illud.math.integer_position_2d import IntegerPosition2D
+from seligimus.maths.integer_position_2d import IntegerPosition2D
+
 from illud.terminal_cursor import TerminalCursor
 
 

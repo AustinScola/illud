@@ -2,12 +2,12 @@
 from typing import Any, Iterable, Optional, Type
 
 import pytest
+from seligimus.maths.integer_position_2d import IntegerPosition2D
+from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.buffer import Buffer
 from illud.exceptions.no_columns_exception import NoColumnsException
 from illud.exceptions.no_rows_exception import NoRowsException
-from illud.math.integer_position_2d import IntegerPosition2D
-from illud.math.integer_size_2d import IntegerSize2D
 from illud.window import Window
 
 
