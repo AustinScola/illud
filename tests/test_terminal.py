@@ -4,14 +4,14 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 from pytest import CaptureFixture
+from seligimus.maths.integer_position_2d import IntegerPosition2D
+from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.ansi.escape_codes.cursor import DEVICE_STATUS_REPORT
 from illud.ansi.escape_codes.erase import CLEAR_SCREEN
 from illud.buffer import Buffer
 from illud.character import Character
 from illud.inputs.standard_input import StandardInput
-from illud.math.integer_position_2d import IntegerPosition2D
-from illud.math.integer_size_2d import IntegerSize2D
 from illud.outputs.standard_output import StandardOutput
 from illud.terminal import Terminal
 from illud.terminal_cursor import TerminalCursor

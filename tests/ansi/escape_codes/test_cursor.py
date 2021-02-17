@@ -1,8 +1,8 @@
 """Test illud.ansi.escape_codes.cursor."""
 import pytest
+from seligimus.maths.integer_position_2d import IntegerPosition2D
 
 from illud.ansi.escape_codes.cursor import DEVICE_STATUS_REPORT, get_move_cursor
-from illud.math.integer_position_2d import IntegerPosition2D
 
 
 def test_clear_screen() -> None:
