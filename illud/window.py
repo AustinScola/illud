@@ -6,6 +6,7 @@ from seligimus.maths.integer_size_2d import IntegerSize2D
 from seligimus.python.decorators.operators.equality.equal_instance_attributes import \
     equal_instance_attributes
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
+from seligimus.python.decorators.standard_representation import standard_representation
 
 from illud.buffer import Buffer
 from illud.exceptions.no_columns_exception import NoColumnsException
@@ -69,3 +70,7 @@ class Window():
     @equal_instance_attributes
     def __eq__(self, other: Any) -> bool:
         return True
+
+    @standard_representation(parameter_to_attribute_name={'buffer_': 'buffer'})
+    def __repr__(self) -> str:
+        pass

@@ -173,3 +173,16 @@ def test_eq(window: Window, other: Any, expected_equality: bool) -> None:
     equality: bool = window == other
 
     assert equality == expected_equality
+
+
+# yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('window, expected_representation', [
+    (Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer()), 'Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer(string=\'\'))'),
+    (Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer('foo')), 'Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer(string=\'foo\'))'),
+])
+# yapf: enable # pylint: enable=line-too-long
+def test_repr(window: Window, expected_representation: str) -> None:
+    """Test illud.window.Window.__repr__."""
+    representation: str = repr(window)
+
+    assert representation == expected_representation
