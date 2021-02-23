@@ -4,6 +4,7 @@ from typing import Any, Optional, Union
 from seligimus.python.decorators.operators.equality.equal_instance_attributes import \
     equal_instance_attributes
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
+from seligimus.python.decorators.standard_representation import standard_representation
 
 
 class Buffer():
@@ -20,20 +21,9 @@ class Buffer():
     def __eq__(self, other: Any) -> bool:
         return True
 
+    @standard_representation(parameter_to_attribute_name={'buffer_': 'buffer'})
     def __repr__(self) -> str:
-        class_name: str = self.__class__.__name__
-
-        if self.string:
-
-            string_representation: str
-            if "'" in self.string:
-                string_representation = f'"{self.string}"'
-            else:
-                string_representation = f"'{self.string}'"
-
-            return f'{class_name}({string_representation})'
-
-        return f'{class_name}()'
+        pass
 
     def __getitem__(self, index: Union[int, slice]) -> str:
         return self.string.__getitem__(index)

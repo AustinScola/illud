@@ -38,8 +38,8 @@ def test_eq(cursor: Cursor, other: Any, expected_equality: bool) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('cursor, expected_representation', [
-    (Cursor(Buffer(), 0), 'Cursor(Buffer(), 0)'),
-    (Cursor(Buffer('foo'), 0), "Cursor(Buffer('foo'), 0)"),
+    (Cursor(Buffer(), 0), 'Cursor(Buffer(string=\'\'), 0)'),
+    (Cursor(Buffer('foo'), 0), "Cursor(Buffer(string='foo'), 0)"),
 ])
 # yapf: enable
 def test_repr(cursor: Cursor, expected_representation: str) -> None:
