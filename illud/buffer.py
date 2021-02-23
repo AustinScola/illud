@@ -9,12 +9,8 @@ from seligimus.python.decorators.standard_representation import standard_represe
 
 class Buffer():
     """A string buffer."""
-    def __init__(self, string: Optional[str] = None):
-        self.string: str
-        if string is None:
-            self.string = ''
-        else:
-            self.string = string
+    def __init__(self, string: str = ''):
+        self.string: str = string
 
     @equal_type
     @equal_instance_attributes
