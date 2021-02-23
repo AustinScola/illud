@@ -41,10 +41,10 @@ def test_eq(buffer_: Buffer, other: Any, expected_equality: bool) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('buffer_, expected_representation', [
-    (Buffer(), 'Buffer()'),
-    (Buffer('foo'), "Buffer('foo')"),
-    (Buffer("'"), 'Buffer("\'")'),
-    (Buffer('"'), 'Buffer(\'"\')'),
+    (Buffer(), 'Buffer(string=\'\')'),
+    (Buffer('foo'), "Buffer(string='foo')"),
+    (Buffer("'"), 'Buffer(string="\'")'),
+    (Buffer('"'), 'Buffer(string=\'"\')'),
 ])
 # yapf: enable
 def test_repr(buffer_: Buffer, expected_representation: str) -> None:
