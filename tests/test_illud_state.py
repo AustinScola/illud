@@ -2,6 +2,8 @@
 from typing import Any, Dict, Optional
 
 import pytest
+from seligimus.maths.integer_position_2d import IntegerPosition2D
+from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.buffer import Buffer
 from illud.cursor import Cursor
@@ -10,6 +12,7 @@ from illud.mode import Mode
 from illud.modes.insert import Insert
 from illud.modes.normal import Normal
 from illud.state import State
+from illud.window import Window
 
 
 def test_inheritance() -> None:
@@ -18,22 +21,24 @@ def test_inheritance() -> None:
 
 
 # yapf: disable # pylint: disable=line-too-long
-@pytest.mark.parametrize('buffer_, cursor_position, mode, pass_buffer, pass_cursor_position, pass_mode, expected_buffer, expected_cursor, expected_mode', [
-    (None, None, None, False, False,False, Buffer(), Cursor(Buffer(), 0), Normal()),
-    (None, None, Normal(), False, False, True, Buffer(), Cursor(Buffer(), 0), Normal()),
-    (Buffer(), None, None, True, False, False, Buffer(), Cursor(Buffer(), 0), Normal()),
-    (Buffer(), None, Normal(), True, False, True, Buffer(), Cursor(Buffer(), 0), Normal()),
-    (None, None, None, True, False, False, Buffer(), Cursor(Buffer(), 0), Normal()),
-    (None, None, Normal(), True, False, True, Buffer(), Cursor(Buffer(), 0), Normal()),
-    (Buffer('foo'), None, None, True, False, False, Buffer('foo'), Cursor(Buffer('foo'), 0), Normal()),
-    (Buffer('foo'), None, Normal(), True, False, True, Buffer('foo'), Cursor(Buffer('foo'), 0), Normal()),
-    (Buffer('foo'), 1, Normal(), True, True, True, Buffer('foo'), Cursor(Buffer('foo'), 1), Normal()),
+@pytest.mark.parametrize('buffer_, cursor_position, mode, terminal_size, pass_buffer, pass_cursor_position, pass_mode, pass_terminal_size, expected_buffer, expected_cursor, expected_mode, expected_window', [
+    (None, None, None, None, False, False, False, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer())),
+    (None, None, Normal(), None, False, False, True, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer())),
+    (Buffer(), None, None, None, True, False, False, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer())),
+    (Buffer(), None, Normal(), None, True, False, True, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer())),
+    (None, None, None, None, True, False, False, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer())),
+    (None, None, Normal(), None, True, False, True, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer())),
+    (Buffer('foo'), None, None, None, True, False, False, False, Buffer('foo'), Cursor(Buffer('foo'), 0), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer('foo'))),
+    (Buffer('foo'), None, Normal(), None, True, False, True, False, Buffer('foo'), Cursor(Buffer('foo'), 0), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer('foo'))),
+    (Buffer('foo'), 1, Normal(), None, True, True, True, False, Buffer('foo'), Cursor(Buffer('foo'), 1), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer('foo'))),
+    (Buffer('foo'), 1, Normal(), IntegerSize2D(80, 24), True, True, True, True, Buffer('foo'), Cursor(Buffer('foo'), 1), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(80, 24), Buffer('foo'))),
 ])
 # yapf: enable # pylint: enable=line-too-long
 # pylint: disable=too-many-arguments
 def test_init(buffer_: Optional[Buffer], cursor_position: Optional[int], mode: Optional[Mode],
-              pass_buffer: bool, pass_cursor_position: bool, pass_mode: bool,
-              expected_buffer: Buffer, expected_cursor: Cursor, expected_mode: Mode) -> None:
+              terminal_size: Optional[IntegerSize2D], pass_buffer: bool, pass_cursor_position: bool,
+              pass_mode: bool, pass_terminal_size: bool, expected_buffer: Buffer,
+              expected_cursor: Cursor, expected_mode: Mode, expected_window: Window) -> None:
     """Test illud.illud_state.IlludState.__init__."""
     keyword_arguments: Dict[str, Any] = {}
     if pass_buffer:
@@ -42,6 +47,8 @@ def test_init(buffer_: Optional[Buffer], cursor_position: Optional[int], mode: O
         keyword_arguments['cursor_position'] = cursor_position
     if pass_mode:
         keyword_arguments['mode'] = mode
+    if pass_terminal_size:
+        keyword_arguments['terminal_size'] = terminal_size
 
     illud_state: IlludState = IlludState(**keyword_arguments)
 
@@ -49,6 +56,8 @@ def test_init(buffer_: Optional[Buffer], cursor_position: Optional[int], mode: O
     assert illud_state.cursor == expected_cursor
     assert illud_state.cursor.buffer is illud_state.buffer
     assert illud_state.mode == expected_mode
+    assert illud_state.window == expected_window
+    assert illud_state.window.buffer is illud_state.buffer
 
 
 # yapf: disable

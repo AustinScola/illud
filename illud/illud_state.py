@@ -1,6 +1,8 @@
 """Persistent information of Illud."""
 from typing import Any, Optional
 
+from seligimus.maths.integer_position_2d import IntegerPosition2D
+from seligimus.maths.integer_size_2d import IntegerSize2D
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
 
 from illud.buffer import Buffer
@@ -8,6 +10,7 @@ from illud.cursor import Cursor
 from illud.mode import Mode
 from illud.modes.normal import Normal
 from illud.state import State
+from illud.window import Window
 
 
 class IlludState(State):  # pylint: disable=too-few-public-methods
@@ -15,7 +18,8 @@ class IlludState(State):  # pylint: disable=too-few-public-methods
     def __init__(self,
                  buffer_: Optional[Buffer] = None,
                  cursor_position: Optional[int] = None,
-                 mode: Mode = None):
+                 mode: Mode = None,
+                 terminal_size: Optional[IntegerSize2D] = None):
         self.buffer: Buffer
         if buffer_ is None:
             self.buffer = Buffer()
@@ -33,6 +37,12 @@ class IlludState(State):  # pylint: disable=too-few-public-methods
             self.mode = Normal()
         else:
             self.mode = mode
+
+        self.window: Window
+        if terminal_size:
+            self.window = Window(IntegerPosition2D(0, 0), terminal_size, self.buffer)
+        else:
+            self.window = Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), self.buffer)
 
     @equal_type
     def __eq__(self, other: Any) -> bool:
