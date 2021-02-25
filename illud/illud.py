@@ -1,5 +1,5 @@
 """A text buffer editor and terminal viewer."""
-from typing import Optional
+from typing import Any, Optional
 
 from illud.character import Character
 from illud.command import Command
@@ -7,6 +7,7 @@ from illud.illud_state import IlludState
 from illud.mode import Mode
 from illud.repl import REPL
 from illud.terminal import Terminal
+from illud.window import Window
 
 
 class Illud(REPL):
@@ -30,3 +31,7 @@ class Illud(REPL):
         command: Command = input_
         mode: Mode = self._state.mode
         mode.evaluate(self._state, command)
+
+    def print(self, result: Any) -> None:
+        window: Window = self._state.window
+        self._terminal.draw_window(window)
