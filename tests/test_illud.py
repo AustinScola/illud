@@ -20,21 +20,23 @@ def test_inheritance() -> None:
     assert issubclass(Illud, REPL)
 
 
-# yapf: disable
-@pytest.mark.parametrize('illud_initial_state, pass_illud_initial_state, expected_illud_state', [
-    (None, False, IlludState()),
-    (IlludState(), True, IlludState()),
-    (IlludState(Buffer('foo')), True, IlludState(Buffer('foo'))),
+# yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('illud_initial_state, pass_illud_initial_state, terminal_size, expected_illud_state', [
+    (None, False, IntegerSize2D(0, 0), IlludState(terminal_size=IntegerSize2D(0, 0))),
+    (None, False, IntegerSize2D(120, 80), IlludState(terminal_size=IntegerSize2D(120, 80))),
+    (IlludState(), True, None, IlludState()),
+    (IlludState(Buffer('foo')), True, None, IlludState(Buffer('foo'))),
 ])
-# yapf: enable
+# yapf: enable # pylint: enable=line-too-long
 def test_init(illud_initial_state: Optional[IlludState], pass_illud_initial_state: bool,
-              expected_illud_state: IlludState) -> None:
+              terminal_size: Optional[IntegerSize2D], expected_illud_state: IlludState) -> None:
     """Test illud.illud.Illud.__init__."""
     keyword_arguments: Dict[str, Any] = {}
     if pass_illud_initial_state:
         keyword_arguments['initial_state'] = illud_initial_state
 
-    terminal_mock = MagicMock()
+    terminal_get_size_mock = MagicMock(return_value=terminal_size)
+    terminal_mock = MagicMock(get_size=terminal_get_size_mock)
     with patch('illud.illud.Terminal', return_value=terminal_mock):
         illud: Illud = Illud(**keyword_arguments)
 
