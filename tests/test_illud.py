@@ -3,6 +3,8 @@ from typing import Any, Dict, Optional
 from unittest.mock import MagicMock, patch
 
 import pytest
+from pytest import CaptureFixture
+from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.buffer import Buffer
 from illud.character import Character
@@ -74,3 +76,24 @@ def test_evaluate(initial_state: IlludState, input_: Command,
     illud.evaluate(input_)
 
     assert illud._state == expected_state_after  # pylint: disable=protected-access
+
+
+# yapf: disable
+@pytest.mark.parametrize('illud_state, result, expected_output', [
+    (IlludState(terminal_size=IntegerSize2D(1, 1)), None, '\x1b[;H '),
+    (IlludState(Buffer('foo'), terminal_size=IntegerSize2D(3, 1)), None, '\x1b[;Hfoo'),
+])
+# yapf: enable
+def test_print(capsys: CaptureFixture, illud_state: IlludState, result: Any,
+               expected_output: str) -> None:
+    """Test illud.illud.Illud.print."""
+    with patch('illud.terminal.StandardInput'), \
+        patch('illud.terminal.Terminal.clear_screen'), \
+        patch('illud.terminal_cursor.TerminalCursor._get_position_from_terminal'):
+
+        illud: Illud = Illud(illud_state)
+
+    illud.print(result)
+
+    captured_output: str = capsys.readouterr().out
+    assert captured_output == expected_output
