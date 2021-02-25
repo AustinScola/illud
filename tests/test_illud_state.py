@@ -60,19 +60,23 @@ def test_init(buffer_: Optional[Buffer], cursor_position: Optional[int], mode: O
     assert illud_state.window.buffer is illud_state.buffer
 
 
-# yapf: disable
+# yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('illud_state, other, expected_equality', [
     (IlludState(), 'foo', False),
     (IlludState(), IlludState(), True),
     (IlludState(Buffer('foo')), IlludState(), False),
     (IlludState(Buffer('foo')), IlludState(Buffer('bar')), False),
     (IlludState(Buffer('foo')), IlludState(Buffer('foo')), True),
+    (IlludState(cursor_position=1), IlludState(), False),
+    (IlludState(cursor_position=1), IlludState(cursor_position=1), True),
     (IlludState(mode=Normal()), IlludState(mode=Insert()), False),
     (IlludState(mode=Normal()), IlludState(mode=Normal()), True),
+    (IlludState(terminal_size=IntegerSize2D(3, 4)), IlludState(), False),
+    (IlludState(terminal_size=IntegerSize2D(3, 4)), IlludState(terminal_size=IntegerSize2D(3, 4)), True),
     (IlludState(Buffer('foo'), mode=Normal()), IlludState(Buffer('bar'), mode=Normal()), False),
     (IlludState(Buffer('foo'), mode=Normal()), IlludState(Buffer('foo'), mode=Normal()), True),
 ])
-# yapf: enable
+# yapf: enable # pylint: enable=line-too-long
 def test_eq(illud_state: IlludState, other: Any, expected_equality: bool) -> None:
     """Test illud.illud_state.IlludState.__eq__."""
     equality: bool = illud_state == other
