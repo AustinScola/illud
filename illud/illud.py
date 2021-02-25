@@ -18,7 +18,7 @@ class Illud(REPL):
 
         self._state: IlludState
         if initial_state is None:
-            self._state = IlludState()
+            self._state = IlludState(terminal_size=self._terminal.get_size())
         else:
             self._state = initial_state
 
