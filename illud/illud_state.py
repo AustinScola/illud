@@ -3,6 +3,8 @@ from typing import Any, Optional
 
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
+from seligimus.python.decorators.operators.equality.equal_instance_attributes import \
+    equal_instance_attributes
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
 
 from illud.buffer import Buffer
@@ -45,11 +47,6 @@ class IlludState(State):  # pylint: disable=too-few-public-methods
             self.window = Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), self.buffer)
 
     @equal_type
+    @equal_instance_attributes
     def __eq__(self, other: Any) -> bool:
-        if self.buffer != other.buffer:
-            return False
-
-        if self.mode != other.mode:
-            return False
-
         return True
