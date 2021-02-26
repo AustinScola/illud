@@ -6,6 +6,8 @@ from seligimus.python.decorators.operators.equality.equal_instance_attributes im
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
 from seligimus.python.decorators.standard_representation import standard_representation
 
+from illud.exceptions.buffer_position_exception import BufferPositionException
+
 
 class Buffer():
     """A string buffer."""
@@ -33,3 +35,10 @@ class Buffer():
     def insert(self, string: str, position: int) -> None:
         """Insert a string at the given position in the buffer."""
         self.string = self.string[:position] + string + self.string[position:]
+
+    def delete(self, position: int) -> None:
+        """Delete the character at the given position in the buffer."""
+        if not 0 <= position < len(self.string):
+            raise BufferPositionException(position, len(self.string))
+
+        self.string = self.string[:position] + self.string[position + 1:]
