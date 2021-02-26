@@ -17,6 +17,8 @@ def test_inheritance() -> None:
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('state, command, expected_state_after', [
     (IlludState(mode=Insert()), Command(Character('a')), IlludState(buffer_=Buffer('a'), cursor_position=1, mode=Insert())),
+    (IlludState(buffer_=Buffer('foo'), mode=Insert()), Command(Character('')), IlludState(buffer_=Buffer('foo'), mode=Insert())),
+    (IlludState(buffer_=Buffer('foo'), cursor_position=2, mode=Insert()), Command(Character('')), IlludState(buffer_=Buffer('fo'), cursor_position=1, mode=Insert())),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_evaluate(state: IlludState, command: Command, expected_state_after: IlludState) -> None:
