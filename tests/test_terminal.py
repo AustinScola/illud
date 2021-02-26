@@ -115,6 +115,7 @@ def test_clear_screen() -> None:
 def test_draw_window(capsys: CaptureFixture, window: Window, expected_output: str) -> None:
     """Test illud.terminal.Terminal.draw_window."""
     with patch('illud.terminal.StandardInput'), \
+        patch('illud.terminal.StandardOutput.flush') as flush_mock, \
         patch('illud.terminal_cursor.TerminalCursor._get_position_from_terminal'):
 
         terminal: Terminal = Terminal()
@@ -125,3 +126,6 @@ def test_draw_window(capsys: CaptureFixture, window: Window, expected_output: st
     # NOTE: Use a list here because otherwise pytest will print out the actual ANSI escape codes and
     # then the console ouput of pytest is garbled.
     assert list(expected_output) == list(captured_output)
+
+    if expected_output:
+        flush_mock.assert_called_once()
