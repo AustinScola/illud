@@ -74,3 +74,5 @@ class Terminal():
             for row in range(row + 1, window.position.y + window.size.height):
                 self._cursor.move(IntegerPosition2D(window.position.x, row))
                 self._standard_output.write(' ' * window.size.width)
+
+        self._standard_output.flush()
