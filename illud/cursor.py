@@ -28,3 +28,9 @@ class Cursor():
         """"Insert a string in the buffer at the current position."""
         self.buffer.insert(string, self.position)
         self.position += len(string)
+
+    def backspace(self) -> None:
+        """Remove the character in the position before the cursor."""
+        if self.position:
+            self.buffer.delete(self.position - 1)
+            self.position -= 1

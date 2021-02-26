@@ -65,3 +65,17 @@ def test_insert(cursor: Cursor, string: str, expected_cursor_after: Cursor) -> N
     cursor.insert(string)
 
     assert cursor == expected_cursor_after
+
+
+# yapf: disable
+@pytest.mark.parametrize('cursor, expected_cursor_after', [
+    (Cursor(Buffer('foo'), 1), Cursor(Buffer('oo'), 0)),
+    (Cursor(Buffer('foo'), 2), Cursor(Buffer('fo'), 1)),
+    (Cursor(Buffer('foo'), 3), Cursor(Buffer('fo'), 2)),
+])
+# yapf: enable
+def test_backspace(cursor: Cursor, expected_cursor_after: Cursor) -> None:
+    """Test illud.cursor.Cursor.backspace."""
+    cursor.backspace()
+
+    assert cursor == expected_cursor_after
