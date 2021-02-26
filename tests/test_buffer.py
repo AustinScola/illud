@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Optional, Type, Union
 import pytest
 
 from illud.buffer import Buffer
+from illud.exceptions.buffer_position_exception import BufferPositionException
 
 
 # yapf: disable
@@ -141,3 +142,29 @@ def test_insert(buffer_: Buffer, string: str, position: int, expected_buffer_aft
     buffer_.insert(string, position)
 
     assert buffer_ == expected_buffer_after
+
+
+# yapf: disable
+@pytest.mark.parametrize('buffer_, position, expected_exception, expected_buffer_after', [
+    (Buffer(), -1, BufferPositionException(-1, 0), None),
+    (Buffer(), 0, BufferPositionException(0, 0), None),
+    (Buffer(), 1, BufferPositionException(1, 0), None),
+    (Buffer('spam'), -1, BufferPositionException(-1, 4), None),
+    (Buffer('spam'), 0, None, Buffer('pam')),
+    (Buffer('spam'), 1, None, Buffer('sam')),
+    (Buffer('spam'), 2, None, Buffer('spm')),
+    (Buffer('spam'), 3, None, Buffer('spa')),
+    (Buffer('spam'), 4, BufferPositionException(4, 4), None),
+])
+# yapf: enable
+def test_delete(buffer_: Buffer, position: int,
+                expected_exception: Optional[BufferPositionException],
+                expected_buffer_after: Optional[Buffer]) -> None:
+    """Test illud.buffer.Buffer.delete."""
+    if expected_exception is not None:
+        with pytest.raises(type(expected_exception), match=str(expected_exception)):
+            buffer_.delete(position)
+    else:
+        buffer_.delete(position)
+
+        assert buffer_ == expected_buffer_after

@@ -18,3 +18,5 @@ class Insert(Mode):  # pylint: disable=too-few-public-methods
         if character.printable:
             string: str = character.value
             state.cursor.insert(string)
+        elif character.value == '':
+            state.cursor.backspace()
