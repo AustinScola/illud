@@ -1,5 +1,5 @@
 """Test illud.characters."""
-from illud.characters import BACKSPACE, CARRIAGE_RETURN, NEWLINE
+from illud.characters import BACKSPACE, CARRIAGE_RETURN, CONTROL_C, NEWLINE
 
 
 def test_backspace() -> None:
@@ -15,3 +15,8 @@ def test_newline() -> None:
 def test_carriage_return() -> None:
     """Test illud.characters.CARRIAGE_RETURN."""
     assert CARRIAGE_RETURN == '\r'
+
+
+def test_control_c() -> None:
+    """Test illud.characters.CONTROL_C."""
+    assert CONTROL_C == ''
