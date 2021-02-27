@@ -125,7 +125,7 @@ def test_draw_window(capsys: CaptureFixture, window: Window, expected_output: st
     captured_output: str = capsys.readouterr().out
     # NOTE: Use a list here because otherwise pytest will print out the actual ANSI escape codes and
     # then the console ouput of pytest is garbled.
-    assert list(expected_output) == list(captured_output)
+    assert list(captured_output) == list(expected_output)
 
     if expected_output:
         flush_mock.assert_called_once()
