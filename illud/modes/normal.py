@@ -14,5 +14,7 @@ class Normal(Mode):  # pylint: disable=too-few-public-methods
     """Mode for navigating and manipulating text."""
     @staticmethod
     def evaluate(state: 'IlludState', command: Command) -> None:
+        super(Normal, Normal).evaluate(state, command)
+
         if command == Command(Character('i')):
             state.mode = Insert()

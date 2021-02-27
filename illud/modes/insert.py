@@ -15,6 +15,8 @@ class Insert(Mode):  # pylint: disable=too-few-public-methods
     @staticmethod
     def evaluate(state: 'IlludState', command: Command) -> None:
         """Evaluate the command for the given state."""
+        super(Insert, Insert).evaluate(state, command)
+
         character: Character = command.character
         if character.value == CARRIAGE_RETURN:
             state.cursor.insert(NEWLINE)
