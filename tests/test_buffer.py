@@ -82,6 +82,21 @@ def test_getitem(buffer_: Buffer, index_or_slice: Union[int, slice],
         assert item == expected_item
 
 
+# yapf: disable
+@pytest.mark.parametrize('buffer_, expected_length', [
+    (Buffer(), 0),
+    (Buffer('a'), 1),
+    (Buffer('foo'), 3),
+    (Buffer('foo\nbar'), 7),
+])
+# yapf: enable
+def test_len(buffer_: Buffer, expected_length: int) -> None:
+    """Test illud.buffer.Buffer.__len__."""
+    length: int = len(buffer_)
+
+    assert length == expected_length
+
+
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('buffer_, substring, start, pass_start, end, pass_end, expected_index, expected_exception', [
     (Buffer(), '', None, False, None, False, 0, None),

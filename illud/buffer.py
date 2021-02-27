@@ -26,6 +26,9 @@ class Buffer():
     def __getitem__(self, index: Union[int, slice]) -> str:
         return self.string.__getitem__(index)
 
+    def __len__(self) -> int:
+        return len(self.string)
+
     def index(self, substring: str, start: Optional[int] = None, end: Optional[int] = None) -> int:
         """Return the lowest index where the substring is found within the range. Raise ValueError
            if the substring is not found."""
@@ -38,7 +41,7 @@ class Buffer():
 
     def delete(self, position: int) -> None:
         """Delete the character at the given position in the buffer."""
-        if not 0 <= position < len(self.string):
-            raise BufferPositionException(position, len(self.string))
+        if not 0 <= position < len(self):
+            raise BufferPositionException(position, len(self))
 
         self.string = self.string[:position] + self.string[position + 1:]
