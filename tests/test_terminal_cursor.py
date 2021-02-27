@@ -7,7 +7,7 @@ import pytest
 from pytest import CaptureFixture
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 
-from illud.ansi.escape_codes.cursor import DEVICE_STATUS_REPORT
+from illud.ansi.escape_codes.cursor import DEVICE_STATUS_REPORT, HIDE_CURSOR, SHOW_CURSOR
 from illud.inputs.standard_input import StandardInput
 from illud.outputs.standard_output import StandardOutput
 from illud.terminal_cursor import TerminalCursor
@@ -74,6 +74,30 @@ def test_eq(terminal_cursor: TerminalCursor, other: Any, expected_equality: bool
     equality: bool = terminal_cursor == other
 
     assert equality == expected_equality
+
+
+def test_hide() -> None:
+    """Test illud.terminal_cursor.TerminalCursor.hide."""
+    standard_input_mock = MagicMock()
+    standard_output_mock = MagicMock()
+    terminal_cursor: TerminalCursor = TerminalCursor(standard_input_mock, standard_output_mock)
+    standard_output_mock.reset_mock()
+
+    terminal_cursor.hide()
+
+    standard_output_mock.write.assert_called_once_with(HIDE_CURSOR)
+
+
+def test_show() -> None:
+    """Test illud.terminal_cursor.TerminalCursor.show."""
+    standard_input_mock = MagicMock()
+    standard_output_mock = MagicMock()
+    terminal_cursor: TerminalCursor = TerminalCursor(standard_input_mock, standard_output_mock)
+    standard_output_mock.reset_mock()
+
+    terminal_cursor.show()
+
+    standard_output_mock.write.assert_called_once_with(SHOW_CURSOR)
 
 
 # yapf: disable

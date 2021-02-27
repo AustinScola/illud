@@ -5,7 +5,8 @@ from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
 
 from illud.ansi.escape_codes.control import CONTROL_SEQUENCE_INTRODUCER
-from illud.ansi.escape_codes.cursor import DEVICE_STATUS_REPORT, get_move_cursor
+from illud.ansi.escape_codes.cursor import (DEVICE_STATUS_REPORT, HIDE_CURSOR, SHOW_CURSOR,
+                                            get_move_cursor)
 from illud.inputs.standard_input import StandardInput
 from illud.outputs.standard_output import StandardOutput
 
@@ -35,6 +36,14 @@ class TerminalCursor():
     def __eq__(self, other: Any) -> bool:
         equality: bool = self._position == other._position
         return equality
+
+    def hide(self) -> None:
+        """Turn off drawing of the terminal cursor."""
+        self._standard_output.write(HIDE_CURSOR)
+
+    def show(self) -> None:
+        """Turn on drawing of the terminal cursor."""
+        self._standard_output.write(SHOW_CURSOR)
 
     def move(self, position: IntegerPosition2D) -> None:
         """Move the terminal cursor to the position."""

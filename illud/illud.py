@@ -3,6 +3,7 @@ from typing import Any, Optional
 
 from illud.character import Character
 from illud.command import Command
+from illud.cursor import Cursor
 from illud.illud_state import IlludState
 from illud.mode import Mode
 from illud.repl import REPL
@@ -34,4 +35,5 @@ class Illud(REPL):
 
     def print(self, result: Any) -> None:
         window: Window = self._state.window
-        self._terminal.draw_window(window)
+        cursor: Cursor = self._state.cursor
+        self._terminal.draw_window(window, cursor)
