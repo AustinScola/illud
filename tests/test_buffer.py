@@ -152,7 +152,7 @@ def test_index(buffer_: Buffer, substring: str, start: Optional[int], pass_start
     (Buffer('foo'), 'bar', 3, Buffer('foobar')),
 ])
 # yapf: enable
-def test_insert(buffer_: Buffer, string: str, position: int, expected_buffer_after: str) -> None:
+def test_insert(buffer_: Buffer, string: str, position: int, expected_buffer_after: Buffer) -> None:
     """Test illud.buffer.Buffer.insert."""
     buffer_.insert(string, position)
 
