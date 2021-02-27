@@ -17,28 +17,28 @@ from illud.outputs.standard_output import StandardOutput
 from illud.terminal import Terminal
 from illud.terminal_cursor import TerminalCursor
 from illud.window import Window
-from mocks.terminal_cursor import get_terminal_cursor_mock
 
 
-# yapf: disable
-@pytest.mark.parametrize('cursor', [
-    (get_terminal_cursor_mock(IntegerPosition2D(0, 0))),
-])
-# yapf: enable
-def test_init(cursor: TerminalCursor) -> None:
+def test_init() -> None:
     """Test illud.terminal.Terminal.__init__."""
     standard_input_mock = MagicMock(StandardInput)
     standard_output_mock = MagicMock(StandardOutput)
+    terminal_cursor_mock = MagicMock(TerminalCursor)
 
     with patch('illud.terminal.StandardInput', return_value=standard_input_mock), \
         patch('illud.terminal.StandardOutput', return_value=standard_output_mock), \
-        patch('illud.terminal.TerminalCursor', return_value=cursor):
+        patch('illud.terminal.TerminalCursor', return_value=terminal_cursor_mock) as \
+            terminal_cursor_contructor:
 
         terminal: Terminal = Terminal()
 
+        terminal_cursor_contructor.assert_called_once_with(standard_input_mock,
+                                                           standard_output_mock)
+
     assert terminal._standard_input == standard_input_mock  # pylint: disable=protected-access
     assert terminal._standard_output == standard_output_mock  # pylint: disable=protected-access
-    assert terminal._cursor == cursor  # pylint: disable=protected-access
+    assert terminal._cursor == terminal_cursor_mock  # pylint: disable=protected-access
+    terminal_cursor_mock.hide.assert_called_once()
 
 
 # yapf: disable
