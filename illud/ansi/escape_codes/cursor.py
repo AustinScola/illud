@@ -6,6 +6,7 @@ from illud.ansi.escape_codes.control import CONTROL_SEQUENCE_INTRODUCER
 DEVICE_STATUS_REPORT = CONTROL_SEQUENCE_INTRODUCER + '6n'
 
 HIDE_CURSOR = CONTROL_SEQUENCE_INTRODUCER + '?25l'
+SHOW_CURSOR = CONTROL_SEQUENCE_INTRODUCER + '?25h'
 
 
 def get_move_cursor(position: IntegerPosition2D) -> str:
