@@ -41,3 +41,36 @@ def test_call(input_or_exception: List[Any], result_or_exception: List[Any],
 
         assert print_mock.call_count == expected_print_call_count
         print_mock.assert_has_calls(map(call, expected_results))
+
+
+def test_read() -> None:
+    """Test illud.repl.REPL.read."""
+    repl: REPL = REPL()
+
+    repl.read()
+
+
+# yapf: disable
+@pytest.mark.parametrize('input_', [
+    ('foo'),
+    (1),
+])
+# yapf: enable
+def test_evaluate(input_: Any) -> None:
+    """Test illud.repl.REPL.evaluate."""
+    repl: REPL = REPL()
+
+    repl.evaluate(input_)
+
+
+# yapf: disable
+@pytest.mark.parametrize('result', [
+    ('foo'),
+    (1),
+])
+# yapf: enable
+def test_print(result: Any) -> None:
+    """Test illud.repl.REPL.print."""
+    repl: REPL = REPL()
+
+    repl.print(result)
