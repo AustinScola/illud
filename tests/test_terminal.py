@@ -1,10 +1,10 @@
 """Test illud.terminal."""
+import itertools
 import os
 from typing import Optional
 from unittest.mock import MagicMock, patch
 
 import pytest
-from pytest import CaptureFixture
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
@@ -118,21 +118,24 @@ def test_clear_screen() -> None:
     (Window(IntegerPosition2D(0, 0), IntegerSize2D(3, 1), Buffer('foo')), Cursor(Buffer('foo'), 0), '\x1b[;H\x1b[7mf\x1b[moo'),
 ])
 # yapf: enable # pylint: enable=line-too-long
-def test_draw_window(capsys: CaptureFixture, window: Window, cursor: Optional[Cursor],
-                     expected_output: str) -> None:
+def test_draw_window(window: Window, cursor: Optional[Cursor], expected_output: str) -> None:
     """Test illud.terminal.Terminal.draw_window."""
+    standard_output_mock = MagicMock(StandardOutput)
     with patch('illud.terminal.StandardInput'), \
-        patch('illud.terminal.StandardOutput.flush') as flush_mock, \
+        patch('illud.terminal.StandardOutput', return_value=standard_output_mock), \
         patch('illud.terminal_cursor.TerminalCursor._get_position_from_terminal'):
 
         terminal: Terminal = Terminal()
 
+        standard_output_mock.write.reset_mock()
+
         terminal.draw_window(window, cursor)
 
-    captured_output: str = capsys.readouterr().out
-    # NOTE: Use a list here because otherwise pytest will print out the actual ANSI escape codes and
-    # then the console ouput of pytest is garbled.
-    assert list(captured_output) == list(expected_output)
+    calls_args = itertools.chain.from_iterable(
+        call_args for call_args, _ in standard_output_mock.write.call_args_list)
+    output: str = ''.join(calls_args)
+
+    assert output == expected_output
 
     if expected_output:
-        flush_mock.assert_called_once()
+        standard_output_mock.flush.assert_called_once()
