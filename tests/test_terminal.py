@@ -1,14 +1,13 @@
 """Test illud.terminal."""
 import os
 from typing import Optional
-from unittest.mock import MagicMock, call, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 from pytest import CaptureFixture
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
-from illud.ansi.escape_codes.cursor import DEVICE_STATUS_REPORT
 from illud.ansi.escape_codes.erase import CLEAR_SCREEN
 from illud.buffer import Buffer
 from illud.character import Character
@@ -88,8 +87,7 @@ def test_clear_screen() -> None:
 
     terminal.clear_screen()
 
-    standard_output_mock.write.assert_has_calls([call(DEVICE_STATUS_REPORT), call(CLEAR_SCREEN)])
-    assert len(standard_output_mock.flush.mock_calls) == 2
+    assert standard_output_mock.write.call_args[0] == (CLEAR_SCREEN, )
 
 
 # yapf: disable # pylint: disable=line-too-long
