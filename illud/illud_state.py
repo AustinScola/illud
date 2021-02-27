@@ -20,7 +20,7 @@ class IlludState(State):  # pylint: disable=too-few-public-methods
     def __init__(self,
                  buffer_: Optional[Buffer] = None,
                  cursor_position: Optional[int] = None,
-                 mode: Mode = None,
+                 mode: Optional[Mode] = None,
                  terminal_size: Optional[IntegerSize2D] = None):
         self.buffer: Buffer
         if buffer_ is None:
