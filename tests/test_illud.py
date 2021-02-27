@@ -1,9 +1,9 @@
 """Test illud.illud."""
+import itertools
 from typing import Any, Dict, Optional
 from unittest.mock import MagicMock, patch
 
 import pytest
-from pytest import CaptureFixture
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.buffer import Buffer
@@ -12,6 +12,7 @@ from illud.command import Command
 from illud.illud import Illud
 from illud.illud_state import IlludState
 from illud.modes.insert import Insert
+from illud.outputs.standard_output import StandardOutput
 from illud.repl import REPL
 
 
@@ -87,16 +88,21 @@ def test_evaluate(initial_state: IlludState, input_: Command,
     (IlludState(Buffer('foo'), cursor_position=1, terminal_size=IntegerSize2D(3, 1)), None, '\x1b[;Hf\x1b[7mo\x1b[mo'),
 ])
 # yapf: enable
-def test_print(capsys: CaptureFixture, illud_state: IlludState, result: Any,
-               expected_output: str) -> None:
+def test_print(illud_state: IlludState, result: Any, expected_output: str) -> None:
     """Test illud.illud.Illud.print."""
+    standard_output_mock = MagicMock(StandardOutput)
     with patch('illud.terminal.StandardInput'), \
+        patch('illud.terminal.StandardOutput', return_value=standard_output_mock), \
         patch('illud.terminal.Terminal.clear_screen'), \
         patch('illud.terminal_cursor.TerminalCursor._get_position_from_terminal'):
 
         illud: Illud = Illud(illud_state)
+        standard_output_mock.write.reset_mock()
 
     illud.print(result)
 
-    captured_output: str = capsys.readouterr().out
-    assert list(captured_output) == list(expected_output)
+    calls_args = itertools.chain.from_iterable(
+        call_args for call_args, _ in standard_output_mock.write.call_args_list)
+    output: str = ''.join(calls_args)
+
+    assert output == expected_output
