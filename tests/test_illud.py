@@ -98,4 +98,4 @@ def test_print(capsys: CaptureFixture, illud_state: IlludState, result: Any,
     illud.print(result)
 
     captured_output: str = capsys.readouterr().out
-    assert captured_output == expected_output
+    assert list(captured_output) == list(expected_output)
