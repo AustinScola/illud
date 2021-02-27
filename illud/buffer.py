@@ -41,7 +41,7 @@ class Buffer():
 
     def delete(self, position: int) -> None:
         """Delete the character at the given position in the buffer."""
-        if not 0 <= position < len(self.string):
-            raise BufferPositionException(position, len(self.string))
+        if not 0 <= position < len(self):
+            raise BufferPositionException(position, len(self))
 
         self.string = self.string[:position] + self.string[position + 1:]
