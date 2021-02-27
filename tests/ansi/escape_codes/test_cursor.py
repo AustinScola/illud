@@ -2,12 +2,17 @@
 import pytest
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 
-from illud.ansi.escape_codes.cursor import DEVICE_STATUS_REPORT, get_move_cursor
+from illud.ansi.escape_codes.cursor import DEVICE_STATUS_REPORT, HIDE_CURSOR, get_move_cursor
 
 
 def test_clear_screen() -> None:
     """Test illud.ansi.escape_codes.cursor.DEVICE_STATUS_REPORT."""
     assert DEVICE_STATUS_REPORT == '\x1b[6n'
+
+
+def test_hide_cursor() -> None:
+    """Test illud.ansi.escape_codes.cursor.HIDE_CURSOR."""
+    assert HIDE_CURSOR == '\x1b[?25l'
 
 
 # yapf: disable
