@@ -3,7 +3,7 @@ import pytest
 
 from illud.buffer import Buffer
 from illud.character import Character
-from illud.characters import BACKSPACE
+from illud.characters import BACKSPACE, CARRIAGE_RETURN
 from illud.command import Command
 from illud.illud_state import IlludState
 from illud.mode import Mode
@@ -20,10 +20,13 @@ def test_inheritance() -> None:
     (IlludState(mode=Insert()), Command(Character('a')), IlludState(buffer_=Buffer('a'), cursor_position=1, mode=Insert())),
     (IlludState(buffer_=Buffer('foo'), mode=Insert()), Command(Character(BACKSPACE)), IlludState(buffer_=Buffer('foo'), mode=Insert())),
     (IlludState(buffer_=Buffer('foo'), cursor_position=2, mode=Insert()), Command(Character('')), IlludState(buffer_=Buffer('fo'), cursor_position=1, mode=Insert())),
+    (IlludState(buffer_=Buffer(''), cursor_position=0, mode=Insert()), Command(Character(CARRIAGE_RETURN)), IlludState(buffer_=Buffer('\n'), cursor_position=1, mode=Insert())),
+    (IlludState(buffer_=Buffer('foo'), cursor_position=2, mode=Insert()), Command(Character(CARRIAGE_RETURN)), IlludState(buffer_=Buffer('fo\no'), cursor_position=3, mode=Insert())),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_evaluate(state: IlludState, command: Command, expected_state_after: IlludState) -> None:
     """Test illud.modes.insert.Insert.evaluate."""
     Insert.evaluate(state, command)
 
+    print(state.buffer, expected_state_after.buffer)
     assert state == expected_state_after
