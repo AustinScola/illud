@@ -6,7 +6,7 @@ from illud.ansi.escape_codes.cursor import (DEVICE_STATUS_REPORT, HIDE_CURSOR, S
                                             get_move_cursor)
 
 
-def test_clear_screen() -> None:
+def test_device_status_report() -> None:
     """Test illud.ansi.escape_codes.cursor.DEVICE_STATUS_REPORT."""
     assert DEVICE_STATUS_REPORT == '\x1b[6n'
 
