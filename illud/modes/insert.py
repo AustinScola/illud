@@ -2,7 +2,7 @@
 from typing import TYPE_CHECKING
 
 from illud.character import Character
-from illud.characters import BACKSPACE
+from illud.characters import BACKSPACE, CARRIAGE_RETURN, NEWLINE
 from illud.command import Command
 from illud.mode import Mode
 
@@ -16,7 +16,9 @@ class Insert(Mode):  # pylint: disable=too-few-public-methods
     def evaluate(state: 'IlludState', command: Command) -> None:
         """Evaluate the command for the given state."""
         character: Character = command.character
-        if character.printable:
+        if character.value == CARRIAGE_RETURN:
+            state.cursor.insert(NEWLINE)
+        elif character.printable:
             string: str = character.value
             state.cursor.insert(string)
         elif character.value == BACKSPACE:
