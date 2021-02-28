@@ -2,8 +2,8 @@
 import pytest
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 
-from illud.ansi.escape_codes.cursor import (DEVICE_STATUS_REPORT, HIDE_CURSOR, SHOW_CURSOR,
-                                            get_move_cursor)
+from illud.ansi.escape_codes.cursor import (DEVICE_STATUS_REPORT, HIDE_CURSOR, MOVE_CURSOR_HOME,
+                                            SHOW_CURSOR, get_move_cursor)
 
 
 def test_device_status_report() -> None:
@@ -36,3 +36,8 @@ def test_get_move_cursor(position: IntegerPosition2D, expected_move_cursor_comma
     """Test illud.ansi.escape_codes.cursor.get_move_cursor."""
     move_cusor_command: str = get_move_cursor(position)
     assert move_cusor_command == expected_move_cursor_command
+
+
+def test_move_cursor_home() -> None:
+    """Test illud.ansi.escape_codes.cursor.MOVE_CURSOR_HOME."""
+    assert MOVE_CURSOR_HOME == '\x1b[;H'

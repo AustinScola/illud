@@ -22,3 +22,6 @@ def get_move_cursor(position: IntegerPosition2D) -> str:
     move_cursor_command += 'H'
 
     return move_cursor_command
+
+
+MOVE_CURSOR_HOME = get_move_cursor(IntegerPosition2D())
