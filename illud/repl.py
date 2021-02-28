@@ -15,6 +15,9 @@ class REPL():
                 self.print(result)
             except BreakException:
                 return
+            except Exception as exception:  # pylint: disable=broad-except
+                self.catch(exception)
+                return
 
     def read(self) -> Any:
         """Return the next input."""
@@ -24,3 +27,7 @@ class REPL():
 
     def print(self, result: Any) -> None:
         """Output the result of evaluation."""
+
+    def catch(self, exception: Exception) -> None:  # pylint: disable=no-self-use
+        """Handle exceptions."""
+        raise exception
