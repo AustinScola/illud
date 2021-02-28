@@ -40,9 +40,10 @@ class Illud(REPL):
         cursor: Cursor = self._state.cursor
         self._terminal.draw_window(window, cursor)
 
-    @staticmethod
-    def catch(exception: Exception) -> None:
+    def catch(self, exception: Exception) -> None:
         if isinstance(exception, QuitException):
+            self._terminal.clear_screen()
+            self._terminal.move_cursor_home()
             sys.exit()
 
         raise exception
