@@ -9,6 +9,7 @@ from seligimus.maths.integer_size_2d import IntegerSize2D
 from illud.buffer import Buffer
 from illud.character import Character
 from illud.command import Command
+from illud.exceptions.quit_exception import QuitException
 from illud.illud import Illud
 from illud.illud_state import IlludState
 from illud.modes.insert import Insert
@@ -106,3 +107,23 @@ def test_print(illud_state: IlludState, result: Any, expected_output: str) -> No
     output: str = ''.join(calls_args)
 
     assert output == expected_output
+
+
+# yapf: disable
+@pytest.mark.parametrize('exception, expect_reraises, expect_exits', [
+    (Exception(), True, False),
+    (TypeError(), True, False),
+    (QuitException(), False, True),
+])
+# yapf: enable
+def test_catch(exception: Exception, expect_reraises: bool, expect_exits: bool) -> None:
+    """Test illud.illud.Illud.catch."""
+    with patch('illud.illud.Terminal'):
+        illud: Illud = Illud()
+
+    if expect_reraises:
+        with pytest.raises(type(exception)):
+            illud.catch(exception)
+    elif expect_exits:
+        with pytest.raises(SystemExit):
+            illud.catch(exception)
