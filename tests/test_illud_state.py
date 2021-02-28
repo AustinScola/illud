@@ -22,16 +22,16 @@ def test_inheritance() -> None:
 
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('buffer_, cursor_position, mode, terminal_size, pass_buffer, pass_cursor_position, pass_mode, pass_terminal_size, expected_buffer, expected_cursor, expected_mode, expected_window', [
-    (None, None, None, None, False, False, False, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer())),
-    (None, None, Normal(), None, False, False, True, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer())),
-    (Buffer(), None, None, None, True, False, False, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer())),
-    (Buffer(), None, Normal(), None, True, False, True, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer())),
-    (None, None, None, None, True, False, False, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer())),
-    (None, None, Normal(), None, True, False, True, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer())),
-    (Buffer('foo'), None, None, None, True, False, False, False, Buffer('foo'), Cursor(Buffer('foo'), 0), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer('foo'))),
-    (Buffer('foo'), None, Normal(), None, True, False, True, False, Buffer('foo'), Cursor(Buffer('foo'), 0), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer('foo'))),
-    (Buffer('foo'), 1, Normal(), None, True, True, True, False, Buffer('foo'), Cursor(Buffer('foo'), 1), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), Buffer('foo'))),
-    (Buffer('foo'), 1, Normal(), IntegerSize2D(80, 24), True, True, True, True, Buffer('foo'), Cursor(Buffer('foo'), 1), Normal(), Window(IntegerPosition2D(0, 0), IntegerSize2D(80, 24), Buffer('foo'))),
+    (None, None, None, None, False, False, False, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer())),
+    (None, None, Normal(), None, False, False, True, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer())),
+    (Buffer(), None, None, None, True, False, False, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer())),
+    (Buffer(), None, Normal(), None, True, False, True, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer())),
+    (None, None, None, None, True, False, False, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer())),
+    (None, None, Normal(), None, True, False, True, False, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer())),
+    (Buffer('foo'), None, None, None, True, False, False, False, Buffer('foo'), Cursor(Buffer('foo'), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer('foo'))),
+    (Buffer('foo'), None, Normal(), None, True, False, True, False, Buffer('foo'), Cursor(Buffer('foo'), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer('foo'))),
+    (Buffer('foo'), 1, Normal(), None, True, True, True, False, Buffer('foo'), Cursor(Buffer('foo'), 1), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer('foo'))),
+    (Buffer('foo'), 1, Normal(), IntegerSize2D(80, 24), True, True, True, True, Buffer('foo'), Cursor(Buffer('foo'), 1), Normal(), Window(IntegerPosition2D(), IntegerSize2D(80, 24), Buffer('foo'))),
 ])
 # yapf: enable # pylint: enable=line-too-long
 # pylint: disable=too-many-arguments

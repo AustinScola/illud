@@ -42,9 +42,9 @@ class IlludState(State):  # pylint: disable=too-few-public-methods
 
         self.window: Window
         if terminal_size:
-            self.window = Window(IntegerPosition2D(0, 0), terminal_size, self.buffer)
+            self.window = Window(IntegerPosition2D(), terminal_size, self.buffer)
         else:
-            self.window = Window(IntegerPosition2D(0, 0), IntegerSize2D(0, 0), self.buffer)
+            self.window = Window(IntegerPosition2D(), IntegerSize2D(0, 0), self.buffer)
 
     @equal_type
     @equal_instance_attributes
