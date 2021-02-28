@@ -23,7 +23,7 @@ def test_show_cursor() -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('position, expected_move_cursor_command', [
-    (IntegerPosition2D(0, 0), '\x1b[;H'),
+    (IntegerPosition2D(), '\x1b[;H'),
     (IntegerPosition2D(0, 1), '\x1b[2;H'),
     (IntegerPosition2D(1, 0), '\x1b[;2H'),
     (IntegerPosition2D(1, 1), '\x1b[2;2H'),

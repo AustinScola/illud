@@ -16,7 +16,7 @@ from mocks.terminal_cursor import get_terminal_cursor_mock
 
 # yapf: disable
 @pytest.mark.parametrize('position, expected_position', [
-    (IntegerPosition2D(0, 0), IntegerPosition2D(0, 0)),
+    (IntegerPosition2D(), IntegerPosition2D()),
 ])
 # yapf: enable
 def test_init(position: IntegerPosition2D, expected_position: IntegerPosition2D) -> None:
@@ -34,7 +34,7 @@ def test_init(position: IntegerPosition2D, expected_position: IntegerPosition2D)
 
 # yapf: disable
 @pytest.mark.parametrize('cursor_position_report, expected_position', [
-    ('\x1b[;R', IntegerPosition2D(0, 0)),
+    ('\x1b[;R', IntegerPosition2D()),
     ('\x1b[1;R', IntegerPosition2D(0, 1)),
     ('\x1b[;1R', IntegerPosition2D(1, 0)),
     ('\x1b[1;1R', IntegerPosition2D(1, 1)),
