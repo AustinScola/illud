@@ -1,12 +1,12 @@
 """Test illud.mode."""
 from typing import Any, Optional
-from unittest.mock import patch
 
 import pytest
 
 from illud.character import Character
 from illud.characters import CONTROL_C
 from illud.command import Command
+from illud.exceptions.quit_exception import QuitException
 from illud.illud_state import IlludState
 from illud.mode import Mode
 
@@ -37,10 +37,8 @@ def test_evaluate(state_before: IlludState, command: Command,
     mode: Mode = Mode()
 
     if expect_exits:
-        with patch('sys.exit') as exit_mock:
+        with pytest.raises(QuitException):
             mode.evaluate(state_before, command)
-
-            exit_mock.assert_called_once_with()
     else:
         mode.evaluate(state_before, command)
 

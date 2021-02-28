@@ -6,6 +6,7 @@ from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.ansi.escape_codes.color import INVERT, RESET
+from illud.ansi.escape_codes.cursor import MOVE_CURSOR_HOME
 from illud.ansi.escape_codes.erase import CLEAR_SCREEN
 from illud.character import Character
 from illud.cursor import Cursor
@@ -40,6 +41,11 @@ class Terminal():
     def clear_screen(self) -> None:
         """Clear the terminal of all characters."""
         self._standard_output.write(CLEAR_SCREEN)
+        self._standard_output.flush()
+
+    def move_cursor_home(self) -> None:
+        """Move the terminal cursor to the top left position of the terminal."""
+        self._standard_output.write(MOVE_CURSOR_HOME)
         self._standard_output.flush()
 
     def draw_window(self, window: Window, cursor: Optional[Cursor] = None) -> None:

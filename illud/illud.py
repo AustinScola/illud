@@ -1,9 +1,11 @@
 """A text buffer editor and terminal viewer."""
+import sys
 from typing import Any, Optional
 
 from illud.character import Character
 from illud.command import Command
 from illud.cursor import Cursor
+from illud.exceptions.quit_exception import QuitException
 from illud.illud_state import IlludState
 from illud.mode import Mode
 from illud.repl import REPL
@@ -37,3 +39,11 @@ class Illud(REPL):
         window: Window = self._state.window
         cursor: Cursor = self._state.cursor
         self._terminal.draw_window(window, cursor)
+
+    def catch(self, exception: Exception) -> None:
+        if isinstance(exception, QuitException):
+            self._terminal.clear_screen()
+            self._terminal.move_cursor_home()
+            sys.exit()
+
+        raise exception

@@ -6,14 +6,18 @@ from unittest.mock import MagicMock, patch
 import pytest
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
+from illud.ansi.escape_codes.cursor import MOVE_CURSOR_HOME
+from illud.ansi.escape_codes.erase import CLEAR_SCREEN
 from illud.buffer import Buffer
 from illud.character import Character
 from illud.command import Command
+from illud.exceptions.quit_exception import QuitException
 from illud.illud import Illud
 from illud.illud_state import IlludState
 from illud.modes.insert import Insert
 from illud.outputs.standard_output import StandardOutput
 from illud.repl import REPL
+from illud.terminal import Terminal
 
 
 def test_inheritance() -> None:
@@ -106,3 +110,43 @@ def test_print(illud_state: IlludState, result: Any, expected_output: str) -> No
     output: str = ''.join(calls_args)
 
     assert output == expected_output
+
+
+# yapf: disable
+@pytest.mark.parametrize('exception, expect_reraises, expect_exits, expected_output', [
+    (Exception(), True, False, None),
+    (TypeError(), True, False, None),
+    (QuitException(), False, True, CLEAR_SCREEN + MOVE_CURSOR_HOME),
+])
+# yapf: enable
+def test_catch(exception: Exception, expect_reraises: bool, expect_exits: bool,
+               expected_output: Optional[str]) -> None:
+    """Test illud.illud.Illud.catch."""
+    standard_output_mock = MagicMock(StandardOutput)
+    with patch('illud.terminal.StandardInput'), \
+        patch('illud.terminal.StandardOutput', return_value=standard_output_mock), \
+        patch('illud.terminal_cursor.TerminalCursor._get_position_from_terminal'):
+
+        terminal_mock = Terminal()
+        standard_output_mock.write.reset_mock()
+
+    with patch('illud.illud.Terminal', return_value=terminal_mock):
+        with patch('illud.terminal.Terminal.get_size'):
+            illud: Illud = Illud()
+        standard_output_mock.write.reset_mock()
+
+    if expect_reraises:
+        with pytest.raises(type(exception)):
+            illud.catch(exception)
+    elif expect_exits:
+        with pytest.raises(SystemExit):
+            illud.catch(exception)
+
+    calls_args = itertools.chain.from_iterable(
+        call_args for call_args, _ in standard_output_mock.write.call_args_list)
+    output: str = ''.join(calls_args)
+
+    if expected_output is not None:
+        assert list(output) == list(expected_output)
+    else:
+        standard_output_mock.write.assert_not_called()

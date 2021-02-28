@@ -8,6 +8,7 @@ import pytest
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
+from illud.ansi.escape_codes.cursor import MOVE_CURSOR_HOME
 from illud.ansi.escape_codes.erase import CLEAR_SCREEN
 from illud.buffer import Buffer
 from illud.character import Character
@@ -88,6 +89,20 @@ def test_clear_screen() -> None:
     terminal.clear_screen()
 
     assert standard_output_mock.write.call_args[0] == (CLEAR_SCREEN, )
+
+
+def test_move_cursor_home() -> None:
+    """Test illud.terminal.Terminal.move_cursor_home."""
+    standard_output_mock = MagicMock(StandardOutput)
+    terminal: Terminal
+    with patch('illud.terminal.StandardInput'), \
+        patch('illud.terminal.StandardOutput', return_value=standard_output_mock):
+
+        terminal = Terminal()
+
+    terminal.move_cursor_home()
+
+    assert standard_output_mock.write.call_args[0] == (MOVE_CURSOR_HOME, )
 
 
 # yapf: disable # pylint: disable=line-too-long
