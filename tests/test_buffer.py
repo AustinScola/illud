@@ -138,6 +138,33 @@ def test_index(buffer_: Buffer, substring: str, start: Optional[int], pass_start
         assert index == expected_index
 
 
+# yapf: disable
+@pytest.mark.parametrize('buffer_, position, expected_exception, expected_column', [
+    (Buffer(), 0, BufferPositionException(0, 0), None),
+    (Buffer(' '), 0, None, 0),
+    (Buffer('\n'), 0, None, 0),
+    (Buffer('foo'), 0, None, 0),
+    (Buffer('foo'), 1, None, 1),
+    (Buffer('foo'), 2, None, 2),
+    (Buffer('foo\nbar'), 3, None, 3),
+    (Buffer('foo\nbar'), 4, None, 0),
+    (Buffer('foo\nbar'), 5, None, 1),
+    (Buffer('foo\nbar'), 6, None, 2),
+])
+# yapf: enable
+def test_get_column(buffer_: Buffer, position: int,
+                    expected_exception: Optional[BufferPositionException],
+                    expected_column: int) -> None:
+    """Test illud.buffer.Buffer.get_column."""
+    if expected_exception is not None:
+        with pytest.raises(type(expected_exception)):
+            buffer_.get_column(position)
+    else:
+        column: int = buffer_.get_column(position)
+
+        assert column == expected_column
+
+
 # pylint: enable=too-many-arguments
 
 
