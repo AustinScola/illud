@@ -16,5 +16,7 @@ class Normal(Mode):  # pylint: disable=too-few-public-methods
     def evaluate(state: 'IlludState', command: Command) -> None:
         super(Normal, Normal).evaluate(state, command)
 
-        if command == Command(Character('i')):
+        if command == Command(Character('j')):
+            state.cursor.move_down()
+        elif command == Command(Character('i')):
             state.mode = Insert()
