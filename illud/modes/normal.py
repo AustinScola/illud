@@ -18,6 +18,8 @@ class Normal(Mode):  # pylint: disable=too-few-public-methods
 
         if command == Command(Character('d')):
             state.cursor.move_left()
+        elif command == Command(Character('f')):
+            state.cursor.move_right()
         elif command == Command(Character('j')):
             state.cursor.move_down()
         elif command == Command(Character('i')):
