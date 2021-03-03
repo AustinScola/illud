@@ -32,6 +32,17 @@ class Cursor():
         if self.buffer[self.position - 1] != '\n':
             self.position -= 1
 
+    def move_right(self) -> None:
+        """Move the cursor right one character."""
+        if not self.buffer:
+            return
+
+        if self.position == len(self.buffer) - 1:
+            return
+
+        if self.buffer[self.position] != '\n':
+            self.position += 1
+
     def move_down(self) -> None:
         """Move the cursor down one line."""
         try:
