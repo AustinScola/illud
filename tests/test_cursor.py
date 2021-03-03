@@ -53,6 +53,25 @@ def test_repr(cursor: Cursor, expected_representation: str) -> None:
 @pytest.mark.parametrize('cursor, expected_cursor_after', [
     (Cursor(Buffer(), 0), Cursor(Buffer(), 0)),
     (Cursor(Buffer('foo'), 0), Cursor(Buffer('foo'), 0)),
+    (Cursor(Buffer('foo'), 1), Cursor(Buffer('foo'), 0)),
+    (Cursor(Buffer('foo'), 2), Cursor(Buffer('foo'), 1)),
+    (Cursor(Buffer('foo\nbar'), 3), Cursor(Buffer('foo\nbar'), 2)),
+    (Cursor(Buffer('foo\nbar'), 4), Cursor(Buffer('foo\nbar'), 4)),
+    (Cursor(Buffer('foo\nbar'), 5), Cursor(Buffer('foo\nbar'), 4)),
+    (Cursor(Buffer('foo\nbar'), 6), Cursor(Buffer('foo\nbar'), 5)),
+])
+# yapf: enable
+def test_move_left(cursor: Cursor, expected_cursor_after: Cursor) -> None:
+    """Test illud.cursor.Cursor.move_left."""
+    cursor.move_left()
+
+    assert cursor == expected_cursor_after
+
+
+# yapf: disable
+@pytest.mark.parametrize('cursor, expected_cursor_after', [
+    (Cursor(Buffer(), 0), Cursor(Buffer(), 0)),
+    (Cursor(Buffer('foo'), 0), Cursor(Buffer('foo'), 0)),
     (Cursor(Buffer('foo'), 1), Cursor(Buffer('foo'), 1)),
     (Cursor(Buffer('foo\nbar'), 0), Cursor(Buffer('foo\nbar'), 4)),
     (Cursor(Buffer('foo\nbar'), 1), Cursor(Buffer('foo\nbar'), 5)),

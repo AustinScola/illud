@@ -24,6 +24,14 @@ class Cursor():
     def __repr__(self) -> str:
         pass
 
+    def move_left(self) -> None:
+        """Move the cursor left one character."""
+        if self.position == 0:
+            return
+
+        if self.buffer[self.position - 1] != '\n':
+            self.position -= 1
+
     def move_down(self) -> None:
         """Move the cursor down one line."""
         try:
