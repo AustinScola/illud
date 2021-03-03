@@ -50,6 +50,24 @@ def test_repr(cursor: Cursor, expected_representation: str) -> None:
 
 
 # yapf: disable
+@pytest.mark.parametrize('cursor, expected_cursor_after', [
+    (Cursor(Buffer(), 0), Cursor(Buffer(), 0)),
+    (Cursor(Buffer('foo'), 0), Cursor(Buffer('foo'), 0)),
+    (Cursor(Buffer('foo'), 1), Cursor(Buffer('foo'), 1)),
+    (Cursor(Buffer('foo\nbar'), 0), Cursor(Buffer('foo\nbar'), 4)),
+    (Cursor(Buffer('foo\nbar'), 1), Cursor(Buffer('foo\nbar'), 5)),
+    (Cursor(Buffer('spam\nham'), 3), Cursor(Buffer('spam\nham'), 7)),
+    (Cursor(Buffer('spam\nham\neggs'), 3), Cursor(Buffer('spam\nham\neggs'), 8)),
+])
+# yapf: enable
+def test_move_down(cursor: Cursor, expected_cursor_after: Cursor) -> None:
+    """Test illud.cursor.Cursor.move_down."""
+    cursor.move_down()
+
+    assert cursor == expected_cursor_after
+
+
+# yapf: disable
 @pytest.mark.parametrize('cursor, string, expected_cursor_after', [
     (Cursor(Buffer(), 0), '', Cursor(Buffer(), 0)),
     (Cursor(Buffer(), 0), 'f', Cursor(Buffer('f'), 1)),

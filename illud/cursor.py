@@ -24,6 +24,30 @@ class Cursor():
     def __repr__(self) -> str:
         pass
 
+    def move_down(self) -> None:
+        """Move the cursor down one line."""
+        try:
+            next_newline_position: int = self.buffer.index('\n', start=self.position)
+        except ValueError:
+            return
+
+        down_position: int
+        column: int = self.buffer.get_column(self.position)
+        down_position = next_newline_position + 1 + column
+
+        if down_position > len(self.buffer) - 1:
+            down_position = len(self.buffer) - 1
+        else:
+            start: int = next_newline_position + 1
+            end: int = down_position
+            try:
+                next_next_newline_position: int = self.buffer.index('\n', start=start, end=end)
+                down_position = next_next_newline_position
+            except ValueError:
+                pass
+
+        self.position = down_position
+
     def insert(self, string: str) -> None:
         """"Insert a string in the buffer at the current position."""
         self.buffer.insert(string, self.position)
