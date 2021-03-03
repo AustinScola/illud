@@ -2,7 +2,7 @@
 from typing import TYPE_CHECKING
 
 from illud.character import Character
-from illud.characters import BACKSPACE, CARRIAGE_RETURN, NEWLINE
+from illud.characters import BACKSPACE, CARRIAGE_RETURN, ESCAPE, NEWLINE
 from illud.command import Command
 from illud.mode import Mode
 
@@ -18,7 +18,11 @@ class Insert(Mode):  # pylint: disable=too-few-public-methods
         super(Insert, Insert).evaluate(state, command)
 
         character: Character = command.character
-        if character.value == CARRIAGE_RETURN:
+        if character.value == ESCAPE:
+            from illud.modes.normal import \
+                Normal  # pylint: disable=import-outside-toplevel, cyclic-import
+            state.mode = Normal()
+        elif character.value == CARRIAGE_RETURN:
             state.cursor.insert(NEWLINE)
         elif character.printable:
             string: str = character.value
