@@ -78,7 +78,7 @@ def test_get_character(next_character: Character, expected_character: Character)
 
 
 def test_clear_screen() -> None:
-    """Test illud.terminal.Terminal.get_character."""
+    """Test illud.terminal.Terminal.clear_screen."""
     standard_output_mock = MagicMock(StandardOutput)
     terminal: Terminal
     with patch('illud.terminal.StandardInput'), \
