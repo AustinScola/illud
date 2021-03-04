@@ -150,7 +150,7 @@ def test_draw_window(window: Window, cursor: Optional[Cursor], expected_output: 
         call_args for call_args, _ in standard_output_mock.write.call_args_list)
     output: str = ''.join(calls_args)
 
-    assert output == expected_output
+    assert list(output) == list(expected_output)
 
     if expected_output:
         standard_output_mock.flush.assert_called_once()
