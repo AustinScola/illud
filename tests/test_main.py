@@ -14,12 +14,23 @@ def test_set_up_argument_parser() -> None:
     argument_parser: argparse.ArgumentParser = _set_up_argument_parser()
 
     _assert_argument_parser_is_set_up(argument_parser)
+    _assert_argument_parser_has_expected_arguments(argument_parser)
 
 
 def _assert_argument_parser_is_set_up(argument_parser: argparse.ArgumentParser) -> None:
     """Assert that the argument parser is set up."""
     assert argument_parser.description == 'A text buffer editor and terminal viewer.'
     assert argument_parser.prog == 'python3 -m illud'
+
+
+def _assert_argument_parser_has_expected_arguments(
+        argument_parser: argparse.ArgumentParser) -> None:
+    """Assert that the argument parser has the expected arguments."""
+    _, file_argument = argument_parser._actions  # pylint: disable=protected-access
+
+    assert file_argument.dest == 'file'
+    assert file_argument.nargs == '?'
+    assert file_argument.help == 'a file to open'
 
 
 def argument_parser_from_dict(dictionary: Dict[str, Any]) -> argparse.ArgumentParser:

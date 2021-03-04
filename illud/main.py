@@ -9,6 +9,9 @@ def _set_up_argument_parser() -> argparse.ArgumentParser:
     """Set up an argument parser."""
     argument_parser: argparse.ArgumentParser = argparse.ArgumentParser(
         prog='python3 -m illud', description='A text buffer editor and terminal viewer.')
+
+    argument_parser.add_argument('file', nargs='?', help='a file to open')
+
     return argument_parser
 
 
