@@ -114,6 +114,7 @@ def test_move_cursor_home() -> None:
     (Window(IntegerPosition2D(), IntegerSize2D(1, 2), Buffer()), None, '\x1b[;H \x1b[2;H '),
     (Window(IntegerPosition2D(), IntegerSize2D(2, 2), Buffer()), None, '\x1b[;H  \x1b[2;H  '),
     (Window(IntegerPosition2D(), IntegerSize2D(2, 1), Buffer('foo')), None, '\x1b[;Hfo'),
+    (Window(IntegerPosition2D(), IntegerSize2D(2, 2), Buffer('foo')), None, '\x1b[;Hfo\x1b[2;H  '),
     (Window(IntegerPosition2D(), IntegerSize2D(3, 1), Buffer('foo')), None, '\x1b[;Hfoo'),
     (Window(IntegerPosition2D(), IntegerSize2D(5, 1), Buffer('foo')), None, '\x1b[;Hfoo  '),
     (Window(IntegerPosition2D(), IntegerSize2D(5, 1), Buffer('foo\n')), None, '\x1b[;Hfoo  '),
