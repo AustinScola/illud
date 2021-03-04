@@ -24,6 +24,73 @@ class Cursor():
     def __repr__(self) -> str:
         pass
 
+    def move_left(self) -> None:
+        """Move the cursor left one character."""
+        if self.position == 0:
+            return
+
+        if self.buffer[self.position - 1] != '\n':
+            self.position -= 1
+
+    def move_right(self) -> None:
+        """Move the cursor right one character."""
+        if not self.buffer:
+            return
+
+        if self.position == len(self.buffer) - 1:
+            return
+
+        if self.buffer[self.position] != '\n':
+            self.position += 1
+
+    def move_up(self) -> None:
+        """Move the cursor up one line."""
+        try:
+            line_start: int = self.buffer.reverse_index('\n', end=self.position) + 1
+        except ValueError:
+            return
+
+        if line_start - 1 < 0:
+            return
+
+        previous_line_start: int
+        try:
+            previous_line_start = self.buffer.reverse_index('\n', end=line_start - 1) + 1
+        except ValueError:
+            previous_line_start = 0
+
+        previous_line_length = line_start - previous_line_start
+        column: int = self.position - line_start
+        if previous_line_length <= column:
+            previous_line_end = line_start - 1
+            self.position = previous_line_end
+        else:
+            self.position = previous_line_start + column
+
+    def move_down(self) -> None:
+        """Move the cursor down one line."""
+        try:
+            next_newline_position: int = self.buffer.index('\n', start=self.position)
+        except ValueError:
+            return
+
+        down_position: int
+        column: int = self.buffer.get_column(self.position)
+        down_position = next_newline_position + 1 + column
+
+        if down_position > len(self.buffer) - 1:
+            down_position = len(self.buffer) - 1
+        else:
+            start: int = next_newline_position + 1
+            end: int = down_position
+            try:
+                next_next_newline_position: int = self.buffer.index('\n', start=start, end=end)
+                down_position = next_next_newline_position
+            except ValueError:
+                pass
+
+        self.position = down_position
+
     def insert(self, string: str) -> None:
         """"Insert a string in the buffer at the current position."""
         self.buffer.insert(string, self.position)

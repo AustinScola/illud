@@ -35,6 +35,31 @@ class Buffer():
         index: int = self.string.index(substring, start, end)
         return index
 
+    def reverse_index(self,
+                      substring: str,
+                      start: Optional[int] = None,
+                      end: Optional[int] = None) -> int:
+        """Return the highest index where the substring is found within the range. Raise ValueError
+           if the substring is not found."""
+        index: int = self.string.rindex(substring, start, end)
+        return index
+
+    def get_column(self, position: int) -> int:
+        """Return the column number of a position in the buffer."""
+        if not 0 <= position < len(self):
+            raise BufferPositionException(position, len(self))
+
+        column: int = 0
+        if self[position] == '\n' and position == 0:
+            pass
+        else:
+            for character in self[:position][::-1]:
+                if character == '\n':
+                    break
+                column += 1
+
+        return column
+
     def insert(self, string: str, position: int) -> None:
         """Insert a string at the given position in the buffer."""
         self.string = self.string[:position] + string + self.string[position:]
