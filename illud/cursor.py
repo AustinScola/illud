@@ -37,7 +37,7 @@ class Cursor():
         if not self.buffer:
             return
 
-        if self.position == len(self.buffer) - 1:
+        if self.position == self.buffer.end:
             return
 
         if self.buffer[self.position] != '\n':
@@ -78,8 +78,8 @@ class Cursor():
         column: int = self.buffer.get_column(self.position)
         down_position = next_newline_position + 1 + column
 
-        if down_position > len(self.buffer) - 1:
-            down_position = len(self.buffer) - 1
+        if down_position > self.buffer.end:
+            down_position = self.buffer.end
         else:
             start: int = next_newline_position + 1
             end: int = down_position
