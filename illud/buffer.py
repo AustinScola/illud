@@ -35,6 +35,15 @@ class Buffer():
         index: int = self.string.index(substring, start, end)
         return index
 
+    def reverse_index(self,
+                      substring: str,
+                      start: Optional[int] = None,
+                      end: Optional[int] = None) -> int:
+        """Return the highest index where the substring is found within the range. Raise ValueError
+           if the substring is not found."""
+        index: int = self.string.rindex(substring, start, end)
+        return index
+
     def get_column(self, position: int) -> int:
         """Return the column number of a position in the buffer."""
         if not 0 <= position < len(self):
