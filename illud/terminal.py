@@ -78,8 +78,7 @@ class Terminal():
                     try:
                         buffer_index = window.buffer.index('\n', buffer_index) + 1
                     except ValueError:
-                        pass
-
+                        buffer_index = len(window.buffer)
         except IndexError:
             remaining_columns = window.right_column - column + 1
             if remaining_columns:
