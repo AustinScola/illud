@@ -48,7 +48,7 @@ def argument_parser_from_dict(dictionary: Dict[str, Any]) -> argparse.ArgumentPa
     (argument_parser_from_dict({'arguments': [{'name_or_flags': ['--foo', '-f']}]}), [], argparse.Namespace(foo=None)),
     (argument_parser_from_dict({'arguments': [{'name_or_flags': ['--foo', '-f']}]}), ['--foo', '1'], argparse.Namespace(foo='1')),
 ])
-# yapf: enable # pylint: disable=enable-too-long
+# yapf: enable # pylint: enable=line-too-long
 def test_parse_arguments(argument_parser: argparse.ArgumentParser, arguments: List[str],
                          expected_parsed_arguments: argparse.Namespace) -> None:
     """Test illud.main._parse_arguments."""
