@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Optional, Type, Union
 import pytest
 
 from illud.buffer import Buffer
+from illud.exceptions.buffer_has_no_end_exception import BufferHasNoEndException
 from illud.exceptions.buffer_position_exception import BufferPositionException
 
 
@@ -23,6 +24,26 @@ def test_init(string: str, pass_string: bool, expected_string: str) -> None:
     buffer_: Buffer = Buffer(*arguments)
 
     assert buffer_.string == expected_string
+
+
+# yapf: disable
+@pytest.mark.parametrize('buffer_, expected_end, expected_exception', [
+    (Buffer(), None, BufferHasNoEndException()),
+    (Buffer('a'), 0, None),
+    (Buffer('ab'), 1, None),
+    (Buffer('abc'), 2, None),
+])
+# yapf: enable
+def test_end(buffer_: Buffer, expected_end: Optional[int],
+             expected_exception: Optional[Exception]) -> None:
+    """Test illud.buffer.Buffer.__init__."""
+    if expected_exception is not None:
+        with pytest.raises(type(expected_exception)):
+            buffer_.end  # pylint: disable=pointless-statement
+    else:
+        end: int = buffer_.end
+
+        assert end == expected_end
 
 
 # yapf: disable

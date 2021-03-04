@@ -6,6 +6,7 @@ from seligimus.python.decorators.operators.equality.equal_instance_attributes im
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
 from seligimus.python.decorators.standard_representation import standard_representation
 
+from illud.exceptions.buffer_has_no_end_exception import BufferHasNoEndException
 from illud.exceptions.buffer_position_exception import BufferPositionException
 
 
@@ -13,6 +14,16 @@ class Buffer():
     """A string buffer."""
     def __init__(self, string: str = ''):
         self.string: str = string
+
+    @property
+    def end(self) -> int:
+        """Return the ending index."""
+        length: int = len(self)
+
+        if length == 0:
+            raise BufferHasNoEndException()
+
+        return length - 1
 
     @equal_type
     @equal_instance_attributes
