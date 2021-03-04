@@ -32,7 +32,7 @@ function freeze_requirements() {
     echo "Done freezing requirements for '${REQUIREMENTS_FILE_PATH}'."
 }
 
-REQUIREMENTS_FILE_PATHS="$(find "${REQUIREMENTS_DIRECTORY}" -maxdepth 1 -name "*_requirements.txt")"
+REQUIREMENTS_FILE_PATHS="$(find "${REQUIREMENTS_DIRECTORY}" -maxdepth 1 -name "*requirements.txt")"
 
 NUMBER_OF_REQUIREMENTS_FILE_PATHS="$(number_of_lines "${REQUIREMENTS_FILE_PATHS}")"
 
