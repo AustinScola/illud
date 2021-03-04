@@ -27,6 +27,8 @@ def test_inheritance() -> None:
     (IlludState(), Command(Character('f')), IlludState(), False),
     (IlludState(Buffer('foo')), Command(Character('f')), IlludState(Buffer('foo'), cursor_position=1), False),
     (IlludState(), Command(Character('j')), IlludState(), False),
+    (IlludState(Buffer('foo')), Command(Character('k')), IlludState(Buffer('foo')), False),
+    (IlludState(Buffer('foo\nbar'), cursor_position=4), Command(Character('k')), IlludState(Buffer('foo\nbar')), False),
     (IlludState(Buffer('foo')), Command(Character('j')), IlludState(Buffer('foo')), False),
     (IlludState(Buffer('foo\nbar')), Command(Character('j')), IlludState(Buffer('foo\nbar'), cursor_position=4), False),
     (IlludState(), Command(Character('k')), IlludState(), False),
