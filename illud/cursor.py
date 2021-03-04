@@ -43,6 +43,30 @@ class Cursor():
         if self.buffer[self.position] != '\n':
             self.position += 1
 
+    def move_up(self) -> None:
+        """Move the cursor up one line."""
+        try:
+            line_start: int = self.buffer.reverse_index('\n', end=self.position) + 1
+        except ValueError:
+            return
+
+        if line_start - 1 < 0:
+            return
+
+        previous_line_start: int
+        try:
+            previous_line_start = self.buffer.reverse_index('\n', end=line_start - 1) + 1
+        except ValueError:
+            previous_line_start = 0
+
+        previous_line_length = line_start - previous_line_start
+        column: int = self.position - line_start
+        if previous_line_length <= column:
+            previous_line_end = line_start - 1
+            self.position = previous_line_end
+        else:
+            self.position = previous_line_start + column
+
     def move_down(self) -> None:
         """Move the cursor down one line."""
         try:
