@@ -35,12 +35,15 @@ def test_call(input_or_exception: List[Any], result_or_exception: List[Any],
     """Test illud.repl.REPL.run."""
     repl: REPL = REPL()
 
-    with patch('illud.repl.REPL.read', side_effect=input_or_exception) as read_mock, \
+    with patch('illud.repl.REPL.startup') as startup_mock, \
+        patch('illud.repl.REPL.read', side_effect=input_or_exception) as read_mock, \
         patch('illud.repl.REPL.evaluate', side_effect=result_or_exception) as evaluate_mock, \
         patch('illud.repl.REPL.print', side_effect=output_or_exception) as print_mock, \
         patch('illud.repl.REPL.catch') as catch_mock:
 
         repl()
+
+        startup_mock.assert_called_once()
 
         assert read_mock.call_count == expected_input_call_count
 
@@ -54,6 +57,13 @@ def test_call(input_or_exception: List[Any], result_or_exception: List[Any],
             catch_mock.assert_called_once()
         else:
             catch_mock.assert_not_called()
+
+
+def test_startup() -> None:
+    """Test illud.repl.REPL.startup."""
+    repl: REPL = REPL()
+
+    repl.startup()
 
 
 def test_read() -> None:
