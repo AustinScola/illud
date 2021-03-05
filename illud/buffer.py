@@ -7,7 +7,7 @@ from seligimus.python.decorators.operators.equality.equal_type import equal_type
 from seligimus.python.decorators.standard_representation import standard_representation
 
 from illud.exceptions.buffer_has_no_end_exception import BufferHasNoEndException
-from illud.exceptions.buffer_position_exception import BufferPositionException
+from illud.exceptions.buffer_index_exception import BufferIndexException
 
 
 class Buffer():
@@ -55,29 +55,29 @@ class Buffer():
         index: int = self.string.rindex(substring, start, end)
         return index
 
-    def get_column(self, position: int) -> int:
-        """Return the column number of a position in the buffer."""
-        if not 0 <= position < len(self):
-            raise BufferPositionException(position, len(self))
+    def get_column(self, index: int) -> int:
+        """Return the column number of an index in the buffer."""
+        if not 0 <= index < len(self):
+            raise BufferIndexException(index, len(self))
 
         column: int = 0
-        if self[position] == '\n' and position == 0:
+        if self[index] == '\n' and index == 0:
             pass
         else:
-            for character in self[:position][::-1]:
+            for character in self[:index][::-1]:
                 if character == '\n':
                     break
                 column += 1
 
         return column
 
-    def insert(self, string: str, position: int) -> None:
-        """Insert a string at the given position in the buffer."""
-        self.string = self.string[:position] + string + self.string[position:]
+    def insert(self, string: str, index: int) -> None:
+        """Insert a string at the given index in the buffer."""
+        self.string = self.string[:index] + string + self.string[index:]
 
-    def delete(self, position: int) -> None:
-        """Delete the character at the given position in the buffer."""
-        if not 0 <= position < len(self):
-            raise BufferPositionException(position, len(self))
+    def delete(self, index: int) -> None:
+        """Delete the character at the given index in the buffer."""
+        if not 0 <= index < len(self):
+            raise BufferIndexException(index, len(self))
 
-        self.string = self.string[:position] + self.string[position + 1:]
+        self.string = self.string[:index] + self.string[index + 1:]
