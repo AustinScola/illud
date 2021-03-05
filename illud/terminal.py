@@ -68,7 +68,7 @@ class Terminal():
                         buffer_index += 1
                         break
 
-                    if cursor and buffer_index == cursor.position:
+                    if cursor and buffer_index == cursor.index:
                         self._standard_output.write(INVERT + character + RESET)
                     else:
                         self._standard_output.write(character)
@@ -82,7 +82,7 @@ class Terminal():
         except IndexError:
             remaining_columns = window.right_column - column + 1
             if remaining_columns:
-                if cursor and buffer_index == cursor.position:
+                if cursor and buffer_index == cursor.index:
                     self._standard_output.write(INVERT + ' ' + RESET)
                     remaining_columns -= 1
                 self._standard_output.write(' ' * remaining_columns)

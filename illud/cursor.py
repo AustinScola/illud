@@ -11,9 +11,9 @@ from illud.buffer import Buffer
 
 class Cursor():
     """A position in a string buffer."""
-    def __init__(self, buffer_: Buffer, position: int):
+    def __init__(self, buffer_: Buffer, index: int):
         self.buffer: Buffer = buffer_
-        self.position: int = position
+        self.index: int = index
 
     @equal_type
     @equal_instance_attributes
@@ -26,27 +26,27 @@ class Cursor():
 
     def move_left(self) -> None:
         """Move the cursor left one character."""
-        if self.position == 0:
+        if self.index == 0:
             return
 
-        if self.buffer[self.position - 1] != '\n':
-            self.position -= 1
+        if self.buffer[self.index - 1] != '\n':
+            self.index -= 1
 
     def move_right(self) -> None:
         """Move the cursor right one character."""
         if not self.buffer:
             return
 
-        if self.position == self.buffer.end:
+        if self.index == self.buffer.end:
             return
 
-        if self.buffer[self.position] != '\n':
-            self.position += 1
+        if self.buffer[self.index] != '\n':
+            self.index += 1
 
     def move_up(self) -> None:
         """Move the cursor up one line."""
         try:
-            line_start: int = self.buffer.reverse_index('\n', end=self.position) + 1
+            line_start: int = self.buffer.reverse_index('\n', end=self.index) + 1
         except ValueError:
             return
 
@@ -60,44 +60,44 @@ class Cursor():
             previous_line_start = 0
 
         previous_line_length = line_start - previous_line_start
-        column: int = self.position - line_start
+        column: int = self.index - line_start
         if previous_line_length <= column:
             previous_line_end = line_start - 1
-            self.position = previous_line_end
+            self.index = previous_line_end
         else:
-            self.position = previous_line_start + column
+            self.index = previous_line_start + column
 
     def move_down(self) -> None:
         """Move the cursor down one line."""
         try:
-            next_newline_position: int = self.buffer.index('\n', start=self.position)
+            next_newline_index: int = self.buffer.index('\n', start=self.index)
         except ValueError:
             return
 
-        down_position: int
-        column: int = self.buffer.get_column(self.position)
-        down_position = next_newline_position + 1 + column
+        down_index: int
+        column: int = self.buffer.get_column(self.index)
+        down_index = next_newline_index + 1 + column
 
-        if down_position > self.buffer.end:
-            down_position = self.buffer.end
+        if down_index > self.buffer.end:
+            down_index = self.buffer.end
         else:
-            start: int = next_newline_position + 1
-            end: int = down_position
+            start: int = next_newline_index + 1
+            end: int = down_index
             try:
-                next_next_newline_position: int = self.buffer.index('\n', start=start, end=end)
-                down_position = next_next_newline_position
+                next_next_newline_index: int = self.buffer.index('\n', start=start, end=end)
+                down_index = next_next_newline_index
             except ValueError:
                 pass
 
-        self.position = down_position
+        self.index = down_index
 
     def insert(self, string: str) -> None:
         """"Insert a string in the buffer at the current position."""
-        self.buffer.insert(string, self.position)
-        self.position += len(string)
+        self.buffer.insert(string, self.index)
+        self.index += len(string)
 
     def backspace(self) -> None:
         """Remove the character in the position before the cursor."""
-        if self.position:
-            self.buffer.delete(self.position - 1)
-            self.position -= 1
+        if self.index:
+            self.buffer.delete(self.index - 1)
+            self.index -= 1

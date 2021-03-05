@@ -8,16 +8,16 @@ from illud.cursor import Cursor
 
 
 # yapf: disable
-@pytest.mark.parametrize('buffer_,  position', [
+@pytest.mark.parametrize('buffer_,  index', [
     (Buffer(), 0),
     (Buffer('foo'), 1),
 ])
 # yapf: enable
-def test_init(buffer_: Buffer, position: int) -> None:
+def test_init(buffer_: Buffer, index: int) -> None:
     """Test illud.cursor.Cursor.__init__."""
-    cursor: Cursor = Cursor(buffer_, position)
+    cursor: Cursor = Cursor(buffer_, index)
 
-    assert cursor.position == position
+    assert cursor.index == index
     assert cursor.buffer is buffer_
 
 

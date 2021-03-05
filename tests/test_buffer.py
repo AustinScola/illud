@@ -5,7 +5,7 @@ import pytest
 
 from illud.buffer import Buffer
 from illud.exceptions.buffer_has_no_end_exception import BufferHasNoEndException
-from illud.exceptions.buffer_position_exception import BufferPositionException
+from illud.exceptions.buffer_index_exception import BufferIndexException
 
 
 # yapf: disable
@@ -201,8 +201,8 @@ def test_reverse_index(buffer_: Buffer, substring: str, start: Optional[int], pa
 
 
 # yapf: disable
-@pytest.mark.parametrize('buffer_, position, expected_exception, expected_column', [
-    (Buffer(), 0, BufferPositionException(0, 0), None),
+@pytest.mark.parametrize('buffer_, index, expected_exception, expected_column', [
+    (Buffer(), 0, BufferIndexException(0, 0), None),
     (Buffer(' '), 0, None, 0),
     (Buffer('\n'), 0, None, 0),
     (Buffer('foo'), 0, None, 0),
@@ -214,15 +214,14 @@ def test_reverse_index(buffer_: Buffer, substring: str, start: Optional[int], pa
     (Buffer('foo\nbar'), 6, None, 2),
 ])
 # yapf: enable
-def test_get_column(buffer_: Buffer, position: int,
-                    expected_exception: Optional[BufferPositionException],
+def test_get_column(buffer_: Buffer, index: int, expected_exception: Optional[BufferIndexException],
                     expected_column: int) -> None:
     """Test illud.buffer.Buffer.get_column."""
     if expected_exception is not None:
         with pytest.raises(type(expected_exception)):
-            buffer_.get_column(position)
+            buffer_.get_column(index)
     else:
-        column: int = buffer_.get_column(position)
+        column: int = buffer_.get_column(index)
 
         assert column == expected_column
 
@@ -231,7 +230,7 @@ def test_get_column(buffer_: Buffer, position: int,
 
 
 # yapf: disable
-@pytest.mark.parametrize('buffer_, string, position, expected_buffer_after', [
+@pytest.mark.parametrize('buffer_, string, index, expected_buffer_after', [
     (Buffer(), '', 0, Buffer()),
     (Buffer(), 'f', 0, Buffer('f')),
     (Buffer(), 'foo', 0, Buffer('foo')),
@@ -241,34 +240,33 @@ def test_get_column(buffer_: Buffer, position: int,
     (Buffer('foo'), 'bar', 3, Buffer('foobar')),
 ])
 # yapf: enable
-def test_insert(buffer_: Buffer, string: str, position: int, expected_buffer_after: Buffer) -> None:
+def test_insert(buffer_: Buffer, string: str, index: int, expected_buffer_after: Buffer) -> None:
     """Test illud.buffer.Buffer.insert."""
-    buffer_.insert(string, position)
+    buffer_.insert(string, index)
 
     assert buffer_ == expected_buffer_after
 
 
 # yapf: disable
-@pytest.mark.parametrize('buffer_, position, expected_exception, expected_buffer_after', [
-    (Buffer(), -1, BufferPositionException(-1, 0), None),
-    (Buffer(), 0, BufferPositionException(0, 0), None),
-    (Buffer(), 1, BufferPositionException(1, 0), None),
-    (Buffer('spam'), -1, BufferPositionException(-1, 4), None),
+@pytest.mark.parametrize('buffer_, index, expected_exception, expected_buffer_after', [
+    (Buffer(), -1, BufferIndexException(-1, 0), None),
+    (Buffer(), 0, BufferIndexException(0, 0), None),
+    (Buffer(), 1, BufferIndexException(1, 0), None),
+    (Buffer('spam'), -1, BufferIndexException(-1, 4), None),
     (Buffer('spam'), 0, None, Buffer('pam')),
     (Buffer('spam'), 1, None, Buffer('sam')),
     (Buffer('spam'), 2, None, Buffer('spm')),
     (Buffer('spam'), 3, None, Buffer('spa')),
-    (Buffer('spam'), 4, BufferPositionException(4, 4), None),
+    (Buffer('spam'), 4, BufferIndexException(4, 4), None),
 ])
 # yapf: enable
-def test_delete(buffer_: Buffer, position: int,
-                expected_exception: Optional[BufferPositionException],
+def test_delete(buffer_: Buffer, index: int, expected_exception: Optional[BufferIndexException],
                 expected_buffer_after: Optional[Buffer]) -> None:
     """Test illud.buffer.Buffer.delete."""
     if expected_exception is not None:
         with pytest.raises(type(expected_exception), match=str(expected_exception)):
-            buffer_.delete(position)
+            buffer_.delete(index)
     else:
-        buffer_.delete(position)
+        buffer_.delete(index)
 
         assert buffer_ == expected_buffer_after
