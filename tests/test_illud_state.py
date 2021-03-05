@@ -1,5 +1,6 @@
 """Test illud.illud_state."""
 from typing import Any, Dict, Optional
+from unittest.mock import mock_open, patch
 
 import pytest
 from seligimus.maths.integer_position_2d import IntegerPosition2D
@@ -58,6 +59,23 @@ def test_init(buffer_: Optional[Buffer], cursor_position: Optional[int], mode: O
     assert illud_state.mode == expected_mode
     assert illud_state.window == expected_window
     assert illud_state.window.buffer is illud_state.buffer
+
+
+# yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('file, file_contents, terminal_size, expected_illud_state', [
+    ('foo.txt', '', IntegerSize2D(0, 0), IlludState()),
+    ('foo.txt', 'Lorem ipsum dolor sit amet', IntegerSize2D(120, 80), IlludState(Buffer('Lorem ipsum dolor sit amet'), terminal_size=IntegerSize2D(120, 80))),
+])
+# yapf: enable # pylint: enable=line-too-long
+def test_from_file(file: str, file_contents: str, terminal_size: IntegerSize2D,
+                   expected_illud_state: IlludState) -> None:
+    """Test illud.illud_state.IlludState.from_file."""
+    with patch('illud.illud.Terminal.get_size', return_value=terminal_size), \
+        patch('builtins.open', mock_open(read_data=file_contents)):
+
+        illud_state: IlludState = IlludState.from_file(file)
+
+    assert illud_state == expected_illud_state
 
 
 # yapf: disable # pylint: disable=line-too-long
