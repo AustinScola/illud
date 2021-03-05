@@ -3,6 +3,7 @@ import argparse
 from typing import List
 
 from illud.illud import Illud
+from illud.illud_state import IlludState
 
 
 def _set_up_argument_parser() -> argparse.ArgumentParser:
@@ -22,9 +23,16 @@ def _parse_arguments(argument_parser: argparse.ArgumentParser,
     return parsed_arguments
 
 
-def _run_illud(parsed_arguments: argparse.Namespace) -> None:  # pylint: disable=unused-argument
+def _run_illud(parsed_arguments: argparse.Namespace) -> None:
     """Run Illud."""
-    illud: Illud = Illud()
+
+    illud: Illud
+    if parsed_arguments.file is not None:
+        illud_state = IlludState.from_file(parsed_arguments.file)
+        illud = Illud(illud_state)
+    else:
+        illud = Illud()
+
     illud()
 
 
