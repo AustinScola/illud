@@ -1,11 +1,14 @@
 """Test illud.main"""
 import argparse
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional, Union
 from unittest.mock import MagicMock, patch
 
 import pytest
+from seligimus.maths.integer_size_2d import IntegerSize2D
 
+from illud.buffer import Buffer
 from illud.illud import Illud
+from illud.illud_state import IlludState
 from illud.main import _parse_arguments, _run_illud, _set_up_argument_parser, main
 
 
@@ -14,12 +17,23 @@ def test_set_up_argument_parser() -> None:
     argument_parser: argparse.ArgumentParser = _set_up_argument_parser()
 
     _assert_argument_parser_is_set_up(argument_parser)
+    _assert_argument_parser_has_expected_arguments(argument_parser)
 
 
 def _assert_argument_parser_is_set_up(argument_parser: argparse.ArgumentParser) -> None:
     """Assert that the argument parser is set up."""
     assert argument_parser.description == 'A text buffer editor and terminal viewer.'
     assert argument_parser.prog == 'python3 -m illud'
+
+
+def _assert_argument_parser_has_expected_arguments(
+        argument_parser: argparse.ArgumentParser) -> None:
+    """Assert that the argument parser has the expected arguments."""
+    _, file_argument = argument_parser._actions  # pylint: disable=protected-access
+
+    assert file_argument.dest == 'file'
+    assert file_argument.nargs == '?'
+    assert file_argument.help == 'a file to open'
 
 
 def argument_parser_from_dict(dictionary: Dict[str, Any]) -> argparse.ArgumentParser:
@@ -57,19 +71,29 @@ def test_parse_arguments(argument_parser: argparse.ArgumentParser, arguments: Li
     assert parsed_arguments == expected_parsed_arguments
 
 
-# yapf: disable
-@pytest.mark.parametrize('parsed_arguments', [
-    (argparse.Namespace()),
+# yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('parsed_arguments, illud_state, expected_init_arguments', [
+    (argparse.Namespace(file=None), None, []),
+    (argparse.Namespace(file='foo.py'), IlludState(Buffer('Lorem ipsum'), terminal_size=IntegerSize2D(120, 80)), IlludState(Buffer('Lorem ipsum'), terminal_size=IntegerSize2D(120, 80))),
 ])
-# yapf: enable
-def test_run_illud(parsed_arguments: argparse.Namespace) -> None:
+# yapf: enable # pylint: enable=line-too-long
+def test_run_illud(parsed_arguments: argparse.Namespace, illud_state: Optional[str],
+                   expected_init_arguments: List[Any]) -> None:
     """Test illud.main._run_illud."""
     illud_mock = MagicMock(Illud, autospec=True)
-    with patch('illud.main.Illud', return_value=illud_mock):
+    illud_init_mock = MagicMock(Illud.__init__, autospec=True, return_value=illud_mock)
+    with patch('illud.main.Illud', illud_init_mock), \
+        patch('illud.illud_state.IlludState.from_file', return_value=illud_state):
 
         _run_illud(parsed_arguments)
 
         illud_mock.assert_called_once()
+
+    if expected_init_arguments:
+        illud_init_mock.assert_called_once_with(expected_init_arguments)
+    else:
+        illud_init_mock.assert_called_once()
+    # assert illud_init_mock.call_args == ((), expected_init_keyword_arguments)
 
 
 # yapf: disable

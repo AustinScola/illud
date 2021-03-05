@@ -25,6 +25,8 @@ class Illud(REPL):
         else:
             self._state = initial_state
 
+        self.print(None)
+
     def read(self) -> Command:
         character: Character = self._terminal.get_character()
         command: Command = Command(character)

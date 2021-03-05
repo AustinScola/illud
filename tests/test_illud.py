@@ -42,13 +42,17 @@ def test_init(illud_initial_state: Optional[IlludState], pass_illud_initial_stat
 
     terminal_get_size_mock = MagicMock(return_value=terminal_size)
     terminal_mock = MagicMock(get_size=terminal_get_size_mock)
-    with patch('illud.illud.Terminal', return_value=terminal_mock):
+    with patch('illud.illud.Terminal', return_value=terminal_mock), \
+        patch('illud.illud.Illud.print') as print_mock:
+
         illud: Illud = Illud(**keyword_arguments)
 
         assert illud._terminal == terminal_mock  # pylint: disable=protected-access
         terminal_mock.clear_screen.assert_called_once()
 
         assert illud._state == expected_illud_state  # pylint: disable=protected-access
+
+        print_mock.assert_called_once()
 
 
 # yapf: disable
