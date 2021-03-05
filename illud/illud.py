@@ -17,7 +17,6 @@ class Illud(REPL):
     """A text buffer editor and terminal viewer."""
     def __init__(self, initial_state: Optional[IlludState] = None) -> None:
         self._terminal: Terminal = Terminal()
-        self._terminal.clear_screen()
 
         self._state: IlludState
         if initial_state is None:
@@ -25,6 +24,8 @@ class Illud(REPL):
         else:
             self._state = initial_state
 
+    def startup(self) -> None:
+        self._terminal.clear_screen()
         self.print(None)
 
     def read(self) -> Command:
