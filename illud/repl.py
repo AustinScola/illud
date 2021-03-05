@@ -7,7 +7,9 @@ from illud.exceptions.break_exception import BreakException
 class REPL():
     """Read, evaluate, print, and then loop."""
     def __call__(self) -> None:
-        """Read, evaluate, print, and then loop."""
+        """Perform one-time startup, then read, evaluate, print, and loop."""
+        self.startup()
+
         while True:
             try:
                 input_: Any = self.read()
@@ -18,6 +20,9 @@ class REPL():
             except Exception as exception:  # pylint: disable=broad-except
                 self.catch(exception)
                 return
+
+    def startup(self) -> None:
+        """Perform one-time startup."""
 
     def read(self) -> Any:
         """Return the next input."""
