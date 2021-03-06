@@ -125,6 +125,7 @@ def test_print(illud_state: IlludState, result: Any, expected_output: str) -> No
     output: str = ''.join(calls_args)
 
     assert output == expected_output
+    standard_output_mock.flush.assert_called_once()
 
 
 # yapf: disable

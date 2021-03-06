@@ -43,6 +43,8 @@ class Illud(REPL):
         cursor: Cursor = self._state.cursor
         self._terminal.draw_window(window, cursor)
 
+        self._terminal.update()
+
     def catch(self, exception: Exception) -> None:
         if isinstance(exception, QuitException):
             self._terminal.clear_screen()
