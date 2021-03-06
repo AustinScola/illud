@@ -1,7 +1,6 @@
 """Test illud.terminal."""
 import itertools
 import os
-from typing import Optional
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -106,35 +105,35 @@ def test_move_cursor_home() -> None:
 
 
 # yapf: disable # pylint: disable=line-too-long
-@pytest.mark.parametrize('window, cursor, expected_output', [
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), None, ''),
-    (Window(IntegerPosition2D(), IntegerSize2D(1, 1), Buffer()), None, '\x1b[;H '),
-    (Window(IntegerPosition2D(), IntegerSize2D(2, 1), Buffer()), None, '\x1b[;H  '),
-    (Window(IntegerPosition2D(), IntegerSize2D(3, 1), Buffer()), None, '\x1b[;H   '),
-    (Window(IntegerPosition2D(), IntegerSize2D(1, 2), Buffer()), None, '\x1b[;H \x1b[2;H '),
-    (Window(IntegerPosition2D(), IntegerSize2D(2, 2), Buffer()), None, '\x1b[;H  \x1b[2;H  '),
-    (Window(IntegerPosition2D(), IntegerSize2D(2, 1), Buffer('foo')), None, '\x1b[;Hfo'),
-    (Window(IntegerPosition2D(), IntegerSize2D(2, 2), Buffer('foo')), None, '\x1b[;Hfo\x1b[2;H  '),
-    (Window(IntegerPosition2D(), IntegerSize2D(3, 1), Buffer('foo')), None, '\x1b[;Hfoo'),
-    (Window(IntegerPosition2D(), IntegerSize2D(5, 1), Buffer('foo')), None, '\x1b[;Hfoo  '),
-    (Window(IntegerPosition2D(), IntegerSize2D(5, 1), Buffer('foo\n')), None, '\x1b[;Hfoo  '),
-    (Window(IntegerPosition2D(), IntegerSize2D(1, 2), Buffer('f')), None, '\x1b[;Hf\x1b[2;H '),
-    (Window(IntegerPosition2D(), IntegerSize2D(1, 2), Buffer('f\nb')), None, '\x1b[;Hf\x1b[2;Hb'),
-    (Window(IntegerPosition2D(), IntegerSize2D(1, 2), Buffer('foo\nb')), None, '\x1b[;Hf\x1b[2;Hb'),
-    (Window(IntegerPosition2D(), IntegerSize2D(1, 2), Buffer('foo\nbar')), None, '\x1b[;Hf\x1b[2;Hb'),
-    (Window(IntegerPosition2D(), IntegerSize2D(2, 2), Buffer('f\nb')), None, '\x1b[;Hf \x1b[2;Hb '),
-    (Window(IntegerPosition2D(), IntegerSize2D(5, 2), Buffer('foo\nbar')), None, '\x1b[;Hfoo  \x1b[2;Hbar  '),
-    (Window(IntegerPosition2D(), IntegerSize2D(5, 2), Buffer('foo\nbar')), None, '\x1b[;Hfoo  \x1b[2;Hbar  '),
-    (Window(IntegerPosition2D(), IntegerSize2D(5, 3), Buffer('foo\nbar\nbaz')), None, '\x1b[;Hfoo  \x1b[2;Hbar  \x1b[3;Hbaz  '),
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), Cursor(Buffer(), 0), ''),
-    (Window(IntegerPosition2D(), IntegerSize2D(1, 1), Buffer('')), Cursor(Buffer(''), 0), '\x1b[;H\x1b[7m \x1b[m'),
-    (Window(IntegerPosition2D(), IntegerSize2D(4, 1), Buffer('foo')), Cursor(Buffer(''), 3), '\x1b[;Hfoo\x1b[7m \x1b[m'),
-    (Window(IntegerPosition2D(), IntegerSize2D(3, 1), Buffer('   ')), Cursor(Buffer('   '), 0), '\x1b[;H\x1b[7m \x1b[m  '),
-    (Window(IntegerPosition2D(), IntegerSize2D(3, 1), Buffer('   ')), Cursor(Buffer('   '), 1), '\x1b[;H \x1b[7m \x1b[m '),
-    (Window(IntegerPosition2D(), IntegerSize2D(3, 1), Buffer('foo')), Cursor(Buffer('foo'), 0), '\x1b[;H\x1b[7mf\x1b[moo'),
+@pytest.mark.parametrize('window, expected_output', [
+    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), ''),
+    (Window(IntegerPosition2D(), IntegerSize2D(1, 1), Buffer()), '\x1b[;H '),
+    (Window(IntegerPosition2D(), IntegerSize2D(2, 1), Buffer()), '\x1b[;H  '),
+    (Window(IntegerPosition2D(), IntegerSize2D(3, 1), Buffer()), '\x1b[;H   '),
+    (Window(IntegerPosition2D(), IntegerSize2D(1, 2), Buffer()), '\x1b[;H \x1b[2;H '),
+    (Window(IntegerPosition2D(), IntegerSize2D(2, 2), Buffer()), '\x1b[;H  \x1b[2;H  '),
+    (Window(IntegerPosition2D(), IntegerSize2D(2, 1), Buffer('foo')), '\x1b[;Hfo'),
+    (Window(IntegerPosition2D(), IntegerSize2D(2, 2), Buffer('foo')), '\x1b[;Hfo\x1b[2;H  '),
+    (Window(IntegerPosition2D(), IntegerSize2D(3, 1), Buffer('foo')), '\x1b[;Hfoo'),
+    (Window(IntegerPosition2D(), IntegerSize2D(5, 1), Buffer('foo')), '\x1b[;Hfoo  '),
+    (Window(IntegerPosition2D(), IntegerSize2D(5, 1), Buffer('foo\n')), '\x1b[;Hfoo  '),
+    (Window(IntegerPosition2D(), IntegerSize2D(1, 2), Buffer('f')), '\x1b[;Hf\x1b[2;H '),
+    (Window(IntegerPosition2D(), IntegerSize2D(1, 2), Buffer('f\nb')), '\x1b[;Hf\x1b[2;Hb'),
+    (Window(IntegerPosition2D(), IntegerSize2D(1, 2), Buffer('foo\nb')), '\x1b[;Hf\x1b[2;Hb'),
+    (Window(IntegerPosition2D(), IntegerSize2D(1, 2), Buffer('foo\nbar')), '\x1b[;Hf\x1b[2;Hb'),
+    (Window(IntegerPosition2D(), IntegerSize2D(2, 2), Buffer('f\nb')), '\x1b[;Hf \x1b[2;Hb '),
+    (Window(IntegerPosition2D(), IntegerSize2D(5, 2), Buffer('foo\nbar')), '\x1b[;Hfoo  \x1b[2;Hbar  '),
+    (Window(IntegerPosition2D(), IntegerSize2D(5, 2), Buffer('foo\nbar')), '\x1b[;Hfoo  \x1b[2;Hbar  '),
+    (Window(IntegerPosition2D(), IntegerSize2D(5, 3), Buffer('foo\nbar\nbaz')), '\x1b[;Hfoo  \x1b[2;Hbar  \x1b[3;Hbaz  '),
+    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), ''),
+    (Window(IntegerPosition2D(), IntegerSize2D(1, 1), Buffer('')), '\x1b[;H '),
+    (Window(IntegerPosition2D(), IntegerSize2D(4, 1), Buffer('foo')), '\x1b[;Hfoo '),
+    (Window(IntegerPosition2D(), IntegerSize2D(3, 1), Buffer('   ')), '\x1b[;H   '),
+    (Window(IntegerPosition2D(), IntegerSize2D(3, 1), Buffer('   ')), '\x1b[;H   '),
+    (Window(IntegerPosition2D(), IntegerSize2D(3, 1), Buffer('foo')), '\x1b[;Hfoo'),
 ])
 # yapf: enable # pylint: enable=line-too-long
-def test_draw_window(window: Window, cursor: Optional[Cursor], expected_output: str) -> None:
+def test_draw_window(window: Window, expected_output: str) -> None:
     """Test illud.terminal.Terminal.draw_window."""
     standard_output_mock = MagicMock(StandardOutput)
     with patch('illud.terminal.StandardInput'), \
@@ -145,7 +144,7 @@ def test_draw_window(window: Window, cursor: Optional[Cursor], expected_output: 
 
         standard_output_mock.write.reset_mock()
 
-        terminal.draw_window(window, cursor)
+        terminal.draw_window(window)
 
     calls_args = itertools.chain.from_iterable(
         call_args for call_args, _ in standard_output_mock.write.call_args_list)
@@ -166,3 +165,38 @@ def test_update() -> None:
         terminal.update()
 
     standard_output_mock.flush.assert_called_once()
+
+
+# yapf: disable
+@pytest.mark.parametrize('cursor, expected_output', [
+    (Cursor(Buffer(), 0), '\x1b[;H\x1b[7m \x1b[;2H\x1b[m'),
+    (Cursor(Buffer('foo'), 0), '\x1b[;H\x1b[7mf\x1b[;2H\x1b[m'),
+    (Cursor(Buffer('foo'), 1), '\x1b[;2H\x1b[7mo\x1b[;3H\x1b[m'),
+    (Cursor(Buffer('foo'), 2), '\x1b[;3H\x1b[7mo\x1b[;4H\x1b[m'),
+    (Cursor(Buffer('foo'), 3), '\x1b[;4H\x1b[7m \x1b[;5H\x1b[m'),
+    (Cursor(Buffer('foo\n'), 3), '\x1b[;4H\x1b[7m \x1b[;5H\x1b[m'),
+    (Cursor(Buffer('foo\nbar'), 3), '\x1b[;4H\x1b[7m \x1b[;5H\x1b[m'),
+    (Cursor(Buffer('foo\nbar'), 4), '\x1b[2;H\x1b[7mb\x1b[2;2H\x1b[m'),
+    (Cursor(Buffer('foo\nbar'), 5), '\x1b[2;2H\x1b[7ma\x1b[2;3H\x1b[m'),
+    (Cursor(Buffer('foo\nbar'), 6), '\x1b[2;3H\x1b[7mr\x1b[2;4H\x1b[m'),
+    (Cursor(Buffer('foo\nbar'), 7), '\x1b[2;4H\x1b[7m \x1b[2;5H\x1b[m'),
+])
+# yapf: enable
+def test_draw_cursor(cursor: Cursor, expected_output: str) -> None:
+    """Test illud.terminal.Terminal.draw_cursor."""
+    standard_output_mock = MagicMock(StandardOutput)
+    with patch('illud.terminal.StandardInput'), \
+        patch('illud.terminal.StandardOutput', return_value=standard_output_mock), \
+        patch('illud.terminal_cursor.TerminalCursor._get_position_from_terminal'):
+
+        terminal: Terminal = Terminal()
+
+        standard_output_mock.write.reset_mock()
+
+        terminal.draw_cursor(cursor)
+
+    calls_args = itertools.chain.from_iterable(
+        call_args for call_args, _ in standard_output_mock.write.call_args_list)
+    output: str = ''.join(calls_args)
+
+    assert list(output) == list(expected_output)

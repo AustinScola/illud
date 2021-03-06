@@ -1,6 +1,6 @@
 """A text terminal."""
 import os
-from typing import Iterable, Iterator, Optional
+from typing import Iterable, Iterator
 
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
@@ -48,7 +48,7 @@ class Terminal():
         self._standard_output.write(MOVE_CURSOR_HOME)
         self._standard_output.flush()
 
-    def draw_window(self, window: Window, cursor: Optional[Cursor] = None) -> None:
+    def draw_window(self, window: Window) -> None:
         """Draw a window on the terminal."""
         if not window.size.width or not window.size.height:
             return
@@ -68,10 +68,7 @@ class Terminal():
                         buffer_index += 1
                         break
 
-                    if cursor and buffer_index == cursor.index:
-                        self._standard_output.write(INVERT + character + RESET)
-                    else:
-                        self._standard_output.write(character)
+                    self._standard_output.write(character)
 
                     buffer_index += 1
                 else:
@@ -82,9 +79,6 @@ class Terminal():
         except IndexError:
             remaining_columns = window.right_column - column + 1
             if remaining_columns:
-                if cursor and buffer_index == cursor.index:
-                    self._standard_output.write(INVERT + ' ' + RESET)
-                    remaining_columns -= 1
                 self._standard_output.write(' ' * remaining_columns)
 
             for row in range(row + 1, window.position.y + window.size.height):
@@ -94,3 +88,32 @@ class Terminal():
     def update(self) -> None:
         """Update the terminal contents."""
         self._standard_output.flush()
+
+    def draw_cursor(self, cursor: Cursor) -> None:
+        """Draw a cursor on the terminal."""
+        cursor_position_in_terminal: IntegerPosition2D
+        if not cursor.buffer:
+            cursor_position_in_terminal = IntegerPosition2D(0, 0)
+        else:
+            row: int = cursor.buffer.get_row(cursor.index)
+            column: int
+            if cursor.index >= len(cursor.buffer):
+                column = cursor.buffer.get_column(cursor.index - 1) + 1
+            else:
+                column = cursor.buffer.get_column(cursor.index)
+            cursor_position_in_terminal = IntegerPosition2D(column, row)
+
+        self._cursor.move(cursor_position_in_terminal)
+        self._standard_output.write(INVERT)
+
+        character: str
+        try:
+            character = cursor.buffer[cursor.index]
+            if character == '\n':
+                character = ' '
+        except IndexError:
+            character = ' '
+        self._standard_output.write(character)
+
+        self._cursor.move(cursor_position_in_terminal + IntegerPosition2D(1, 0))
+        self._standard_output.write(RESET)
