@@ -153,9 +153,6 @@ def test_draw_window(window: Window, cursor: Optional[Cursor], expected_output: 
 
     assert list(output) == list(expected_output)
 
-    if expected_output:
-        standard_output_mock.flush.assert_called_once()
-
 
 def test_update() -> None:
     """Test illud.terminal.Terminal.draw_update."""

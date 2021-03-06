@@ -91,8 +91,6 @@ class Terminal():
                 self._cursor.move(IntegerPosition2D(window.position.x, row))
                 self._standard_output.write(' ' * window.size.width)
 
-        self._standard_output.flush()
-
     def update(self) -> None:
         """Update the terminal contents."""
         self._standard_output.flush()
