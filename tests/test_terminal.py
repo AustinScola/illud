@@ -155,3 +155,17 @@ def test_draw_window(window: Window, cursor: Optional[Cursor], expected_output: 
 
     if expected_output:
         standard_output_mock.flush.assert_called_once()
+
+
+def test_update() -> None:
+    """Test illud.terminal.Terminal.draw_update."""
+    standard_output_mock = MagicMock(StandardOutput, autospec=True)
+    with patch('illud.terminal.StandardInput'), \
+        patch('illud.terminal.StandardOutput', return_value=standard_output_mock):
+
+        terminal: Terminal = Terminal()
+        standard_output_mock.flush.reset_mock()
+
+        terminal.update()
+
+    standard_output_mock.flush.assert_called_once()

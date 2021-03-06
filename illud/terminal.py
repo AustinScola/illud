@@ -92,3 +92,7 @@ class Terminal():
                 self._standard_output.write(' ' * window.size.width)
 
         self._standard_output.flush()
+
+    def update(self) -> None:
+        """Update the terminal contents."""
+        self._standard_output.flush()
