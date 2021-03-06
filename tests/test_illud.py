@@ -124,7 +124,7 @@ def test_print(illud_state: IlludState, result: Any, expected_output: str) -> No
         call_args for call_args, _ in standard_output_mock.write.call_args_list)
     output: str = ''.join(calls_args)
 
-    assert output == expected_output
+    assert list(output) == list(expected_output)
     standard_output_mock.flush.assert_called_once()
 
 
