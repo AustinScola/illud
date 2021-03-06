@@ -201,6 +201,36 @@ def test_reverse_index(buffer_: Buffer, substring: str, start: Optional[int], pa
 
 
 # yapf: disable
+@pytest.mark.parametrize('buffer_, index, expected_exception, expected_row', [
+    (Buffer(), 1, BufferIndexException(1, 0), None),
+    (Buffer(), 0, None, 0),
+    (Buffer(''), 0, None, 0),
+    (Buffer('foo'), 0, None, 0),
+    (Buffer('foo'), 1, None, 0),
+    (Buffer('foo'), 2, None, 0),
+    (Buffer('foo\nbar'), 3, None, 0),
+    (Buffer('foo\nbar'), 4, None, 1),
+    (Buffer('foo\nbar'), 5, None, 1),
+    (Buffer('foo\nbar'), 6, None, 1),
+    (Buffer('foo\nbar\nbaz'), 7, None, 1),
+    (Buffer('foo\nbar\nbaz'), 8, None, 2),
+    (Buffer('foo\nbar\nbaz'), 9, None, 2),
+    (Buffer('foo\nbar\nbaz'), 10, None, 2),
+])
+# yapf: enable
+def test_get_row(buffer_: Buffer, index: int, expected_exception: Optional[BufferIndexException],
+                 expected_row: int) -> None:
+    """Test illud.buffer.Buffer.get_row."""
+    if expected_exception is not None:
+        with pytest.raises(type(expected_exception)):
+            buffer_.get_row(index)
+    else:
+        row: int = buffer_.get_row(index)
+
+        assert row == expected_row
+
+
+# yapf: disable
 @pytest.mark.parametrize('buffer_, index, expected_exception, expected_column', [
     (Buffer(), 0, BufferIndexException(0, 0), None),
     (Buffer(' '), 0, None, 0),
