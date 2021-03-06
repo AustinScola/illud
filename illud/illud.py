@@ -40,8 +40,10 @@ class Illud(REPL):
 
     def print(self, result: Any) -> None:
         window: Window = self._state.window
+        self._terminal.draw_window(window)
+
         cursor: Cursor = self._state.cursor
-        self._terminal.draw_window(window, cursor)
+        self._terminal.draw_cursor(cursor)
 
         self._terminal.update()
 

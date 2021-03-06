@@ -102,9 +102,9 @@ def test_evaluate(initial_state: IlludState, input_: Command,
 
 # yapf: disable
 @pytest.mark.parametrize('illud_state, result, expected_output', [
-    (IlludState(terminal_size=IntegerSize2D(1, 1)), None, '\x1b[;H\x1b[7m \x1b[m'),
-    (IlludState(Buffer('foo'), terminal_size=IntegerSize2D(3, 1)), None, '\x1b[;H\x1b[7mf\x1b[moo'),
-    (IlludState(Buffer('foo'), cursor_position=1, terminal_size=IntegerSize2D(3, 1)), None, '\x1b[;Hf\x1b[7mo\x1b[mo'),
+    (IlludState(terminal_size=IntegerSize2D(1, 1)), None, '\x1b[;H \x1b[;H\x1b[7m \x1b[;2H\x1b[m'),
+    (IlludState(Buffer('foo'), terminal_size=IntegerSize2D(3, 1)), None, '\x1b[;Hfoo\x1b[;H\x1b[7mf\x1b[;2H\x1b[m'),
+    (IlludState(Buffer('foo'), cursor_position=1, terminal_size=IntegerSize2D(3, 1)), None, '\x1b[;Hfoo\x1b[;2H\x1b[7mo\x1b[;3H\x1b[m'),
 ])
 # yapf: enable
 def test_print(illud_state: IlludState, result: Any, expected_output: str) -> None:

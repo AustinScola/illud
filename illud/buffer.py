@@ -55,6 +55,18 @@ class Buffer():
         index: int = self.string.rindex(substring, start, end)
         return index
 
+    def get_row(self, index: int) -> int:
+        """Return the row number of an index in the buffer."""
+        if index > len(self):
+            raise BufferIndexException(index, len(self))
+
+        if not self:
+            return 0
+
+        row: int = self.string.count('\n', 0, index)
+
+        return row
+
     def get_column(self, index: int) -> int:
         """Return the column number of an index in the buffer."""
         if not 0 <= index < len(self):
