@@ -18,10 +18,13 @@ from illud.window import Window
 
 class IlludState(State):
     """Persistent information of Illud."""
+
+    # pylint: disable=too-many-arguments
     def __init__(self,
                  buffer_: Optional[Buffer] = None,
-                 cursor_position: Optional[int] = None,
+                 cursor: Optional[Cursor] = None,
                  mode: Optional[Mode] = None,
+                 window: Optional[Window] = None,
                  terminal_size: Optional[IntegerSize2D] = None):
         self.buffer: Buffer
         if buffer_ is None:
@@ -30,10 +33,10 @@ class IlludState(State):
             self.buffer = buffer_
 
         self.cursor: Cursor
-        if cursor_position is None:
-            self.cursor = Cursor(self.buffer, 0)
+        if cursor is None:
+            self.cursor = Cursor(Buffer(), 0)
         else:
-            self.cursor = Cursor(self.buffer, cursor_position)
+            self.cursor = cursor
 
         self.mode: Mode
         if mode is None:
@@ -42,10 +45,16 @@ class IlludState(State):
             self.mode = mode
 
         self.window: Window
-        if terminal_size:
-            self.window = Window(IntegerPosition2D(), terminal_size, self.buffer)
+        if window is None:
+            self.window = Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer())
         else:
-            self.window = Window(IntegerPosition2D(), IntegerSize2D(0, 0), self.buffer)
+            self.window = window
+
+        self.terminal_size: IntegerSize2D
+        if terminal_size is None:
+            self.terminal_size = IntegerSize2D(0, 0)
+        else:
+            self.terminal_size = terminal_size
 
     @staticmethod
     def from_file(file: str) -> 'IlludState':
