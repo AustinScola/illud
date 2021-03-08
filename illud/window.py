@@ -1,5 +1,5 @@
 """A rectangular view of a string buffer."""
-from typing import Any, Iterable
+from typing import Any, Iterable, Optional
 
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
@@ -15,10 +15,15 @@ from illud.exceptions.no_rows_exception import NoRowsException
 
 class Window():
     """A rectangular view of a string buffer."""
-    def __init__(self, position: IntegerPosition2D, size: IntegerSize2D, buffer_: Buffer):
+    def __init__(self,
+                 position: IntegerPosition2D,
+                 size: IntegerSize2D,
+                 buffer_: Buffer,
+                 offset: Optional[IntegerPosition2D] = None):
         self.position: IntegerPosition2D = position
         self.size: IntegerSize2D = size
         self.buffer: Buffer = buffer_
+        self.offset: IntegerPosition2D = offset if offset is not None else IntegerPosition2D()
 
     @property
     def rows(self) -> Iterable[int]:

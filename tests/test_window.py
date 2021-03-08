@@ -12,17 +12,20 @@ from illud.window import Window
 
 
 # yapf: disable
-@pytest.mark.parametrize('position, size, buffer_', [
-    (IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()),
+@pytest.mark.parametrize('position, size, buffer_, offset, expected_offset', [
+    (IntegerPosition2D(), IntegerSize2D(0, 0), Buffer(), None, IntegerPosition2D()),
+    (IntegerPosition2D(), IntegerSize2D(0, 0), Buffer(), IntegerPosition2D(), IntegerPosition2D()),
 ])
 # yapf: enable
-def test_init(position: IntegerPosition2D, size: IntegerSize2D, buffer_: Buffer) -> None:
+def test_init(position: IntegerPosition2D, size: IntegerSize2D, buffer_: Buffer,
+              offset: Optional[IntegerPosition2D], expected_offset: IntegerPosition2D) -> None:
     """Test illud.window.Window.__init__"""
-    window: Window = Window(position, size, buffer_)
+    window: Window = Window(position, size, buffer_, offset)
 
     assert window.position == position
     assert window.size == size
     assert window.buffer is buffer_
+    assert window.offset == expected_offset
 
 
 # yapf: disable
@@ -177,8 +180,8 @@ def test_eq(window: Window, other: Any, expected_equality: bool) -> None:
 
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('window, expected_representation', [
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), 'Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer())'),
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer('foo')), 'Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer(string=\'foo\'))'),
+    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), 'Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer(), offset=IntegerPosition2D())'),
+    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer('foo')), 'Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer(string=\'foo\'), offset=IntegerPosition2D())'),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_repr(window: Window, expected_representation: str) -> None:
