@@ -7,6 +7,7 @@ from illud.buffer import Buffer
 from illud.character import Character
 from illud.characters import CONTROL_C
 from illud.command import Command
+from illud.cursor import Cursor
 from illud.exceptions.quit_exception import QuitException
 from illud.illud_state import IlludState
 from illud.mode import Mode
@@ -23,14 +24,14 @@ def test_inheritance() -> None:
 @pytest.mark.parametrize('state_before, command, expected_state_after, expect_exits', [
     (IlludState(), Command(Character('i')), IlludState(mode=Insert()), False),
     (IlludState(), Command(Character('d')), IlludState(), False),
-    (IlludState(Buffer('foo'), cursor_position=1), Command(Character('d')), IlludState(Buffer('foo')), False),
+    (IlludState(cursor=Cursor(Buffer('foo'), 1)), Command(Character('d')), IlludState(cursor=Cursor(Buffer('foo'), 0)), False),
     (IlludState(), Command(Character('f')), IlludState(), False),
-    (IlludState(Buffer('foo')), Command(Character('f')), IlludState(Buffer('foo'), cursor_position=1), False),
+    (IlludState(cursor=Cursor(Buffer('foo'), 0)), Command(Character('f')), IlludState(cursor=Cursor(Buffer('foo'), 1)), False),
     (IlludState(), Command(Character('j')), IlludState(), False),
     (IlludState(Buffer('foo')), Command(Character('k')), IlludState(Buffer('foo')), False),
-    (IlludState(Buffer('foo\nbar'), cursor_position=4), Command(Character('k')), IlludState(Buffer('foo\nbar')), False),
+    (IlludState(cursor=Cursor(Buffer('foo\nbar'), 4)), Command(Character('k')), IlludState(cursor=Cursor(Buffer('foo\nbar'), 0)), False),
     (IlludState(Buffer('foo')), Command(Character('j')), IlludState(Buffer('foo')), False),
-    (IlludState(Buffer('foo\nbar')), Command(Character('j')), IlludState(Buffer('foo\nbar'), cursor_position=4), False),
+    (IlludState(cursor=Cursor(Buffer('foo\nbar'), 0)), Command(Character('j')), IlludState(cursor=Cursor(Buffer('foo\nbar'), 4)), False),
     (IlludState(), Command(Character('k')), IlludState(), False),
     (IlludState(), Command(Character('f')), IlludState(), False),
     (IlludState(), Command(Character('d')), IlludState(), False),

@@ -4,6 +4,7 @@ from typing import Any, Dict, Optional
 from unittest.mock import MagicMock, patch
 
 import pytest
+from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.ansi.escape_codes.cursor import MOVE_CURSOR_HOME
@@ -11,6 +12,7 @@ from illud.ansi.escape_codes.erase import CLEAR_SCREEN
 from illud.buffer import Buffer
 from illud.character import Character
 from illud.command import Command
+from illud.cursor import Cursor
 from illud.exceptions.quit_exception import QuitException
 from illud.illud import Illud
 from illud.illud_state import IlludState
@@ -18,6 +20,7 @@ from illud.modes.insert import Insert
 from illud.outputs.standard_output import StandardOutput
 from illud.repl import REPL
 from illud.terminal import Terminal
+from illud.window import Window
 
 
 def test_inheritance() -> None:
@@ -102,9 +105,9 @@ def test_evaluate(initial_state: IlludState, input_: Command,
 
 # yapf: disable
 @pytest.mark.parametrize('illud_state, result, expected_output', [
-    (IlludState(terminal_size=IntegerSize2D(1, 1)), None, '\x1b[;H \x1b[;H\x1b[7m \x1b[;2H\x1b[m'),
-    (IlludState(Buffer('foo'), terminal_size=IntegerSize2D(3, 1)), None, '\x1b[;Hfoo\x1b[;H\x1b[7mf\x1b[;2H\x1b[m'),
-    (IlludState(Buffer('foo'), cursor_position=1, terminal_size=IntegerSize2D(3, 1)), None, '\x1b[;Hfoo\x1b[;2H\x1b[7mo\x1b[;3H\x1b[m'),
+    (IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(1, 1), Buffer())), None, '\x1b[;H \x1b[;H\x1b[7m \x1b[;2H\x1b[m'),
+    (IlludState(cursor=Cursor(Buffer('foo'), 0), window=Window(IntegerPosition2D(), IntegerSize2D(3, 1), Buffer('foo'))), None, '\x1b[;Hfoo\x1b[;H\x1b[7mf\x1b[;2H\x1b[m'),
+    (IlludState(cursor=Cursor(Buffer('foo'), 1), window=Window(IntegerPosition2D(), IntegerSize2D(3, 1), Buffer('foo'))), None, '\x1b[;Hfoo\x1b[;2H\x1b[7mo\x1b[;3H\x1b[m'),
 ])
 # yapf: enable
 def test_print(illud_state: IlludState, result: Any, expected_output: str) -> None:
