@@ -79,3 +79,7 @@ class Window():
     @standard_representation(parameter_to_attribute_name={'buffer_': 'buffer'})
     def __repr__(self) -> str:
         pass
+
+    def move_view(self, offset: IntegerPosition2D) -> None:
+        """Move the view of the buffer by an offset."""
+        self.offset += offset
