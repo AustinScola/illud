@@ -62,9 +62,11 @@ class IlludState(State):
         with open(file) as system_file:
             contents: str = system_file.read()
 
-        terminal_size = Terminal.get_size()
         buffer_: Buffer = Buffer(contents)
-        illud_state: IlludState = IlludState(buffer_, terminal_size=terminal_size)
+        cursor: Cursor = Cursor(buffer_, 0)
+        terminal_size: IntegerSize2D = Terminal.get_size()
+        window: Window = Window(IntegerPosition2D(), terminal_size, buffer_)
+        illud_state = IlludState(buffer_, cursor, window=window, terminal_size=terminal_size)
 
         return illud_state
 

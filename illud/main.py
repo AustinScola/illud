@@ -2,8 +2,15 @@
 import argparse
 from typing import List
 
+from seligimus.maths.integer_position_2d import IntegerPosition2D
+from seligimus.maths.integer_size_2d import IntegerSize2D
+
+from illud.buffer import Buffer
+from illud.cursor import Cursor
 from illud.illud import Illud
 from illud.illud_state import IlludState
+from illud.terminal import Terminal
+from illud.window import Window
 
 
 def _set_up_argument_parser() -> argparse.ArgumentParser:
@@ -26,12 +33,17 @@ def _parse_arguments(argument_parser: argparse.ArgumentParser,
 def _run_illud(parsed_arguments: argparse.Namespace) -> None:
     """Run Illud."""
 
-    illud: Illud
+    illud_state: IlludState
     if parsed_arguments.file is not None:
         illud_state = IlludState.from_file(parsed_arguments.file)
-        illud = Illud(illud_state)
     else:
-        illud = Illud()
+        buffer_: Buffer = Buffer()
+        cursor: Cursor = Cursor(buffer_, 0)
+        terminal_size: IntegerSize2D = Terminal.get_size()
+        window: Window = Window(IntegerPosition2D(), terminal_size, buffer_)
+        illud_state = IlludState(buffer_, cursor, window=window, terminal_size=terminal_size)
+
+    illud: Illud = Illud(illud_state)
 
     illud()
 

@@ -4,12 +4,15 @@ from typing import Any, Dict, List, Optional, Union
 from unittest.mock import MagicMock, patch
 
 import pytest
+from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.buffer import Buffer
+from illud.cursor import Cursor
 from illud.illud import Illud
 from illud.illud_state import IlludState
 from illud.main import _parse_arguments, _run_illud, _set_up_argument_parser, main
+from illud.window import Window
 
 
 def test_set_up_argument_parser() -> None:
@@ -72,28 +75,32 @@ def test_parse_arguments(argument_parser: argparse.ArgumentParser, arguments: Li
 
 
 # yapf: disable # pylint: disable=line-too-long
-@pytest.mark.parametrize('parsed_arguments, illud_state, expected_init_arguments', [
-    (argparse.Namespace(file=None), None, []),
-    (argparse.Namespace(file='foo.py'), IlludState(Buffer('Lorem ipsum'), terminal_size=IntegerSize2D(120, 80)), IlludState(Buffer('Lorem ipsum'), terminal_size=IntegerSize2D(120, 80))),
+@pytest.mark.parametrize('parsed_arguments, illud_state_from_file, terminal_size, expected_init_arguments', [
+    (argparse.Namespace(file=None), None, IntegerSize2D(120, 80), [IlludState(Buffer(), Cursor(Buffer(), 0), window=Window(IntegerPosition2D(), IntegerSize2D(120, 80), Buffer()), terminal_size=IntegerSize2D(120, 80))]),
+    (argparse.Namespace(file='foo.py'), IlludState(Buffer('Lorem ipsum'), terminal_size=IntegerSize2D(120, 80)), IntegerSize2D(120, 80), [IlludState(Buffer('Lorem ipsum'), terminal_size=IntegerSize2D(120, 80))]),
 ])
 # yapf: enable # pylint: enable=line-too-long
-def test_run_illud(parsed_arguments: argparse.Namespace, illud_state: Optional[str],
-                   expected_init_arguments: List[Any]) -> None:
+def test_run_illud(parsed_arguments: argparse.Namespace, illud_state_from_file: Optional[str],
+                   terminal_size: IntegerSize2D, expected_init_arguments: List[Any]) -> None:
     """Test illud.main._run_illud."""
     illud_mock = MagicMock(Illud, autospec=True)
     illud_init_mock = MagicMock(Illud.__init__, autospec=True, return_value=illud_mock)
     with patch('illud.main.Illud', illud_init_mock), \
-        patch('illud.illud_state.IlludState.from_file', return_value=illud_state):
+        patch('illud.illud_state.IlludState.from_file', return_value=illud_state_from_file), \
+        patch('illud.main.Terminal.get_size', return_value=terminal_size):
 
         _run_illud(parsed_arguments)
 
         illud_mock.assert_called_once()
 
-    if expected_init_arguments:
-        illud_init_mock.assert_called_once_with(expected_init_arguments)
-    else:
-        illud_init_mock.assert_called_once()
-    # assert illud_init_mock.call_args == ((), expected_init_keyword_arguments)
+    illud_init_mock.assert_called_once_with(*expected_init_arguments)
+
+    if illud_state_from_file is None:
+        illud_init_arguments, _ = illud_init_mock.call_args
+        illud_state: IlludState = illud_init_arguments[0]
+
+        assert illud_state.cursor.buffer is illud_state.buffer
+        assert illud_state.window.buffer is illud_state.buffer
 
 
 # yapf: disable
