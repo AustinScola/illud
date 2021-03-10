@@ -1,6 +1,6 @@
 """A text terminal."""
 import os
-from typing import Iterable, Iterator
+from typing import Iterable
 
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
@@ -48,19 +48,37 @@ class Terminal():
         self._standard_output.write(MOVE_CURSOR_HOME)
         self._standard_output.flush()
 
-    def draw_window(self, window: Window) -> None:
+    def draw_window(self, window: Window) -> None:  # pylint: disable=too-many-branches
         """Draw a window on the terminal."""
         if not window.size.width or not window.size.height:
             return
+
+        column_offset: int = window.offset.x
 
         buffer_index: int = 0
         rows: Iterable[int] = window.rows
         try:
             for row in rows:
                 self._cursor.move(IntegerPosition2D(window.position.x, row))
-                columns: Iterator[int] = iter(window.columns)
-                for column in columns:
-                    character: str = window.buffer[buffer_index]
+
+                if column_offset < 0:
+                    spaces: int
+                    if -column_offset > window.size.width:
+                        spaces = window.size.width
+                    else:
+                        spaces = -column_offset
+                    self._standard_output.write(' ' * spaces)
+                else:
+                    for column in range(column_offset):
+                        character: str = window.buffer[buffer_index]
+                        if character == '\n':
+                            break
+                        buffer_index += 1
+
+                starting_column: int = 0 if column_offset > 0 else -column_offset
+                ending_column: int = window.right_column + 1
+                for column in range(starting_column, ending_column):
+                    character = window.buffer[buffer_index]
 
                     if character == '\n':
                         remaining_columns: int = window.right_column - column + 1
