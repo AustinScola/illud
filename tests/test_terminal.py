@@ -137,6 +137,11 @@ def test_move_cursor_home() -> None:
     (Window(IntegerPosition2D(), IntegerSize2D(3, 1), Buffer('foo'), IntegerPosition2D(-1, 0)), '\x1b[;H fo'),
     (Window(IntegerPosition2D(), IntegerSize2D(3, 2), Buffer('foo\nbar'), IntegerPosition2D(-1, 0)), '\x1b[;H fo\x1b[2;H ba'),
     (Window(IntegerPosition2D(), IntegerSize2D(3, 3), Buffer('foo\n\nbar'), IntegerPosition2D(-1, 0)), '\x1b[;H fo\x1b[2;H   \x1b[3;H ba'),
+    (Window(IntegerPosition2D(), IntegerSize2D(3, 2), Buffer('foo'), IntegerPosition2D(0, 1)), '\x1b[;H   \x1b[2;H   '),
+    (Window(IntegerPosition2D(), IntegerSize2D(3, 2), Buffer('foo'), IntegerPosition2D(0, -1)), '\x1b[;H   \x1b[2;Hfoo'),
+    (Window(IntegerPosition2D(), IntegerSize2D(3, 2), Buffer('foo\nbar'), IntegerPosition2D(0, -1)), '\x1b[;H   \x1b[2;Hfoo'),
+    (Window(IntegerPosition2D(), IntegerSize2D(3, 2), Buffer('foo\nbar'), IntegerPosition2D(0, -2)), '\x1b[;H   \x1b[2;H   '),
+    (Window(IntegerPosition2D(), IntegerSize2D(3, 2), Buffer('foo\n\n'), IntegerPosition2D(0, -2)), '\x1b[;H   \x1b[2;H   '),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_draw_window(window: Window, expected_output: str) -> None:

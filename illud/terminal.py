@@ -1,6 +1,5 @@
 """A text terminal."""
 import os
-from typing import Iterable
 
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
@@ -53,12 +52,25 @@ class Terminal():
         if not window.size.width or not window.size.height:
             return
 
-        column_offset: int = window.offset.x
-
         buffer_index: int = 0
-        rows: Iterable[int] = window.rows
+
+        row_offset: int = window.offset.y
+        if row_offset > 0:
+            try:
+                for _ in range(row_offset):
+                    buffer_index = window.buffer.index('\n', buffer_index) + 1
+            except ValueError:
+                buffer_index = len(window.buffer)
+        else:
+            for row in range(-row_offset):
+                self._cursor.move(IntegerPosition2D(0, row))
+                self._standard_output.write(' ' * window.size.width)
+
+        column_offset: int = window.offset.x
         try:
-            for row in rows:
+            starting_row: int = 0 if row_offset > 0 else -row_offset
+            ending_row: int = window.bottom_row + 1
+            for row in range(starting_row, ending_row):
                 self._cursor.move(IntegerPosition2D(window.position.x, row))
 
                 if column_offset < 0:
