@@ -43,7 +43,7 @@ class Illud(REPL):
         self._terminal.draw_window(window)
 
         cursor: Cursor = self._state.cursor
-        self._terminal.draw_cursor(cursor)
+        self._terminal.draw_cursor(cursor, window.offset)
 
         self._terminal.update()
 

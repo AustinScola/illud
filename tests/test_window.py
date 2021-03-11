@@ -189,3 +189,18 @@ def test_repr(window: Window, expected_representation: str) -> None:
     representation: str = repr(window)
 
     assert representation == expected_representation
+
+
+# yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('window, offset, expected_offset_after', [
+    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer()), IntegerPosition2D(0, 0), IntegerPosition2D(0, 0)),
+    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer()), IntegerPosition2D(-1, 0), IntegerPosition2D(-1, 0)),
+    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer(), IntegerPosition2D(1, 1)), IntegerPosition2D(-1, 0), IntegerPosition2D(0, 1)),
+])
+# yapf: enable # pylint: enable=line-too-long
+def test_move_view(window: Window, offset: IntegerPosition2D,
+                   expected_offset_after: IntegerPosition2D) -> None:
+    """Test illud.window.Window.move_view."""
+    window.move_view(offset)
+
+    assert window.offset == expected_offset_after
