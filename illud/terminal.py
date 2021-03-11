@@ -119,7 +119,7 @@ class Terminal():
         """Update the terminal contents."""
         self._standard_output.flush()
 
-    def draw_cursor(self, cursor: Cursor) -> None:
+    def draw_cursor(self, cursor: Cursor, offset: IntegerPosition2D) -> None:
         """Draw a cursor on the terminal."""
         cursor_position_in_terminal: IntegerPosition2D
         if not cursor.buffer:
@@ -132,6 +132,11 @@ class Terminal():
             else:
                 column = cursor.buffer.get_column(cursor.index)
             cursor_position_in_terminal = IntegerPosition2D(column, row)
+        cursor_position_in_terminal = IntegerPosition2D(cursor_position_in_terminal.x - offset.x,
+                                                        cursor_position_in_terminal.y - offset.y)
+
+        if cursor_position_in_terminal.x < 0 or cursor_position_in_terminal.y < 0:
+            return
 
         self._cursor.move(cursor_position_in_terminal)
         self._standard_output.write(INVERT)
