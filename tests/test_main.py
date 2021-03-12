@@ -9,6 +9,7 @@ from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.buffer import Buffer
 from illud.cursor import Cursor
+from illud.file import File
 from illud.illud import Illud
 from illud.illud_state import IlludState
 from illud.main import _parse_arguments, _run_illud, _set_up_argument_parser, main
@@ -77,7 +78,7 @@ def test_parse_arguments(argument_parser: argparse.ArgumentParser, arguments: Li
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('parsed_arguments, illud_state_from_file, terminal_size, expected_init_arguments', [
     (argparse.Namespace(file=None), None, IntegerSize2D(120, 80), [IlludState(Buffer(), Cursor(Buffer(), 0), window=Window(IntegerPosition2D(), IntegerSize2D(120, 80), Buffer()), terminal_size=IntegerSize2D(120, 80))]),
-    (argparse.Namespace(file='foo.py'), IlludState(Buffer('Lorem ipsum'), terminal_size=IntegerSize2D(120, 80)), IntegerSize2D(120, 80), [IlludState(Buffer('Lorem ipsum'), terminal_size=IntegerSize2D(120, 80))]),
+    (argparse.Namespace(file='foo.py'), IlludState(Buffer('Lorem ipsum'), terminal_size=IntegerSize2D(120, 80), file=File('foo.py')), IntegerSize2D(120, 80), [IlludState(Buffer('Lorem ipsum'), terminal_size=IntegerSize2D(120, 80), file=File('foo.py'))]),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_run_illud(parsed_arguments: argparse.Namespace, illud_state_from_file: Optional[str],

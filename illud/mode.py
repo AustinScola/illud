@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
 
-from illud.characters import CONTROL_C, CONTROL_D, CONTROL_F, CONTROL_J, CONTROL_K
+from illud.characters import CONTROL_C, CONTROL_D, CONTROL_F, CONTROL_J, CONTROL_K, CONTROL_W
 from illud.command import Command
 from illud.exceptions.quit_exception import QuitException
 
@@ -36,3 +36,6 @@ class Mode():
         elif command.character.value == CONTROL_K:
             up = IntegerPosition2D(0, -1)  # pylint: disable=invalid-name
             state.window.move_view(up)
+        elif command.character.value == CONTROL_W:
+            if state.file is not None:
+                state.file.write(state.buffer)
