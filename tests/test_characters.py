@@ -1,6 +1,6 @@
 """Test illud.characters."""
 from illud.characters import (BACKSPACE, CARRIAGE_RETURN, CONTROL_C, CONTROL_D, CONTROL_F,
-                              CONTROL_J, CONTROL_K, ESCAPE, NEWLINE)
+                              CONTROL_J, CONTROL_K, CONTROL_W, ESCAPE, NEWLINE)
 
 
 def test_backspace() -> None:
@@ -46,3 +46,8 @@ def test_control_j() -> None:
 def test_control_k() -> None:
     """Test illud.characters.CONTROL_K."""
     assert CONTROL_K == '\x0b'
+
+
+def test_control_w() -> None:
+    """Test illud.characters.CONTROL_w."""
+    assert CONTROL_W == ''
