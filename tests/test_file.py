@@ -1,9 +1,11 @@
 """Test illud.file."""
 from pathlib import Path
 from typing import Any, Union
+from unittest.mock import mock_open, patch
 
 import pytest
 
+from illud.buffer import Buffer
 from illud.file import File
 
 
@@ -53,3 +55,17 @@ def test_eq(file: File, other: Any, expected_equality: bool) -> None:
     equality = file == other
 
     assert equality == expected_equality
+
+
+# yapf: disable
+@pytest.mark.parametrize('file, buffer_', [
+    (File('foo'), Buffer()),
+    (File('foo'), Buffer('bar')),
+])
+# yapf: enable
+def test_write(file: File, buffer_: Buffer) -> None:
+    """Test illud.file.write."""
+    with patch('builtins.open', mock_open()) as open_mock:
+        file.write(buffer_)
+
+        open_mock().write.assert_called_once_with(buffer_.string)
