@@ -1,5 +1,5 @@
 """Test illud.illud_state."""
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from unittest.mock import mock_open, patch
 
 import pytest
@@ -8,6 +8,7 @@ from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.buffer import Buffer
 from illud.cursor import Cursor
+from illud.file import File
 from illud.illud_state import IlludState
 from illud.mode import Mode
 from illud.modes.insert import Insert
@@ -22,20 +23,21 @@ def test_inheritance() -> None:
 
 
 # yapf: disable # pylint: disable=line-too-long
-@pytest.mark.parametrize('arguments, keyword_arguments, expected_buffer, expected_cursor, expected_mode, expected_window, expected_terminal_size', [
-    ([], {}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0)),
-    ([Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0)], {}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0)),
-    ([], {'buffer_': Buffer()}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0)),
-    ([], {'cursor': Cursor(Buffer(), 0)}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0)),
-    ([], {'mode': Normal()}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0)),
-    ([], {'window': Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer())}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0)),
-    ([], {'terminal_size': IntegerSize2D(0, 0)}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0)),
+@pytest.mark.parametrize('arguments, keyword_arguments, expected_buffer, expected_cursor, expected_mode, expected_window, expected_terminal_size, expected_file', [
+    ([], {}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0), None),
+    ([Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0)], {}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0), None),
+    ([], {'buffer_': Buffer()}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0), None),
+    ([], {'cursor': Cursor(Buffer(), 0)}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0), None),
+    ([], {'mode': Normal()}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0), None),
+    ([], {'window': Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer())}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0), None),
+    ([], {'terminal_size': IntegerSize2D(0, 0)}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0), None),
+    ([], {'file': File('foo')}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0), File('foo')),
 ])
 # yapf: enable # pylint: enable=line-too-long
 # pylint: disable=too-many-arguments
 def test_init(arguments: List[Any], keyword_arguments: Dict[str, Any], expected_buffer: Buffer,
               expected_cursor: Cursor, expected_mode: Mode, expected_window: Window,
-              expected_terminal_size: IntegerSize2D) -> None:
+              expected_terminal_size: IntegerSize2D, expected_file: Optional[File]) -> None:
     """Test illud.illud_state.IlludState.__init__."""
     illud_state: IlludState = IlludState(*arguments, **keyword_arguments)
 
@@ -44,6 +46,7 @@ def test_init(arguments: List[Any], keyword_arguments: Dict[str, Any], expected_
     assert illud_state.mode == expected_mode
     assert illud_state.window == expected_window
     assert illud_state.terminal_size == expected_terminal_size
+    assert illud_state.file == expected_file
 
 
 # yapf: disable # pylint: disable=line-too-long
