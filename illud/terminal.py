@@ -132,8 +132,7 @@ class Terminal():
             else:
                 column = cursor.buffer.get_column(cursor.index)
             cursor_position_in_terminal = IntegerPosition2D(column, row)
-        cursor_position_in_terminal = IntegerPosition2D(cursor_position_in_terminal.x - offset.x,
-                                                        cursor_position_in_terminal.y - offset.y)
+        cursor_position_in_terminal -= offset
 
         if cursor_position_in_terminal.x < 0 or cursor_position_in_terminal.y < 0:
             return
