@@ -61,16 +61,21 @@ class IlludState(State):
         self.file: Optional[File] = file
 
     @staticmethod
-    def from_file(file: str) -> 'IlludState':
+    def from_file(path: str) -> 'IlludState':
         """Return Illud state for a file with contents."""
-        with open(file) as system_file:
+        with open(path) as system_file:
             contents: str = system_file.read()
 
         buffer_: Buffer = Buffer(contents)
         cursor: Cursor = Cursor(buffer_, 0)
         terminal_size: IntegerSize2D = Terminal.get_size()
         window: Window = Window(IntegerPosition2D(), terminal_size, buffer_)
-        illud_state = IlludState(buffer_, cursor, window=window, terminal_size=terminal_size)
+        file: File = File(path)
+        illud_state = IlludState(buffer_,
+                                 cursor,
+                                 window=window,
+                                 terminal_size=terminal_size,
+                                 file=file)
 
         return illud_state
 
