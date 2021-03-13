@@ -35,6 +35,7 @@ def test_inheritance() -> None:
     (IlludState(), Command(Character('k')), IlludState(), False),
     (IlludState(), Command(Character('f')), IlludState(), False),
     (IlludState(), Command(Character('d')), IlludState(), False),
+    (IlludState(cursor=Cursor(Buffer('foo'), 0)), Command(Character('x')), IlludState(cursor=Cursor(Buffer('oo'), 0)), False),
     (IlludState(), Command(Character(CONTROL_C)), None, True),
 ])
 # yapf: enable # pylint: enable=line-too-long

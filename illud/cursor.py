@@ -101,3 +101,13 @@ class Cursor():
         if self.index:
             self.buffer.delete(self.index - 1)
             self.index -= 1
+
+    def delete(self) -> None:
+        """Remove the character at the cursor position."""
+        if not self.buffer:
+            return
+
+        self.buffer.delete(self.index)
+
+        if self.index > self.buffer.end:
+            self.index = self.buffer.end
