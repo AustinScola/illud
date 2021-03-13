@@ -22,7 +22,7 @@ class Cursor():
 
     @standard_representation(parameter_to_attribute_name={'buffer_': 'buffer'})
     def __repr__(self) -> str:
-        pass
+        pass  # pragma: no cover
 
     def move_left(self) -> None:
         """Move the cursor left one character."""
@@ -50,9 +50,6 @@ class Cursor():
         except ValueError:
             return
 
-        if line_start - 1 < 0:
-            return
-
         previous_line_start: int
         try:
             previous_line_start = self.buffer.reverse_index('\n', end=line_start - 1) + 1
@@ -72,6 +69,9 @@ class Cursor():
         try:
             next_newline_index: int = self.buffer.index('\n', start=self.index)
         except ValueError:
+            return
+
+        if next_newline_index == self.buffer.end:
             return
 
         down_index: int

@@ -111,11 +111,11 @@ class StandardInput(Input):
 
     @overload
     def maybe_read_integer(self, default: int) -> int:
-        ...
+        ...  # pragma: no cover
 
     @overload
     def maybe_read_integer(self, default: None) -> None:
-        ...
+        ...  # pragma: no cover
 
     def maybe_read_integer(self, default: Optional[int] = None) -> Optional[int]:
         """Return an integer or a default value."""

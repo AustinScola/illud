@@ -9,7 +9,7 @@ from illud.command import Command
 from illud.exceptions.quit_exception import QuitException
 
 if TYPE_CHECKING:
-    from illud.illud_state import IlludState  # pylint: disable=cyclic-import
+    from illud.illud_state import IlludState  # pylint: disable=cyclic-import # pragma: no cover
 
 
 class Mode():
