@@ -161,3 +161,19 @@ def test_backspace(cursor: Cursor, expected_cursor_after: Cursor) -> None:
     cursor.backspace()
 
     assert cursor == expected_cursor_after
+
+
+# yapf: disable
+@pytest.mark.parametrize('cursor, expected_cursor_after', [
+    (Cursor(Buffer(''), 0), Cursor(Buffer(''), 0)),
+    (Cursor(Buffer('foo'), 0), Cursor(Buffer('oo'), 0)),
+    (Cursor(Buffer('foo'), 1), Cursor(Buffer('fo'), 1)),
+    (Cursor(Buffer('foo'), 2), Cursor(Buffer('fo'), 1)),
+    (Cursor(Buffer('foo\n'), 3), Cursor(Buffer('foo'), 2)),
+])
+# yapf: enable
+def test_delete(cursor: Cursor, expected_cursor_after: Cursor) -> None:
+    """Test illud.cursor.Cursor.delete."""
+    cursor.delete()
+
+    assert cursor == expected_cursor_after
