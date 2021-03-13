@@ -115,8 +115,11 @@ def test_move_up(cursor: Cursor, expected_cursor_after: Cursor) -> None:
     (Cursor(Buffer(), 0), Cursor(Buffer(), 0)),
     (Cursor(Buffer('foo'), 0), Cursor(Buffer('foo'), 0)),
     (Cursor(Buffer('foo'), 1), Cursor(Buffer('foo'), 1)),
+    (Cursor(Buffer('foo\n'), 0), Cursor(Buffer('foo\n'), 0)),
+    (Cursor(Buffer('foo\n'), 1), Cursor(Buffer('foo\n'), 1)),
     (Cursor(Buffer('foo\nbar'), 0), Cursor(Buffer('foo\nbar'), 4)),
     (Cursor(Buffer('foo\nbar'), 1), Cursor(Buffer('foo\nbar'), 5)),
+    (Cursor(Buffer('wibble\nfoo\nbar',), 5), Cursor(Buffer('wibble\nfoo\nbar'), 10)),
     (Cursor(Buffer('spam\nham'), 3), Cursor(Buffer('spam\nham'), 7)),
     (Cursor(Buffer('spam\nham\neggs'), 3), Cursor(Buffer('spam\nham\neggs'), 8)),
 ])

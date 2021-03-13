@@ -32,7 +32,7 @@ class Buffer():
 
     @standard_representation(parameter_to_attribute_name={'buffer_': 'buffer'})
     def __repr__(self) -> str:
-        pass
+        pass  # pragma: no cover
 
     def __getitem__(self, index: Union[int, slice]) -> str:
         return self.string.__getitem__(index)

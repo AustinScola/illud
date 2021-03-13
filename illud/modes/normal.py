@@ -7,7 +7,7 @@ from illud.mode import Mode
 from illud.modes.insert import Insert
 
 if TYPE_CHECKING:
-    from illud.illud_state import IlludState  # pylint: disable=cyclic-import
+    from illud.illud_state import IlludState  # pylint: disable=cyclic-import # pragma: no cover
 
 
 class Normal(Mode):  # pylint: disable=too-few-public-methods

@@ -19,6 +19,7 @@ from illud.file import File
     ('foo/bar.baz', Path('foo/bar.baz')),
     ('../foo/bar', Path('../foo/bar')),
     ('../foo/bar.baz', Path('../foo/bar.baz')),
+    (Path('foo'), Path('foo')),
 ])
 # yapf: enable
 def test_init(path: Union[str, Path], expected_path: Path) -> None:
