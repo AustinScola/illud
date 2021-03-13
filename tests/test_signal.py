@@ -1,10 +1,10 @@
 """Test illud.signal_."""
 from abc import ABC
-from typing import Any
+from typing import Any, Iterable
 
 import pytest
 
-from illud.signal_ import Signal
+from illud.signal_ import Signal, Signals
 
 
 def test_inheritance() -> None:
@@ -23,3 +23,9 @@ def test_eq(signal: Signal, other: Any, expected_equality: bool) -> None:
     equality = signal == other
 
     assert equality == expected_equality
+
+
+def test_signals() -> None:
+    """Test illud.signal_.Signals."""
+    assert issubclass(Signals, Iterable)
+    assert Signals.__args__ == (Signal, )  # type: ignore[attr-defined]
