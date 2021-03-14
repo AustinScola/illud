@@ -3,7 +3,6 @@ import sys
 from typing import Any, Optional
 
 from illud.character import Character
-from illud.command import Command
 from illud.cursor import Cursor
 from illud.exceptions.quit_exception import QuitException
 from illud.illud_state import IlludState
@@ -28,15 +27,14 @@ class Illud(REPL):
         self._terminal.clear_screen()
         self.print(None)
 
-    def read(self) -> Command:
+    def read(self) -> Character:
         character: Character = self._terminal.get_character()
-        command: Command = Command(character)
-        return command
+        return character
 
-    def evaluate(self, input_: Command) -> None:
-        command: Command = input_
+    def evaluate(self, input_: Character) -> None:
+        character: Character = input_
         mode: Mode = self._state.mode
-        mode.evaluate(self._state, command)
+        mode.evaluate(self._state, character)
 
     def print(self, result: Any) -> None:
         window: Window = self._state.window

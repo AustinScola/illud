@@ -11,7 +11,6 @@ from illud.ansi.escape_codes.cursor import MOVE_CURSOR_HOME
 from illud.ansi.escape_codes.erase import CLEAR_SCREEN
 from illud.buffer import Buffer
 from illud.character import Character
-from illud.command import Command
 from illud.cursor import Cursor
 from illud.exceptions.quit_exception import QuitException
 from illud.illud import Illud
@@ -70,28 +69,28 @@ def test_startup() -> None:
 
 
 # yapf: disable
-@pytest.mark.parametrize('character, expected_command', [
-    (Character('i'), Command(Character('i'))),
+@pytest.mark.parametrize('character, expected_character', [
+    (Character('i'), Character('i')),
 ])
 # yapf: enable
-def test_read(character: Character, expected_command: Command) -> None:
+def test_read(character: Character, expected_character: Character) -> None:
     """Test illud.illud.Illud.read."""
     terminal_mock = MagicMock(get_character=lambda: character)
 
     with patch('illud.illud.Terminal', return_value=terminal_mock):
         illud: Illud = Illud()
 
-        command: Command = illud.read()
+        read_character: Character = illud.read()
 
-    assert command == expected_command
+    assert read_character == expected_character
 
 
 # yapf: disable
 @pytest.mark.parametrize('initial_state, input_, expected_state_after', [
-    (IlludState(), Command(Character('i')), IlludState(mode=Insert())),
+    (IlludState(), Character('i'), IlludState(mode=Insert())),
 ])
 # yapf: enable
-def test_evaluate(initial_state: IlludState, input_: Command,
+def test_evaluate(initial_state: IlludState, input_: Character,
                   expected_state_after: IlludState) -> None:
     """Test illud.illud.Illud.evaluate."""
 

@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING
 
 from illud.character import Character
 from illud.characters import BACKSPACE, CARRIAGE_RETURN, ESCAPE, NEWLINE
-from illud.command import Command
 from illud.mode import Mode
 
 if TYPE_CHECKING:
@@ -13,11 +12,10 @@ if TYPE_CHECKING:
 class Insert(Mode):  # pylint: disable=too-few-public-methods
     """Mode for inserting text."""
     @staticmethod
-    def evaluate(state: 'IlludState', command: Command) -> None:
-        """Evaluate the command for the given state."""
-        super(Insert, Insert).evaluate(state, command)
+    def evaluate(state: 'IlludState', character: Character) -> None:
+        """Evaluate the character for the given state."""
+        super(Insert, Insert).evaluate(state, character)
 
-        character: Character = command.character
         if character.value == ESCAPE:
             from illud.modes.normal import \
                 Normal  # pylint: disable=import-outside-toplevel, cyclic-import
