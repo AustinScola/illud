@@ -11,14 +11,18 @@ from illud.ansi.escape_codes.cursor import MOVE_CURSOR_HOME
 from illud.ansi.escape_codes.erase import CLEAR_SCREEN
 from illud.buffer import Buffer
 from illud.character import Character
-from illud.command import Command
 from illud.cursor import Cursor
 from illud.exceptions.quit_exception import QuitException
 from illud.illud import Illud
+from illud.illud_input import IlludInput
 from illud.illud_state import IlludState
+from illud.inputs.signal_listener import SignalListener
 from illud.modes.insert import Insert
 from illud.outputs.standard_output import StandardOutput
 from illud.repl import REPL
+from illud.signal_ import Signals
+from illud.signal_handler import SignalHandler
+from illud.signals.terminal_size_change import TerminalSizeChange
 from illud.terminal import Terminal
 from illud.window import Window
 
@@ -50,6 +54,9 @@ def test_init(illud_initial_state: Optional[IlludState], pass_illud_initial_stat
         illud: Illud = Illud(**keyword_arguments)
 
         assert illud._terminal == terminal_mock  # pylint: disable=protected-access
+        assert isinstance(illud._signal_listener, SignalListener)  # pylint: disable=protected-access
+        assert not illud._signal_listener  # pylint: disable=protected-access
+        assert isinstance(illud._signal_handler, SignalHandler)  # pylint: disable=protected-access
 
         assert illud._state == expected_illud_state  # pylint: disable=protected-access
 
@@ -59,7 +66,8 @@ def test_startup() -> None:
     clear_screen_mock = MagicMock()
     terminal_mock = MagicMock(Terminal, autospec=True, clear_screen=clear_screen_mock)
     with patch('illud.illud.Terminal', return_value=terminal_mock), \
-        patch('illud.illud.Illud.print') as print_mock:
+        patch('illud.illud.Illud.print') as print_mock, \
+        patch('illud.illud.SignalListener.start') as signal_listener_start_mock:
 
         illud: Illud = Illud()
 
@@ -67,38 +75,46 @@ def test_startup() -> None:
 
         clear_screen_mock.assert_called_once()
         print_mock.assert_called_once_with(None)
+        signal_listener_start_mock.assert_called_once()
 
 
-# yapf: disable
-@pytest.mark.parametrize('character, expected_command', [
-    (Character('i'), Command(Character('i'))),
+@pytest.mark.parametrize('signals, character, expected_input', [
+    ([], Character('i'), Character('i')),
+    ([TerminalSizeChange()], Character('i'), TerminalSizeChange()),
 ])
 # yapf: enable
-def test_read(character: Character, expected_command: Command) -> None:
+def test_read(signals: Signals, character: Character, expected_input: IlludInput) -> None:
     """Test illud.illud.Illud.read."""
+    signal_listener: SignalListener = SignalListener()
+    for signal in signals:
+        signal_listener._signals.put_nowait(signal)  # pylint: disable=protected-access
+
     terminal_mock = MagicMock(get_character=lambda: character)
 
-    with patch('illud.illud.Terminal', return_value=terminal_mock):
+    with patch('illud.illud.Terminal', return_value=terminal_mock), \
+        patch('illud.illud.SignalListener', return_value=signal_listener):
         illud: Illud = Illud()
 
-        command: Command = illud.read()
+        input_: IlludInput = illud.read()
 
-    assert command == expected_command
+    assert input_ == expected_input
 
 
-# yapf: disable
-@pytest.mark.parametrize('initial_state, input_, expected_state_after', [
-    (IlludState(), Command(Character('i')), IlludState(mode=Insert())),
+# yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('initial_state, input_, terminal_size, expected_state_after', [
+    (IlludState(), Character('i'), None, IlludState(mode=Insert())),
+    (IlludState(), TerminalSizeChange(), IntegerSize2D(120, 80), IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(120, 80), Buffer()), terminal_size=IntegerSize2D(120, 80))),
 ])
-# yapf: enable
-def test_evaluate(initial_state: IlludState, input_: Command,
-                  expected_state_after: IlludState) -> None:
+# yapf: enable # pylint: enable=line-too-long
+def test_evaluate(initial_state: IlludState, input_: IlludInput,
+                  terminal_size: Optional[IntegerSize2D], expected_state_after: IlludState) -> None:
     """Test illud.illud.Illud.evaluate."""
+    with patch('illud.illud.Terminal'), \
+        patch('illud.signal_handler.Terminal.get_size', return_value=terminal_size):
 
-    with patch('illud.illud.Terminal'):
         illud: Illud = Illud(initial_state)
 
-    illud.evaluate(input_)
+        illud.evaluate(input_)
 
     assert illud._state == expected_state_after  # pylint: disable=protected-access
 

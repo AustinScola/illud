@@ -2,7 +2,6 @@
 from typing import TYPE_CHECKING
 
 from illud.character import Character
-from illud.command import Command
 from illud.mode import Mode
 from illud.modes.insert import Insert
 
@@ -13,18 +12,18 @@ if TYPE_CHECKING:
 class Normal(Mode):  # pylint: disable=too-few-public-methods
     """Mode for navigating and manipulating text."""
     @staticmethod
-    def evaluate(state: 'IlludState', command: Command) -> None:
-        super(Normal, Normal).evaluate(state, command)
+    def evaluate(state: 'IlludState', character: Character) -> None:
+        super(Normal, Normal).evaluate(state, character)
 
-        if command == Command(Character('d')):
+        if character.value == 'd':
             state.cursor.move_left()
-        elif command == Command(Character('f')):
+        elif character.value == 'f':
             state.cursor.move_right()
-        elif command == Command(Character('k')):
+        elif character.value == 'k':
             state.cursor.move_up()
-        elif command == Command(Character('j')):
+        elif character.value == 'j':
             state.cursor.move_down()
-        elif command == Command(Character('x')):
+        elif character.value == 'x':
             state.cursor.delete()
-        elif command == Command(Character('i')):
+        elif character.value == 'i':
             state.mode = Insert()

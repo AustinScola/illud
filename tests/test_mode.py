@@ -9,7 +9,6 @@ from seligimus.maths.integer_size_2d import IntegerSize2D
 from illud.buffer import Buffer
 from illud.character import Character
 from illud.characters import CONTROL_C, CONTROL_D, CONTROL_F, CONTROL_J, CONTROL_K, CONTROL_W
-from illud.command import Command
 from illud.exceptions.quit_exception import QuitException
 from illud.file import File
 from illud.illud_state import IlludState
@@ -32,18 +31,18 @@ def test_eq(mode: Mode, other: Any, expected_equality: bool) -> None:
 
 
 # yapf: disable # pylint: disable=line-too-long
-@pytest.mark.parametrize('state_before, command, expected_state_after, expect_writes, expect_exits', [
-    (IlludState(), Command(Character('i')), IlludState(), False, False),
-    (IlludState(), Command(Character(CONTROL_C)), None, False, True),
-    (IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer())), Command(Character(CONTROL_D)), IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer(), IntegerPosition2D(-1, 0))), False, False),
-    (IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer())), Command(Character(CONTROL_F)), IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer(), IntegerPosition2D(1, 0))), False, False),
-    (IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer())), Command(Character(CONTROL_J)), IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer(), IntegerPosition2D(0, 1))), False, False),
-    (IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer())), Command(Character(CONTROL_K)), IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer(), IntegerPosition2D(0, -1))), False, False),
-    (IlludState(), Command(Character(CONTROL_W)), IlludState(), False, False),
-    (IlludState(file=File('foo')), Command(Character(CONTROL_W)), IlludState(file=File('foo')), True, False),
+@pytest.mark.parametrize('state_before, character, expected_state_after, expect_writes, expect_exits', [
+    (IlludState(), Character('i'), IlludState(), False, False),
+    (IlludState(), Character(CONTROL_C), None, False, True),
+    (IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer())), Character(CONTROL_D), IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer(), IntegerPosition2D(-1, 0))), False, False),
+    (IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer())), Character(CONTROL_F), IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer(), IntegerPosition2D(1, 0))), False, False),
+    (IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer())), Character(CONTROL_J), IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer(), IntegerPosition2D(0, 1))), False, False),
+    (IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer())), Character(CONTROL_K), IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer(), IntegerPosition2D(0, -1))), False, False),
+    (IlludState(), Character(CONTROL_W), IlludState(), False, False),
+    (IlludState(file=File('foo')), Character(CONTROL_W), IlludState(file=File('foo')), True, False),
 ])
 # yapf: enable # pylint: enable=line-too-long
-def test_evaluate(state_before: IlludState, command: Command,
+def test_evaluate(state_before: IlludState, character: Character,
                   expected_state_after: Optional[IlludState], expect_writes: bool,
                   expect_exits: bool) -> None:
     """Test illud.mode.evaluate."""
@@ -51,11 +50,11 @@ def test_evaluate(state_before: IlludState, command: Command,
 
     if expect_exits:
         with pytest.raises(QuitException):
-            mode.evaluate(state_before, command)
+            mode.evaluate(state_before, character)
         return
 
     with patch('illud.file.File.write') as file_write_mock:
-        mode.evaluate(state_before, command)
+        mode.evaluate(state_before, character)
 
         if expect_writes:
             file_write_mock.assert_called_once_with(state_before.buffer)
