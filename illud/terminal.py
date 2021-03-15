@@ -7,6 +7,7 @@ from seligimus.maths.integer_size_2d import IntegerSize2D
 from illud.ansi.escape_codes.color import INVERT, RESET
 from illud.ansi.escape_codes.cursor import MOVE_CURSOR_HOME
 from illud.ansi.escape_codes.erase import CLEAR_SCREEN
+from illud.ansi.escape_codes.screen import DISABLE_ALTERNATIVE_SCREEN, ENABLE_ALTERNATIVE_SCREEN
 from illud.character import Character
 from illud.cursor import Cursor
 from illud.inputs.standard_input import StandardInput
@@ -36,6 +37,16 @@ class Terminal():
         """Return the next character input from the terminal."""
         character: Character = next(self._standard_input)
         return character
+
+    def enable_alternative_screen(self) -> None:
+        """Enable an alternative terminal screen."""
+        self._standard_output.write(ENABLE_ALTERNATIVE_SCREEN)
+        self._standard_output.flush()
+
+    def disable_alternative_screen(self) -> None:
+        """Enable the alternative terminal screen."""
+        self._standard_output.write(DISABLE_ALTERNATIVE_SCREEN)
+        self._standard_output.flush()
 
     def clear_screen(self) -> None:
         """Clear the terminal of all characters."""
