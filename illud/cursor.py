@@ -7,6 +7,7 @@ from seligimus.python.decorators.operators.equality.equal_type import equal_type
 from seligimus.python.decorators.standard_representation import standard_representation
 
 from illud.buffer import Buffer
+from illud.characters import WHITESPACE
 
 
 class Cursor():
@@ -111,3 +112,29 @@ class Cursor():
 
         if self.index > self.buffer.end:
             self.index = self.buffer.end
+
+    def next_word(self) -> None:
+        """Move the cursor position to the start of the next word."""
+        if not self.buffer:
+            return
+
+        if self.index == self.buffer.end:
+            return
+
+        while True:
+            character = self.buffer[self.index]
+            if character in WHITESPACE:
+                break
+            self.index += 1
+
+            if self.index == self.buffer.end:
+                return
+
+        while True:
+            character = self.buffer[self.index]
+            if not character in WHITESPACE:
+                break
+            self.index += 1
+
+            if self.index == self.buffer.end:
+                return
