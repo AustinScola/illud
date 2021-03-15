@@ -9,6 +9,7 @@ from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.ansi.escape_codes.cursor import MOVE_CURSOR_HOME
 from illud.ansi.escape_codes.erase import CLEAR_SCREEN
+from illud.ansi.escape_codes.screen import DISABLE_ALTERNATIVE_SCREEN, ENABLE_ALTERNATIVE_SCREEN
 from illud.buffer import Buffer
 from illud.character import Character
 from illud.cursor import Cursor
@@ -74,6 +75,34 @@ def test_get_character(next_character: Character, expected_character: Character)
         character: Character = terminal.get_character()
 
         assert character == expected_character
+
+
+def test_enable_alternative_screen() -> None:
+    """Test illud.terminal.Terminal.enable_alternative_screen."""
+    standard_output_mock = MagicMock(StandardOutput)
+    terminal: Terminal
+    with patch('illud.terminal.StandardInput'), \
+        patch('illud.terminal.StandardOutput', return_value=standard_output_mock):
+
+        terminal = Terminal()
+
+    terminal.enable_alternative_screen()
+
+    assert standard_output_mock.write.call_args[0] == (ENABLE_ALTERNATIVE_SCREEN, )
+
+
+def test_disable_alternative_screen() -> None:
+    """Test illud.terminal.Terminal.disable_alternative_screen."""
+    standard_output_mock = MagicMock(StandardOutput)
+    terminal: Terminal
+    with patch('illud.terminal.StandardInput'), \
+        patch('illud.terminal.StandardOutput', return_value=standard_output_mock):
+
+        terminal = Terminal()
+
+    terminal.disable_alternative_screen()
+
+    assert standard_output_mock.write.call_args[0] == (DISABLE_ALTERNATIVE_SCREEN, )
 
 
 def test_clear_screen() -> None:
