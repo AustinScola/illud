@@ -7,8 +7,7 @@ import pytest
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
-from illud.ansi.escape_codes.cursor import MOVE_CURSOR_HOME
-from illud.ansi.escape_codes.erase import CLEAR_SCREEN
+from illud.ansi.escape_codes.screen import DISABLE_ALTERNATIVE_SCREEN
 from illud.buffer import Buffer
 from illud.character import Character
 from illud.cursor import Cursor
@@ -63,8 +62,10 @@ def test_init(illud_initial_state: Optional[IlludState], pass_illud_initial_stat
 
 def test_startup() -> None:
     """Test illud.illud.Illud.startup."""
-    clear_screen_mock = MagicMock()
-    terminal_mock = MagicMock(Terminal, autospec=True, clear_screen=clear_screen_mock)
+    enable_alternative_screen_mock = MagicMock()
+    terminal_mock = MagicMock(Terminal,
+                              autospec=True,
+                              enable_alternative_screen=enable_alternative_screen_mock)
     with patch('illud.illud.Terminal', return_value=terminal_mock), \
         patch('illud.illud.Illud.print') as print_mock, \
         patch('illud.illud.SignalListener.start') as signal_listener_start_mock:
@@ -73,7 +74,7 @@ def test_startup() -> None:
 
         illud.startup()
 
-        clear_screen_mock.assert_called_once()
+        enable_alternative_screen_mock.assert_called_once()
         print_mock.assert_called_once_with(None)
         signal_listener_start_mock.assert_called_once()
 
@@ -149,9 +150,9 @@ def test_print(illud_state: IlludState, result: Any, expected_output: str) -> No
 
 # yapf: disable
 @pytest.mark.parametrize('exception, expect_reraises, expect_exits, expected_output', [
-    (Exception(), True, False, None),
-    (TypeError(), True, False, None),
-    (QuitException(), False, True, CLEAR_SCREEN + MOVE_CURSOR_HOME),
+    (Exception(), True, False, DISABLE_ALTERNATIVE_SCREEN),
+    (TypeError(), True, False, DISABLE_ALTERNATIVE_SCREEN),
+    (QuitException(), False, True, DISABLE_ALTERNATIVE_SCREEN),
 ])
 # yapf: enable
 def test_catch(exception: Exception, expect_reraises: bool, expect_exits: bool,

@@ -30,7 +30,7 @@ class Illud(REPL):
             self._state = initial_state
 
     def startup(self) -> None:
-        self._terminal.clear_screen()
+        self._terminal.enable_alternative_screen()
         self.print(None)
         self._signal_listener.start()
 
@@ -63,9 +63,9 @@ class Illud(REPL):
         self._terminal.update()
 
     def catch(self, exception: Exception) -> None:
+        self._terminal.disable_alternative_screen()
+
         if isinstance(exception, QuitException):
-            self._terminal.clear_screen()
-            self._terminal.move_cursor_home()
             sys.exit()
 
         raise exception
