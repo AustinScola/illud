@@ -9,7 +9,7 @@ venvs/*
 .mypy_cache
 
 # Ignore temporary files used by isort.
-.isorted
+*.isorted
 
 # Ignore test coverage.
 .coverage
