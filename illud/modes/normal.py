@@ -17,14 +17,19 @@ class Normal(Mode):  # pylint: disable=too-few-public-methods
 
         if character.value == 'd':
             state.cursor.move_left()
+            state.window.adjust_view_to_include(state.cursor.index)
         elif character.value == 'f':
             state.cursor.move_right()
+            state.window.adjust_view_to_include(state.cursor.index)
         elif character.value == 'k':
             state.cursor.move_up()
+            state.window.adjust_view_to_include(state.cursor.index)
         elif character.value == 'j':
             state.cursor.move_down()
+            state.window.adjust_view_to_include(state.cursor.index)
         elif character.value == 'w':
             state.cursor.next_word()
+            state.window.adjust_view_to_include(state.cursor.index)
         elif character.value == 'x':
             state.cursor.delete()
         elif character.value == 'i':
