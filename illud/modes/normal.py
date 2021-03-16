@@ -23,6 +23,8 @@ class Normal(Mode):  # pylint: disable=too-few-public-methods
             state.cursor.move_up()
         elif character.value == 'j':
             state.cursor.move_down()
+        elif character.value == 'w':
+            state.cursor.next_word()
         elif character.value == 'x':
             state.cursor.delete()
         elif character.value == 'i':

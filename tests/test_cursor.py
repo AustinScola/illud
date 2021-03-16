@@ -177,3 +177,23 @@ def test_delete(cursor: Cursor, expected_cursor_after: Cursor) -> None:
     cursor.delete()
 
     assert cursor == expected_cursor_after
+
+
+# yapf: disable
+@pytest.mark.parametrize('cursor, expected_cursor_after', [
+    (Cursor(Buffer(''), 0), Cursor(Buffer(''), 0)),
+    (Cursor(Buffer('a b'), 0), Cursor(Buffer('a b'), 2)),
+    (Cursor(Buffer('a b'), 1), Cursor(Buffer('a b'), 2)),
+    (Cursor(Buffer('a b'), 2), Cursor(Buffer('a b'), 2)),
+    (Cursor(Buffer('foo bar'), 1), Cursor(Buffer('foo bar'), 4)),
+    (Cursor(Buffer('foo\n\tbar'), 1), Cursor(Buffer('foo\n\tbar'), 5)),
+    (Cursor(Buffer('foo bar baz'), 5), Cursor(Buffer('foo bar baz'), 8)),
+    (Cursor(Buffer('foo '), 2), Cursor(Buffer('foo '), 3)),
+    (Cursor(Buffer('foo  '), 2), Cursor(Buffer('foo  '), 4)),
+])
+# yapf: enable
+def test_next_word(cursor: Cursor, expected_cursor_after: Cursor) -> None:
+    """Test illud.cursor.Cursor.next_word."""
+    cursor.next_word()
+
+    assert cursor == expected_cursor_after

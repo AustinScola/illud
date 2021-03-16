@@ -34,6 +34,7 @@ def test_inheritance() -> None:
     (IlludState(), Character('k'), IlludState(), False),
     (IlludState(), Character('f'), IlludState(), False),
     (IlludState(), Character('d'), IlludState(), False),
+    (IlludState(cursor=Cursor(Buffer('foo bar'), 0)), Character('w'), IlludState(cursor=Cursor(Buffer('foo bar'), 4)), False),
     (IlludState(cursor=Cursor(Buffer('foo'), 0)), Character('x'), IlludState(cursor=Cursor(Buffer('oo'), 0)), False),
     (IlludState(), Character(CONTROL_C), None, True),
 ])
