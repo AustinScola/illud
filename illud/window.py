@@ -83,3 +83,26 @@ class Window():
     def move_view(self, offset: IntegerPosition2D) -> None:
         """Move the view of the buffer by an offset."""
         self.offset += offset
+
+    def adjust_view_to_include(self, index: int) -> None:
+        """Move the view so that it inlcudes an index of the buffer."""
+        if not self.buffer:
+            return
+
+        column: int = self.buffer.get_column(index)
+        row: int = self.buffer.get_row(index)
+
+        offset: IntegerPosition2D
+        if column > self.offset.x + self.size.width - 1:
+            offset = IntegerPosition2D(column - (self.offset.x + self.size.width - 1), 0)
+            self.move_view(offset)
+        elif column < self.offset.x:
+            offset = IntegerPosition2D(column - self.offset.x, 0)
+            self.move_view(offset)
+
+        if row > self.offset.y + self.size.height - 1:
+            offset = IntegerPosition2D(0, row - (self.offset.y + self.size.height - 1))
+            self.move_view(offset)
+        if row < self.offset.y:
+            offset = IntegerPosition2D(0, row - self.offset.y)
+            self.move_view(offset)
