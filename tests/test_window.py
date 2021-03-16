@@ -204,3 +204,23 @@ def test_move_view(window: Window, offset: IntegerPosition2D,
     window.move_view(offset)
 
     assert window.offset == expected_offset_after
+
+
+# yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('window, index, expected_window', [
+    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('')), 0, Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer(''))),
+    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo')), 0, Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo'))),
+    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar')), 4, Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar'), IntegerPosition2D(1, 0))),
+    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar')), 5, Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar'), IntegerPosition2D(2, 0))),
+    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar'), IntegerPosition2D(1, 0)), 6, Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar'), IntegerPosition2D(3, 0))),
+    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar'), IntegerPosition2D(1, 0)), 0, Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar'))),
+    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar'), IntegerPosition2D(2, 0)), 0, Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar'))),
+    (Window(IntegerPosition2D(), IntegerSize2D(3, 2), Buffer('foo\nbar\nbaz')), 8, Window(IntegerPosition2D(), IntegerSize2D(3, 2), Buffer('foo\nbar\nbaz'), IntegerPosition2D(0, 1))),
+    (Window(IntegerPosition2D(), IntegerSize2D(3, 2), Buffer('foo\nbar\nbaz'), IntegerPosition2D(0, 1)), 0, Window(IntegerPosition2D(), IntegerSize2D(3, 2), Buffer('foo\nbar\nbaz'))),
+])
+# yapf: enable # pylint: enable=line-too-long
+def test_adjust_view_to_include(window: Window, index: int, expected_window: Window) -> None:
+    """Test illud.window.Window.adjust_view_to_include."""
+    window.adjust_view_to_include(index)
+
+    assert window == expected_window
