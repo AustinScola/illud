@@ -11,20 +11,23 @@ from illud.exceptions.no_rows_exception import NoRowsException
 from illud.window import Window
 
 
-# yapf: disable
-@pytest.mark.parametrize('position, size, buffer_, offset, expected_offset', [
-    (IntegerPosition2D(), IntegerSize2D(0, 0), Buffer(), None, IntegerPosition2D()),
-    (IntegerPosition2D(), IntegerSize2D(0, 0), Buffer(), IntegerPosition2D(), IntegerPosition2D()),
+# yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('position, size, buffer_, offset, expected_position, expected_size, expected_buffer, expected_offset', [
+    (None, None, None, None, IntegerPosition2D(), IntegerSize2D(0, 0), Buffer(), IntegerPosition2D()),
+    (IntegerPosition2D(), IntegerSize2D(0, 0), Buffer(), IntegerPosition2D(), IntegerPosition2D(), IntegerSize2D(0, 0), Buffer(), IntegerPosition2D()),
 ])
-# yapf: enable
-def test_init(position: IntegerPosition2D, size: IntegerSize2D, buffer_: Buffer,
-              offset: Optional[IntegerPosition2D], expected_offset: IntegerPosition2D) -> None:
+# yapf: enable # pylint: enable=line-too-long
+# pylint: disable=too-many-arguments
+def test_init(position: Optional[IntegerPosition2D], size: Optional[IntegerSize2D],
+              buffer_: Optional[Buffer], offset: Optional[IntegerPosition2D],
+              expected_position: IntegerPosition2D, expected_size: IntegerSize2D,
+              expected_buffer: Buffer, expected_offset: IntegerPosition2D) -> None:
     """Test illud.window.Window.__init__"""
     window: Window = Window(position, size, buffer_, offset)
 
-    assert window.position == position
-    assert window.size == size
-    assert window.buffer is buffer_
+    assert window.position == expected_position
+    assert window.size == expected_size
+    assert window.buffer == expected_buffer
     assert window.offset == expected_offset
 
 
@@ -180,8 +183,8 @@ def test_eq(window: Window, other: Any, expected_equality: bool) -> None:
 
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('window, expected_representation', [
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), 'Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer(), offset=IntegerPosition2D())'),
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer('foo')), 'Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer(string=\'foo\'), offset=IntegerPosition2D())'),
+    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), 'Window(position=IntegerPosition2D(), size=IntegerSize2D(0, 0), buffer_=Buffer(), offset=IntegerPosition2D())'),
+    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer('foo')), 'Window(position=IntegerPosition2D(), size=IntegerSize2D(0, 0), buffer_=Buffer(string=\'foo\'), offset=IntegerPosition2D())'),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_repr(window: Window, expected_representation: str) -> None:
