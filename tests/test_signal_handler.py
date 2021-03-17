@@ -2,10 +2,8 @@
 from unittest.mock import patch
 
 import pytest
-from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
-from illud.buffer import Buffer
 from illud.illud_state import IlludState
 from illud.signal_ import Signal
 from illud.signal_handler import SignalHandler
@@ -15,7 +13,7 @@ from illud.window import Window
 
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('state_before, signal, terminal_size, expected_state_after', [
-    (IlludState(), TerminalSizeChange(), IntegerSize2D(120, 80), IlludState(window=Window(IntegerPosition2D(), IntegerSize2D(120, 80), Buffer()), terminal_size=IntegerSize2D(120, 80))),
+    (IlludState(), TerminalSizeChange(), IntegerSize2D(120, 80), IlludState(window=Window(size=IntegerSize2D(120, 80)), terminal_size=IntegerSize2D(120, 80))),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_handle(state_before: IlludState, signal: Signal, terminal_size: IntegerSize2D,

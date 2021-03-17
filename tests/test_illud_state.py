@@ -3,7 +3,6 @@ from typing import Any, Dict, List, Optional
 from unittest.mock import mock_open, patch
 
 import pytest
-from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.buffer import Buffer
@@ -24,14 +23,14 @@ def test_inheritance() -> None:
 
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('arguments, keyword_arguments, expected_buffer, expected_cursor, expected_mode, expected_window, expected_terminal_size, expected_file', [
-    ([], {}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0), None),
-    ([Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0)], {}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0), None),
-    ([], {'buffer_': Buffer()}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0), None),
-    ([], {'cursor': Cursor(Buffer(), 0)}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0), None),
-    ([], {'mode': Normal()}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0), None),
-    ([], {'window': Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer())}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0), None),
-    ([], {'terminal_size': IntegerSize2D(0, 0)}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0), None),
-    ([], {'file': File('foo')}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), IntegerSize2D(0, 0), File('foo')),
+    ([], {}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), IntegerSize2D(0, 0), None),
+    ([Buffer(), Cursor(Buffer(), 0), Normal(), Window(), IntegerSize2D(0, 0)], {}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), IntegerSize2D(0, 0), None),
+    ([], {'buffer_': Buffer()}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), IntegerSize2D(0, 0), None),
+    ([], {'cursor': Cursor(Buffer(), 0)}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), IntegerSize2D(0, 0), None),
+    ([], {'mode': Normal()}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), IntegerSize2D(0, 0), None),
+    ([], {'window': Window()}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), IntegerSize2D(0, 0), None),
+    ([], {'terminal_size': IntegerSize2D(0, 0)}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), IntegerSize2D(0, 0), None),
+    ([], {'file': File('foo')}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), IntegerSize2D(0, 0), File('foo')),
 ])
 # yapf: enable # pylint: enable=line-too-long
 # pylint: disable=too-many-arguments
@@ -52,7 +51,7 @@ def test_init(arguments: List[Any], keyword_arguments: Dict[str, Any], expected_
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('path, file_contents, terminal_size, expected_illud_state', [
     ('foo.txt', '', IntegerSize2D(0, 0), IlludState(file=File('foo.txt'))),
-    ('foo.txt', 'Lorem ipsum dolor sit amet', IntegerSize2D(120, 80), IlludState(Buffer('Lorem ipsum dolor sit amet'), Cursor(Buffer('Lorem ipsum dolor sit amet'), 0), window=Window(IntegerPosition2D(), IntegerSize2D(120, 80), Buffer('Lorem ipsum dolor sit amet')), terminal_size=IntegerSize2D(120, 80), file=File('foo.txt'))),
+    ('foo.txt', 'Lorem ipsum dolor sit amet', IntegerSize2D(120, 80), IlludState(Buffer('Lorem ipsum dolor sit amet'), Cursor(Buffer('Lorem ipsum dolor sit amet'), 0), window=Window(size=IntegerSize2D(120, 80), buffer_=Buffer('Lorem ipsum dolor sit amet')), terminal_size=IntegerSize2D(120, 80), file=File('foo.txt'))),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_from_file(path: str, file_contents: str, terminal_size: IntegerSize2D,

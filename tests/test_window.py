@@ -33,12 +33,12 @@ def test_init(position: Optional[IntegerPosition2D], size: Optional[IntegerSize2
 
 # yapf: disable
 @pytest.mark.parametrize('window, expected_rows', [
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer('')), range(0, 0)),
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 3), Buffer('')), range(0, 3)),
-    (Window(IntegerPosition2D(0, 1), IntegerSize2D(0, 0), Buffer('')), range(1, 1)),
-    (Window(IntegerPosition2D(0, 1), IntegerSize2D(0, 3), Buffer('')), range(1, 4)),
-    (Window(IntegerPosition2D(0, 7), IntegerSize2D(0, 0), Buffer('')), range(7, 7)),
-    (Window(IntegerPosition2D(0, 7), IntegerSize2D(0, 3), Buffer('')), range(7, 10)),
+    (Window(), range(0, 0)),
+    (Window(size=IntegerSize2D(0, 3)), range(0, 3)),
+    (Window(IntegerPosition2D(0, 1)), range(1, 1)),
+    (Window(IntegerPosition2D(0, 1), IntegerSize2D(0, 3)), range(1, 4)),
+    (Window(IntegerPosition2D(0, 7)), range(7, 7)),
+    (Window(IntegerPosition2D(0, 7), IntegerSize2D(0, 3)), range(7, 10)),
 ])
 # yapf: enable
 def test_rows(window: Window, expected_rows: Iterable[int]) -> None:
@@ -50,12 +50,12 @@ def test_rows(window: Window, expected_rows: Iterable[int]) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('window, expected_columns', [
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer('')), range(0, 0)),
-    (Window(IntegerPosition2D(), IntegerSize2D(3, 0), Buffer('')), range(0, 3)),
-    (Window(IntegerPosition2D(1, 0), IntegerSize2D(0, 0), Buffer('')), range(1, 1)),
-    (Window(IntegerPosition2D(1, 0), IntegerSize2D(3, 0), Buffer('')), range(1, 4)),
-    (Window(IntegerPosition2D(7, 0), IntegerSize2D(0, 0), Buffer('')), range(7, 7)),
-    (Window(IntegerPosition2D(7, 0), IntegerSize2D(3, 0), Buffer('')), range(7, 10)),
+    (Window(), range(0, 0)),
+    (Window(size=IntegerSize2D(3, 0)), range(0, 3)),
+    (Window(IntegerPosition2D(1, 0)), range(1, 1)),
+    (Window(IntegerPosition2D(1, 0), IntegerSize2D(3, 0)), range(1, 4)),
+    (Window(IntegerPosition2D(7, 0)), range(7, 7)),
+    (Window(IntegerPosition2D(7, 0), IntegerSize2D(3, 0)), range(7, 10)),
 ])
 # yapf: enable
 def test_columns(window: Window, expected_columns: Iterable[int]) -> None:
@@ -67,15 +67,15 @@ def test_columns(window: Window, expected_columns: Iterable[int]) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('window, expected_left_column, expected_exception', [
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), None, NoColumnsException),
-    (Window(IntegerPosition2D(1, 0), IntegerSize2D(0, 0), Buffer()), None, NoColumnsException),
-    (Window(IntegerPosition2D(3, 0), IntegerSize2D(0, 0), Buffer()), None, NoColumnsException),
-    (Window(IntegerPosition2D(), IntegerSize2D(1, 0), Buffer()), 0, None),
-    (Window(IntegerPosition2D(1, 0), IntegerSize2D(1, 0), Buffer()), 1, None),
-    (Window(IntegerPosition2D(3, 0), IntegerSize2D(1, 0), Buffer()), 3, None),
-    (Window(IntegerPosition2D(), IntegerSize2D(3, 0), Buffer()), 0, None),
-    (Window(IntegerPosition2D(1, 0), IntegerSize2D(3, 0), Buffer()), 1, None),
-    (Window(IntegerPosition2D(3, 0), IntegerSize2D(3, 0), Buffer()), 3, None),
+    (Window(), None, NoColumnsException),
+    (Window(IntegerPosition2D(1, 0)), None, NoColumnsException),
+    (Window(IntegerPosition2D(3, 0)), None, NoColumnsException),
+    (Window(size=IntegerSize2D(1, 0)), 0, None),
+    (Window(IntegerPosition2D(1, 0), IntegerSize2D(1, 0)), 1, None),
+    (Window(IntegerPosition2D(3, 0), IntegerSize2D(1, 0)), 3, None),
+    (Window(size=IntegerSize2D(3, 0)), 0, None),
+    (Window(IntegerPosition2D(1, 0), IntegerSize2D(3, 0)), 1, None),
+    (Window(IntegerPosition2D(3, 0), IntegerSize2D(3, 0)), 3, None),
 ])
 # yapf: enable
 def test_left_column(window: Window, expected_left_column: Optional[int],
@@ -92,15 +92,15 @@ def test_left_column(window: Window, expected_left_column: Optional[int],
 
 # yapf: disable
 @pytest.mark.parametrize('window, expected_right_column, expected_exception', [
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), None, NoColumnsException),
-    (Window(IntegerPosition2D(1, 0), IntegerSize2D(0, 0), Buffer()), None, NoColumnsException),
-    (Window(IntegerPosition2D(3, 0), IntegerSize2D(0, 0), Buffer()), None, NoColumnsException),
-    (Window(IntegerPosition2D(), IntegerSize2D(1, 0), Buffer()), 0, None),
-    (Window(IntegerPosition2D(1, 0), IntegerSize2D(1, 0), Buffer()), 1, None),
-    (Window(IntegerPosition2D(3, 0), IntegerSize2D(1, 0), Buffer()), 3, None),
-    (Window(IntegerPosition2D(), IntegerSize2D(3, 0), Buffer()), 2, None),
-    (Window(IntegerPosition2D(1, 0), IntegerSize2D(3, 0), Buffer()), 3, None),
-    (Window(IntegerPosition2D(3, 0), IntegerSize2D(3, 0), Buffer()), 5, None),
+    (Window(), None, NoColumnsException),
+    (Window(IntegerPosition2D(1, 0)), None, NoColumnsException),
+    (Window(IntegerPosition2D(3, 0)), None, NoColumnsException),
+    (Window(size=IntegerSize2D(1, 0)), 0, None),
+    (Window(IntegerPosition2D(1, 0), IntegerSize2D(1, 0)), 1, None),
+    (Window(IntegerPosition2D(3, 0), IntegerSize2D(1, 0)), 3, None),
+    (Window(size=IntegerSize2D(3, 0)), 2, None),
+    (Window(IntegerPosition2D(1, 0), IntegerSize2D(3, 0)), 3, None),
+    (Window(IntegerPosition2D(3, 0), IntegerSize2D(3, 0)), 5, None),
 ])
 # yapf: enable
 def test_right_column(window: Window, expected_right_column: Optional[int],
@@ -117,15 +117,15 @@ def test_right_column(window: Window, expected_right_column: Optional[int],
 
 # yapf: disable
 @pytest.mark.parametrize('window, expected_top_row, expected_exception', [
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), None, NoRowsException),
-    (Window(IntegerPosition2D(0, 1), IntegerSize2D(0, 0), Buffer()), None, NoRowsException),
-    (Window(IntegerPosition2D(0, 3), IntegerSize2D(0, 0), Buffer()), None, NoRowsException),
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 1), Buffer()), 0, None),
-    (Window(IntegerPosition2D(0, 1), IntegerSize2D(0, 1), Buffer()), 1, None),
-    (Window(IntegerPosition2D(0, 3), IntegerSize2D(0, 1), Buffer()), 3, None),
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 3), Buffer()), 0, None),
-    (Window(IntegerPosition2D(0, 1), IntegerSize2D(0, 3), Buffer()), 1, None),
-    (Window(IntegerPosition2D(0, 3), IntegerSize2D(0, 3), Buffer()), 3, None),
+    (Window(), None, NoRowsException),
+    (Window(IntegerPosition2D(0, 1)), None, NoRowsException),
+    (Window(IntegerPosition2D(0, 3)), None, NoRowsException),
+    (Window(size=IntegerSize2D(0, 1)), 0, None),
+    (Window(IntegerPosition2D(0, 1), IntegerSize2D(0, 1)), 1, None),
+    (Window(IntegerPosition2D(0, 3), IntegerSize2D(0, 1)), 3, None),
+    (Window(size=IntegerSize2D(0, 3)), 0, None),
+    (Window(IntegerPosition2D(0, 1), IntegerSize2D(0, 3)), 1, None),
+    (Window(IntegerPosition2D(0, 3), IntegerSize2D(0, 3)), 3, None),
 ])
 # yapf: enable
 def test_top_row(window: Window, expected_top_row: Optional[int],
@@ -142,15 +142,15 @@ def test_top_row(window: Window, expected_top_row: Optional[int],
 
 # yapf: disable
 @pytest.mark.parametrize('window, expected_bottom_row, expected_exception', [
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), None, NoRowsException),
-    (Window(IntegerPosition2D(0, 1), IntegerSize2D(0, 0), Buffer()), None, NoRowsException),
-    (Window(IntegerPosition2D(0, 3), IntegerSize2D(0, 0), Buffer()), None, NoRowsException),
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 1), Buffer()), 0, None),
-    (Window(IntegerPosition2D(0, 1), IntegerSize2D(0, 1), Buffer()), 1, None),
-    (Window(IntegerPosition2D(0, 3), IntegerSize2D(0, 1), Buffer()), 3, None),
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 3), Buffer()), 2, None),
-    (Window(IntegerPosition2D(0, 1), IntegerSize2D(0, 3), Buffer()), 3, None),
-    (Window(IntegerPosition2D(0, 3), IntegerSize2D(0, 3), Buffer()), 5, None),
+    (Window(), None, NoRowsException),
+    (Window(IntegerPosition2D(0, 1)), None, NoRowsException),
+    (Window(IntegerPosition2D(0, 3)), None, NoRowsException),
+    (Window(size=IntegerSize2D(0, 1)), 0, None),
+    (Window(IntegerPosition2D(0, 1), IntegerSize2D(0, 1)), 1, None),
+    (Window(IntegerPosition2D(0, 3), IntegerSize2D(0, 1)), 3, None),
+    (Window(size=IntegerSize2D(0, 3)), 2, None),
+    (Window(IntegerPosition2D(0, 1), IntegerSize2D(0, 3)), 3, None),
+    (Window(IntegerPosition2D(0, 3), IntegerSize2D(0, 3)), 5, None),
 ])
 # yapf: enable
 def test_bottom_row(window: Window, expected_bottom_row: Optional[int],
@@ -167,10 +167,10 @@ def test_bottom_row(window: Window, expected_bottom_row: Optional[int],
 
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('window, other, expected_equality', [
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), 'foo', False),
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer('foo')), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer('bar')), False),
-    (Window(IntegerPosition2D(), IntegerSize2D(3, 7), Buffer('foo')), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer('foo')), False),
-    (Window(IntegerPosition2D(1, 4), IntegerSize2D(0, 0), Buffer('foo')), Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer('foo')), False),
+    (Window(), 'foo', False),
+    (Window(buffer_=Buffer('foo')), Window(buffer_=Buffer('bar')), False),
+    (Window(size=IntegerSize2D(3, 7), buffer_=Buffer('foo')), Window(buffer_=Buffer('foo')), False),
+    (Window(IntegerPosition2D(1, 4), buffer_=Buffer('foo')), Window(buffer_=Buffer('foo')), False),
     (Window(IntegerPosition2D(1, 4), IntegerSize2D(3, 7), Buffer('foo')), Window(IntegerPosition2D(1, 4), IntegerSize2D(3, 7), Buffer('foo')), True),
 ])
 # yapf: enable # pylint: enable=line-too-long
@@ -183,8 +183,8 @@ def test_eq(window: Window, other: Any, expected_equality: bool) -> None:
 
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('window, expected_representation', [
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer()), 'Window(position=IntegerPosition2D(), size=IntegerSize2D(0, 0), buffer_=Buffer(), offset=IntegerPosition2D())'),
-    (Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer('foo')), 'Window(position=IntegerPosition2D(), size=IntegerSize2D(0, 0), buffer_=Buffer(string=\'foo\'), offset=IntegerPosition2D())'),
+    (Window(), 'Window(position=IntegerPosition2D(), size=IntegerSize2D(0, 0), buffer_=Buffer(), offset=IntegerPosition2D())'),
+    (Window(buffer_=Buffer('foo')), 'Window(position=IntegerPosition2D(), size=IntegerSize2D(0, 0), buffer_=Buffer(string=\'foo\'), offset=IntegerPosition2D())'),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_repr(window: Window, expected_representation: str) -> None:
@@ -196,9 +196,9 @@ def test_repr(window: Window, expected_representation: str) -> None:
 
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('window, offset, expected_offset_after', [
-    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer()), IntegerPosition2D(0, 0), IntegerPosition2D(0, 0)),
-    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer()), IntegerPosition2D(-1, 0), IntegerPosition2D(-1, 0)),
-    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer(), IntegerPosition2D(1, 1)), IntegerPosition2D(-1, 0), IntegerPosition2D(0, 1)),
+    (Window(size=IntegerSize2D(4, 3)), IntegerPosition2D(0, 0), IntegerPosition2D(0, 0)),
+    (Window(size=IntegerSize2D(4, 3)), IntegerPosition2D(-1, 0), IntegerPosition2D(-1, 0)),
+    (Window(size=IntegerSize2D(4, 3), offset=IntegerPosition2D(1, 1)), IntegerPosition2D(-1, 0), IntegerPosition2D(0, 1)),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_move_view(window: Window, offset: IntegerPosition2D,
@@ -211,15 +211,15 @@ def test_move_view(window: Window, offset: IntegerPosition2D,
 
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('window, index, expected_window', [
-    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('')), 0, Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer(''))),
-    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo')), 0, Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo'))),
-    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar')), 4, Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar'), IntegerPosition2D(1, 0))),
-    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar')), 5, Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar'), IntegerPosition2D(2, 0))),
-    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar'), IntegerPosition2D(1, 0)), 6, Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar'), IntegerPosition2D(3, 0))),
-    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar'), IntegerPosition2D(1, 0)), 0, Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar'))),
-    (Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar'), IntegerPosition2D(2, 0)), 0, Window(IntegerPosition2D(), IntegerSize2D(4, 3), Buffer('foo bar'))),
-    (Window(IntegerPosition2D(), IntegerSize2D(3, 2), Buffer('foo\nbar\nbaz')), 8, Window(IntegerPosition2D(), IntegerSize2D(3, 2), Buffer('foo\nbar\nbaz'), IntegerPosition2D(0, 1))),
-    (Window(IntegerPosition2D(), IntegerSize2D(3, 2), Buffer('foo\nbar\nbaz'), IntegerPosition2D(0, 1)), 0, Window(IntegerPosition2D(), IntegerSize2D(3, 2), Buffer('foo\nbar\nbaz'))),
+    (Window(size=IntegerSize2D(4, 3)), 0, Window(size=IntegerSize2D(4, 3))),
+    (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo')), 0, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo'))),
+    (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar')), 4, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(1, 0))),
+    (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar')), 5, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(2, 0))),
+    (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(1, 0)), 6, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(3, 0))),
+    (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(1, 0)), 0, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'))),
+    (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(2, 0)), 0, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'))),
+    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar\nbaz')), 8, Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar\nbaz'), offset=IntegerPosition2D(0, 1))),
+    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar\nbaz'), offset=IntegerPosition2D(0, 1)), 0, Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar\nbaz'))),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_adjust_view_to_include(window: Window, index: int, expected_window: Window) -> None:

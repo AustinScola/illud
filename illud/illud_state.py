@@ -1,7 +1,6 @@
 """Persistent information of Illud."""
 from typing import Any, Optional
 
-from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 from seligimus.python.decorators.operators.equality.equal_instance_attributes import \
     equal_instance_attributes
@@ -48,7 +47,7 @@ class IlludState(State):
 
         self.window: Window
         if window is None:
-            self.window = Window(IntegerPosition2D(), IntegerSize2D(0, 0), Buffer())
+            self.window = Window()
         else:
             self.window = window
 
@@ -69,7 +68,7 @@ class IlludState(State):
         buffer_: Buffer = Buffer(contents)
         cursor: Cursor = Cursor(buffer_, 0)
         terminal_size: IntegerSize2D = Terminal.get_size()
-        window: Window = Window(IntegerPosition2D(), terminal_size, buffer_)
+        window: Window = Window(size=terminal_size, buffer_=buffer_)
         file: File = File(path)
         illud_state = IlludState(buffer_,
                                  cursor,
