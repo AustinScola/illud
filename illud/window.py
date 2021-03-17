@@ -89,8 +89,9 @@ class Window():
         if not self.buffer:
             return
 
-        column: int = self.buffer.get_column(index)
-        row: int = self.buffer.get_row(index)
+        position: IntegerPosition2D = self.buffer.get_position(index)
+        column: int = position.x
+        row: int = position.y
 
         offset: IntegerPosition2D
         if column > self.offset.x + self.size.width - 1:
