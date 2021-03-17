@@ -1,6 +1,8 @@
 """A string buffer."""
+
 from typing import Any, Optional, Union
 
+from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.python.decorators.operators.equality.equal_instance_attributes import \
     equal_instance_attributes
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
@@ -54,6 +56,14 @@ class Buffer():
            if the substring is not found."""
         index: int = self.string.rindex(substring, start, end)
         return index
+
+    def get_position(self, index: int) -> IntegerPosition2D:
+        """Return the position of an index in the buffer."""
+        column: int = self.get_column(index)
+        row: int = self.get_row(index)
+
+        position: IntegerPosition2D = IntegerPosition2D(column, row)
+        return position
 
     def get_row(self, index: int) -> int:
         """Return the row number of an index in the buffer."""

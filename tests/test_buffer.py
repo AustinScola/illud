@@ -2,6 +2,7 @@
 from typing import Any, Dict, List, Optional, Type, Union
 
 import pytest
+from seligimus.maths.integer_position_2d import IntegerPosition2D
 
 from illud.buffer import Buffer
 from illud.exceptions.buffer_has_no_end_exception import BufferHasNoEndException
@@ -198,6 +199,30 @@ def test_reverse_index(buffer_: Buffer, substring: str, start: Optional[int], pa
         index = buffer_.reverse_index(substring, **keyword_arguments)
 
         assert index == expected_index
+
+
+# yapf: disable
+@pytest.mark.parametrize('buffer_, index, expected_exception, expected_position', [
+    (Buffer(), 0, BufferIndexException(0, 0), None),
+    (Buffer(), 1, BufferIndexException(1, 0), None),
+    (Buffer('foo'), 0, None, IntegerPosition2D()),
+    (Buffer('foo'), 1, None, IntegerPosition2D(1, 0)),
+    (Buffer('foo\nbar'), 0, None, IntegerPosition2D()),
+    (Buffer('foo\nbar'), 4, None, IntegerPosition2D(0, 1)),
+    (Buffer('foo\nbar'), 6, None, IntegerPosition2D(2, 1)),
+])
+# yapf: enable
+def test_get_position(buffer_: Buffer, index: int,
+                      expected_exception: Optional[BufferIndexException],
+                      expected_position: IntegerPosition2D) -> None:
+    """Test illud.buffer.Buffer.get_position."""
+    if expected_exception is not None:
+        with pytest.raises(type(expected_exception)):
+            buffer_.get_position(index)
+    else:
+        position: IntegerPosition2D = buffer_.get_position(index)
+
+        assert position == expected_position
 
 
 # yapf: disable
