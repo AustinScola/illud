@@ -16,13 +16,13 @@ from illud.exceptions.no_rows_exception import NoRowsException
 class Window():
     """A rectangular view of a string buffer."""
     def __init__(self,
-                 position: IntegerPosition2D,
-                 size: IntegerSize2D,
-                 buffer_: Buffer,
+                 position: Optional[IntegerPosition2D] = None,
+                 size: Optional[IntegerSize2D] = None,
+                 buffer_: Optional[Buffer] = None,
                  offset: Optional[IntegerPosition2D] = None):
-        self.position: IntegerPosition2D = position
-        self.size: IntegerSize2D = size
-        self.buffer: Buffer = buffer_
+        self.position: IntegerPosition2D = position if position is not None else IntegerPosition2D()
+        self.size: IntegerSize2D = size if size is not None else IntegerSize2D(0, 0)
+        self.buffer: Buffer = buffer_ if buffer_ is not None else Buffer()
         self.offset: IntegerPosition2D = offset if offset is not None else IntegerPosition2D()
 
     @property

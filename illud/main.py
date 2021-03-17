@@ -2,7 +2,6 @@
 import argparse
 from typing import List
 
-from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.buffer import Buffer
@@ -40,7 +39,7 @@ def _run_illud(parsed_arguments: argparse.Namespace) -> None:
         buffer_: Buffer = Buffer()
         cursor: Cursor = Cursor(buffer_, 0)
         terminal_size: IntegerSize2D = Terminal.get_size()
-        window: Window = Window(IntegerPosition2D(), terminal_size, buffer_)
+        window: Window = Window(size=terminal_size, buffer_=buffer_)
         illud_state = IlludState(buffer_, cursor, window=window, terminal_size=terminal_size)
 
     illud: Illud = Illud(illud_state)
