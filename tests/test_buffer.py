@@ -79,7 +79,7 @@ def test_repr(buffer_: Buffer, expected_representation: str) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('buffer_, index_or_slice, expected_item, expected_exception', [
-    (Buffer(''), 0, None, IndexError),
+    (Buffer(), 0, None, IndexError),
     (Buffer('f'), 0, 'f', None),
     (Buffer('foo'), 1, 'o', None),
     (Buffer('foo'), -1, 'o', None),
@@ -229,7 +229,7 @@ def test_get_position(buffer_: Buffer, index: int,
 @pytest.mark.parametrize('buffer_, index, expected_exception, expected_row', [
     (Buffer(), 1, BufferIndexException(1, 0), None),
     (Buffer(), 0, None, 0),
-    (Buffer(''), 0, None, 0),
+    (Buffer(), 0, None, 0),
     (Buffer('foo'), 0, None, 0),
     (Buffer('foo'), 1, None, 0),
     (Buffer('foo'), 2, None, 0),

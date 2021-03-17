@@ -26,7 +26,7 @@ def test_inheritance() -> None:
     (IlludState(mode=Insert()), Character('a'), IlludState(cursor=Cursor(Buffer('a'), 1), mode=Insert()), False),
     (IlludState(cursor=Cursor(Buffer('foo'), 0), mode=Insert()), Character(BACKSPACE), IlludState(cursor=Cursor(Buffer('foo'), 0), mode=Insert()), False),
     (IlludState(cursor=Cursor(Buffer('foo'), 2), mode=Insert()), Character(BACKSPACE), IlludState(cursor=Cursor(Buffer('fo'), 1), mode=Insert()), False),
-    (IlludState(cursor=Cursor(Buffer(''), 0), mode=Insert()), Character(CARRIAGE_RETURN), IlludState(cursor=Cursor(Buffer('\n'), 1), mode=Insert()), False),
+    (IlludState(cursor=Cursor(Buffer(), 0), mode=Insert()), Character(CARRIAGE_RETURN), IlludState(cursor=Cursor(Buffer('\n'), 1), mode=Insert()), False),
     (IlludState(cursor=Cursor(Buffer('foo'), 2), mode=Insert()), Character(CARRIAGE_RETURN), IlludState(cursor=Cursor(Buffer('fo\no'), 3), mode=Insert()), False),
 ])
 # yapf: enable # pylint: enable=line-too-long
