@@ -131,8 +131,7 @@ def test_print(illud_state: IlludState, result: Any, expected_output: str) -> No
     standard_output_mock = MagicMock(StandardOutput)
     with patch('illud.terminal.StandardInput'), \
         patch('illud.terminal.StandardOutput', return_value=standard_output_mock), \
-        patch('illud.terminal.Terminal.clear_screen'), \
-        patch('illud.terminal_cursor.TerminalCursor._get_position_from_terminal'):
+        patch('illud.terminal.Terminal.clear_screen'):
 
         illud: Illud = Illud(illud_state)
         standard_output_mock.write.reset_mock()
@@ -159,8 +158,7 @@ def test_catch(exception: Exception, expect_reraises: bool, expect_exits: bool,
     """Test illud.illud.Illud.catch."""
     standard_output_mock = MagicMock(StandardOutput)
     with patch('illud.terminal.StandardInput'), \
-        patch('illud.terminal.StandardOutput', return_value=standard_output_mock), \
-        patch('illud.terminal_cursor.TerminalCursor._get_position_from_terminal'):
+        patch('illud.terminal.StandardOutput', return_value=standard_output_mock):
 
         terminal_mock = Terminal()
         standard_output_mock.write.reset_mock()

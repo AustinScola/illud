@@ -33,8 +33,7 @@ def test_init() -> None:
 
         terminal: Terminal = Terminal()
 
-        terminal_cursor_contructor.assert_called_once_with(standard_input_mock,
-                                                           standard_output_mock)
+        terminal_cursor_contructor.assert_called_once_with(standard_output_mock)
 
     assert terminal._standard_input == standard_input_mock  # pylint: disable=protected-access
     assert terminal._standard_output == standard_output_mock  # pylint: disable=protected-access
@@ -177,8 +176,7 @@ def test_draw_window(window: Window, expected_output: str) -> None:
     """Test illud.terminal.Terminal.draw_window."""
     standard_output_mock = MagicMock(StandardOutput)
     with patch('illud.terminal.StandardInput'), \
-        patch('illud.terminal.StandardOutput', return_value=standard_output_mock), \
-        patch('illud.terminal_cursor.TerminalCursor._get_position_from_terminal'):
+        patch('illud.terminal.StandardOutput', return_value=standard_output_mock):
 
         terminal: Terminal = Terminal()
 
@@ -233,8 +231,7 @@ def test_draw_cursor(cursor: Cursor, offset: IntegerPosition2D, expected_output:
     """Test illud.terminal.Terminal.draw_cursor."""
     standard_output_mock = MagicMock(StandardOutput)
     with patch('illud.terminal.StandardInput'), \
-        patch('illud.terminal.StandardOutput', return_value=standard_output_mock), \
-        patch('illud.terminal_cursor.TerminalCursor._get_position_from_terminal'):
+        patch('illud.terminal.StandardOutput', return_value=standard_output_mock):
 
         terminal: Terminal = Terminal()
 

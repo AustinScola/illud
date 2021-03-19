@@ -21,7 +21,7 @@ class Terminal():
     def __init__(self) -> None:
         self._standard_input: StandardInput = StandardInput()
         self._standard_output: StandardOutput = StandardOutput()
-        self._cursor = TerminalCursor(self._standard_input, self._standard_output)
+        self._cursor = TerminalCursor(self._standard_output)
         self._cursor.hide()
 
     @staticmethod
