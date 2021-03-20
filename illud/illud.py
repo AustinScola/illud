@@ -59,11 +59,10 @@ class Illud(REPL):
         canvas.remove_inversions()
 
         window: Window = self._state.window
-
-        self._terminal.draw_window(window, canvas)
+        window.draw(canvas)
 
         cursor: Cursor = self._state.cursor
-        self._terminal.draw_cursor(cursor, window.offset, canvas)
+        cursor.draw(window.offset, canvas)
 
         canvas.render()
 

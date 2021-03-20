@@ -3,21 +3,16 @@ import os
 from unittest.mock import MagicMock, patch
 
 import pytest
-from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.ansi.escape_codes.cursor import MOVE_CURSOR_HOME
 from illud.ansi.escape_codes.erase import CLEAR_SCREEN
 from illud.ansi.escape_codes.screen import DISABLE_ALTERNATIVE_SCREEN, ENABLE_ALTERNATIVE_SCREEN
-from illud.buffer import Buffer
-from illud.canvas import Canvas
 from illud.character import Character
-from illud.cursor import Cursor
 from illud.inputs.standard_input import StandardInput
 from illud.outputs.standard_output import StandardOutput
 from illud.terminal import Terminal
 from illud.terminal_cursor import TerminalCursor
-from illud.window import Window
 
 
 def test_init() -> None:
@@ -132,49 +127,6 @@ def test_move_cursor_home() -> None:
     assert standard_output_mock.write.call_args[0] == (MOVE_CURSOR_HOME, )
 
 
-# yapf: disable # pylint: disable=line-too-long
-@pytest.mark.parametrize('window, canvas, expected_canvas_after', [
-    (Window(), Canvas(), Canvas()),
-    (Window(size=IntegerSize2D(1, 1)), Canvas(IntegerSize2D(1, 1), [['x']]), Canvas(IntegerSize2D(1, 1), [[' ']])),
-    (Window(size=IntegerSize2D(1, 1), buffer_=Buffer('a')), Canvas(IntegerSize2D(1, 1), [['x']]), Canvas(IntegerSize2D(1, 1), [['a']])),
-    (Window(size=IntegerSize2D(2, 1), buffer_=Buffer('foo')), Canvas(IntegerSize2D(2, 1), [['x', 'x']]), Canvas(IntegerSize2D(2, 1), [['f', 'o']])),
-    (Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo')), Canvas(IntegerSize2D(3, 1), [['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 1), [['f', 'o', 'o']])),
-    (Window(size=IntegerSize2D(2, 1), buffer_=Buffer('foo')), Canvas(IntegerSize2D(3, 1), [['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 1), [['f', 'o', 'x']])),
-    (Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo')), Canvas(IntegerSize2D(4, 1), [['x', 'x', 'x', 'x']]), Canvas(IntegerSize2D(4, 1), [['f', 'o', 'o', 'x']])),
-    (Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo')), Canvas(IntegerSize2D(5, 1), [['x', 'x', 'x', 'x', 'x']]), Canvas(IntegerSize2D(5, 1), [['f', 'o', 'o', 'x', 'x']])),
-    (Window(size=IntegerSize2D(5, 1), buffer_=Buffer('foo')), Canvas(IntegerSize2D(5, 1), [['x', 'x', 'x', 'x', 'x']]), Canvas(IntegerSize2D(5, 1), [['f', 'o', 'o', ' ', ' ']])),
-    (Window(size=IntegerSize2D(5, 1), buffer_=Buffer('foo\n')), Canvas(IntegerSize2D(5, 1), [['x', 'x', 'x', 'x', 'x']]), Canvas(IntegerSize2D(5, 1), [['f', 'o', 'o', ' ', ' ']])),
-    (Window(size=IntegerSize2D(2, 2), buffer_=Buffer('foo')), Canvas(IntegerSize2D(3, 2), [['x', 'x', 'x'], ['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 2), [['f', 'o', 'x'], [' ', ' ', 'x']])),
-    (Window(size=IntegerSize2D(1, 2), buffer_=Buffer('f')), Canvas(IntegerSize2D(2, 2), [['x', 'x'], ['x', 'x']]), Canvas(IntegerSize2D(2, 2), [['f', 'x'], [' ', 'x']])),
-    (Window(size=IntegerSize2D(1, 2), buffer_=Buffer('f\nb')), Canvas(IntegerSize2D(2, 2), [['x', 'x'], ['x', 'x']]), Canvas(IntegerSize2D(2, 2), [['f', 'x'], ['b', 'x']])),
-    (Window(size=IntegerSize2D(1, 2), buffer_=Buffer('foo\nb')), Canvas(IntegerSize2D(2, 2), [['x', 'x'], ['x', 'x']]), Canvas(IntegerSize2D(2, 2), [['f', 'x'], ['b', 'x']])),
-    (Window(size=IntegerSize2D(1, 2), buffer_=Buffer('foo\nbar')), Canvas(IntegerSize2D(2, 2), [['x', 'x'], ['x', 'x']]), Canvas(IntegerSize2D(2, 2), [['f', 'x'], ['b', 'x']])),
-    (Window(size=IntegerSize2D(2, 2), buffer_=Buffer('f\nb')), Canvas(IntegerSize2D(2, 2), [['x', 'x'], ['x', 'x']]), Canvas(IntegerSize2D(2, 2), [['f', ' '], ['b', ' ']])),
-    (Window(size=IntegerSize2D(5, 2), buffer_=Buffer('foo\nbar')), Canvas(IntegerSize2D(5, 2), [['x', 'x', 'x', 'x', 'x'], ['x', 'x', 'x', 'x', 'x']]), Canvas(IntegerSize2D(5, 2), [['f', 'o', 'o', ' ', ' '], ['b', 'a', 'r', ' ', ' ']])),
-    (Window(size=IntegerSize2D(5, 3), buffer_=Buffer('foo\nbar\nbaz')), Canvas(IntegerSize2D(5, 3), [['x', 'x', 'x', 'x', 'x'], ['x', 'x', 'x', 'x', 'x'], ['x', 'x', 'x', 'x', 'x']]), Canvas(IntegerSize2D(5, 3), [['f', 'o', 'o', ' ', ' '], ['b', 'a', 'r', ' ', ' '], ['b', 'a', 'z', ' ', ' ']])),
-    (Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo'), offset=IntegerPosition2D(1, 0)), Canvas(IntegerSize2D(3, 1), [['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 1), [['o', 'o', ' ']])),
-    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar'), offset=IntegerPosition2D(1, 0)), Canvas(IntegerSize2D(3, 2), [['x', 'x', 'x'], ['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 2), [['o', 'o', ' '], ['a', 'r', ' ']])),
-    (Window(size=IntegerSize2D(3, 3), buffer_=Buffer('foo\n\nbar'), offset=IntegerPosition2D(1, 0)), Canvas(IntegerSize2D(3, 3), [['x', 'x', 'x'], ['x', 'x', 'x'], ['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 3), [['o', 'o', ' '], [' ', ' ', ' '], ['a', 'r', ' ']])),
-    (Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo'), offset=IntegerPosition2D(-1, 0)), Canvas(IntegerSize2D(3, 1), [['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 1), [[' ', 'f', 'o']])),
-    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar'), offset=IntegerPosition2D(-1, 0)), Canvas(IntegerSize2D(3, 2), [['x', 'x', 'x'], ['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 2), [[' ', 'f', 'o'], [' ', 'b', 'a']])),
-    (Window(size=IntegerSize2D(3, 3), buffer_=Buffer('foo\n\nbar'), offset=IntegerPosition2D(-1, 0)), Canvas(IntegerSize2D(3, 3), [['x', 'x', 'x'], ['x', 'x', 'x'], ['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 3), [[' ', 'f', 'o'], [' ', ' ', ' '], [' ', 'b', 'a']])),
-    (Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo'), offset=IntegerPosition2D(-4, 0)), Canvas(IntegerSize2D(3, 1), [['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 1), [[' ', ' ', ' ']])),
-    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo'), offset=IntegerPosition2D(0, 1)), Canvas(IntegerSize2D(3, 2), [['x', 'x', 'x'], ['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], [' ', ' ', ' ']])),
-    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo'), offset=IntegerPosition2D(0, -1)), Canvas(IntegerSize2D(3, 2), [['x', 'x', 'x'], ['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], ['f', 'o', 'o']])),
-    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar'), offset=IntegerPosition2D(0, -1)), Canvas(IntegerSize2D(3, 2), [['x', 'x', 'x'], ['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], ['f', 'o', 'o']])),
-    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo'), offset=IntegerPosition2D(0, -2)), Canvas(IntegerSize2D(3, 2), [['x', 'x', 'x'], ['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], [' ', ' ', ' ']])),
-])
-# yapf: enable # pylint: enable=line-too-long
-def test_draw_window(window: Window, canvas: Canvas, expected_canvas_after: Canvas) -> None:
-    """Test illud.terminal.Terminal.draw_window."""
-    with patch('illud.terminal.StandardInput'), patch('illud.terminal.StandardOutput'):
-        terminal: Terminal = Terminal()
-
-    terminal.draw_window(window, canvas)
-
-    assert canvas == expected_canvas_after
-
-
 def test_update() -> None:
     """Test illud.terminal.Terminal.draw_update."""
     standard_output_mock = MagicMock(StandardOutput, autospec=True)
@@ -187,35 +139,3 @@ def test_update() -> None:
         terminal.update()
 
     standard_output_mock.flush.assert_called_once()
-
-
-# yapf: disable
-@pytest.mark.parametrize('cursor, offset, canvas, expected_canvas_after', [
-    (Cursor(Buffer(), 0), IntegerPosition2D(), Canvas(), Canvas()),
-    (Cursor(Buffer('foo'), 0), IntegerPosition2D(), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1), inversions=[IntegerPosition2D()])),
-    (Cursor(Buffer('foo'), 1), IntegerPosition2D(), Canvas(size=IntegerSize2D(3, 2)), Canvas(size=IntegerSize2D(3, 2), inversions=[IntegerPosition2D(1, 0)])),
-    (Cursor(Buffer('foo'), 2), IntegerPosition2D(), Canvas(size=IntegerSize2D(3, 2)), Canvas(size=IntegerSize2D(3, 2), inversions=[IntegerPosition2D(2, 0)])),
-    (Cursor(Buffer('foo\n'), 3), IntegerPosition2D(), Canvas(size=IntegerSize2D(4, 2)), Canvas(size=IntegerSize2D(4, 2), inversions=[IntegerPosition2D(3, 0)])),
-    (Cursor(Buffer('foo\nbar'), 3), IntegerPosition2D(), Canvas(size=IntegerSize2D(4, 2)), Canvas(size=IntegerSize2D(4, 2), inversions=[IntegerPosition2D(3, 0)])),
-    (Cursor(Buffer('foo\nbar'), 4), IntegerPosition2D(), Canvas(size=IntegerSize2D(4, 2)), Canvas(size=IntegerSize2D(4, 2), inversions=[IntegerPosition2D(0, 1)])),
-    (Cursor(Buffer('foo\nbar'), 5), IntegerPosition2D(), Canvas(size=IntegerSize2D(4, 2)), Canvas(size=IntegerSize2D(4, 2), inversions=[IntegerPosition2D(1, 1)])),
-    (Cursor(Buffer('foo\nbar'), 6), IntegerPosition2D(), Canvas(size=IntegerSize2D(4, 2)), Canvas(size=IntegerSize2D(4, 2), inversions=[IntegerPosition2D(2, 1)])),
-    (Cursor(Buffer('foo\nbar'), 7), IntegerPosition2D(), Canvas(size=IntegerSize2D(4, 2)), Canvas(size=IntegerSize2D(4, 2), inversions=[IntegerPosition2D(3, 1)])),
-    (Cursor(Buffer(), 0), IntegerPosition2D(1, 0), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1))),
-    (Cursor(Buffer('foo'), 0), IntegerPosition2D(1, 0), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1))),
-    (Cursor(Buffer('foo'), 0), IntegerPosition2D(2, 0), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1))),
-    (Cursor(Buffer('foo'), 0), IntegerPosition2D(-1, 0), Canvas(size=IntegerSize2D(3, 2)), Canvas(size=IntegerSize2D(3, 2), inversions=[IntegerPosition2D(1, 0)])),
-    (Cursor(Buffer('foo'), 0), IntegerPosition2D(0, 1), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1))),
-    (Cursor(Buffer('foo'), 0), IntegerPosition2D(0, -1), Canvas(size=IntegerSize2D(3, 2)), Canvas(size=IntegerSize2D(3, 2), inversions=[IntegerPosition2D(0, 1)])),
-    (Cursor(Buffer('foo'), 0), IntegerPosition2D(0, -2), Canvas(size=IntegerSize2D(3, 3)), Canvas(size=IntegerSize2D(3, 3), inversions=[IntegerPosition2D(0, 2)])),
-])
-# yapf: enable
-def test_draw_cursor(cursor: Cursor, offset: IntegerPosition2D, canvas: Canvas,
-                     expected_canvas_after: Canvas) -> None:
-    """Test illud.terminal.Terminal.draw_cursor."""
-    with patch('illud.terminal.StandardInput'), patch('illud.terminal.StandardOutput'):
-        terminal: Terminal = Terminal()
-
-    terminal.draw_cursor(cursor, offset, canvas)
-
-    assert canvas == expected_canvas_after
