@@ -2,8 +2,11 @@
 from typing import Any
 
 import pytest
+from seligimus.maths.integer_position_2d import IntegerPosition2D
+from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.buffer import Buffer
+from illud.canvas import Canvas
 from illud.cursor import Cursor
 
 
@@ -197,3 +200,32 @@ def test_next_word(cursor: Cursor, expected_cursor_after: Cursor) -> None:
     cursor.next_word()
 
     assert cursor == expected_cursor_after
+
+
+# yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('cursor, offset, canvas, expected_canvas_after', [
+    (Cursor(Buffer(), 0), IntegerPosition2D(), Canvas(), Canvas()),
+    (Cursor(Buffer('foo'), 0), IntegerPosition2D(), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1), inversions=[IntegerPosition2D()])),
+    (Cursor(Buffer('foo'), 1), IntegerPosition2D(), Canvas(size=IntegerSize2D(3, 2)), Canvas(size=IntegerSize2D(3, 2), inversions=[IntegerPosition2D(1, 0)])),
+    (Cursor(Buffer('foo'), 2), IntegerPosition2D(), Canvas(size=IntegerSize2D(3, 2)), Canvas(size=IntegerSize2D(3, 2), inversions=[IntegerPosition2D(2, 0)])),
+    (Cursor(Buffer('foo\n'), 3), IntegerPosition2D(), Canvas(size=IntegerSize2D(4, 2)), Canvas(size=IntegerSize2D(4, 2), inversions=[IntegerPosition2D(3, 0)])),
+    (Cursor(Buffer('foo\nbar'), 3), IntegerPosition2D(), Canvas(size=IntegerSize2D(4, 2)), Canvas(size=IntegerSize2D(4, 2), inversions=[IntegerPosition2D(3, 0)])),
+    (Cursor(Buffer('foo\nbar'), 4), IntegerPosition2D(), Canvas(size=IntegerSize2D(4, 2)), Canvas(size=IntegerSize2D(4, 2), inversions=[IntegerPosition2D(0, 1)])),
+    (Cursor(Buffer('foo\nbar'), 5), IntegerPosition2D(), Canvas(size=IntegerSize2D(4, 2)), Canvas(size=IntegerSize2D(4, 2), inversions=[IntegerPosition2D(1, 1)])),
+    (Cursor(Buffer('foo\nbar'), 6), IntegerPosition2D(), Canvas(size=IntegerSize2D(4, 2)), Canvas(size=IntegerSize2D(4, 2), inversions=[IntegerPosition2D(2, 1)])),
+    (Cursor(Buffer('foo\nbar'), 7), IntegerPosition2D(), Canvas(size=IntegerSize2D(4, 2)), Canvas(size=IntegerSize2D(4, 2), inversions=[IntegerPosition2D(3, 1)])),
+    (Cursor(Buffer(), 0), IntegerPosition2D(1, 0), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1))),
+    (Cursor(Buffer('foo'), 0), IntegerPosition2D(1, 0), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1))),
+    (Cursor(Buffer('foo'), 0), IntegerPosition2D(2, 0), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1))),
+    (Cursor(Buffer('foo'), 0), IntegerPosition2D(-1, 0), Canvas(size=IntegerSize2D(3, 2)), Canvas(size=IntegerSize2D(3, 2), inversions=[IntegerPosition2D(1, 0)])),
+    (Cursor(Buffer('foo'), 0), IntegerPosition2D(0, 1), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1))),
+    (Cursor(Buffer('foo'), 0), IntegerPosition2D(0, -1), Canvas(size=IntegerSize2D(3, 2)), Canvas(size=IntegerSize2D(3, 2), inversions=[IntegerPosition2D(0, 1)])),
+    (Cursor(Buffer('foo'), 0), IntegerPosition2D(0, -2), Canvas(size=IntegerSize2D(3, 3)), Canvas(size=IntegerSize2D(3, 3), inversions=[IntegerPosition2D(0, 2)])),
+])
+# yapf: enable # pylint: enable=line-too-long
+def test_draw_cursor(cursor: Cursor, offset: IntegerPosition2D, canvas: Canvas,
+                     expected_canvas_after: Canvas) -> None:
+    """Test illud.terminal.Terminal.draw_cursor."""
+    cursor.draw(offset, canvas)
+
+    assert canvas == expected_canvas_after

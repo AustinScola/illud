@@ -7,6 +7,7 @@ from seligimus.python.decorators.operators.equality.equal_instance_attributes im
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
 
 from illud.buffer import Buffer
+from illud.canvas import Canvas, Text
 from illud.cursor import Cursor
 from illud.file import File
 from illud.mode import Mode
@@ -25,6 +26,7 @@ class IlludState(State):
                  cursor: Optional[Cursor] = None,
                  mode: Optional[Mode] = None,
                  window: Optional[Window] = None,
+                 canvas: Optional[Canvas] = None,
                  terminal_size: Optional[IntegerSize2D] = None,
                  file: Optional[File] = None):
         self.buffer: Buffer
@@ -51,6 +53,12 @@ class IlludState(State):
         else:
             self.window = window
 
+        self.canvas: Canvas
+        if canvas is None:
+            self.canvas = Canvas()
+        else:
+            self.canvas = canvas
+
         self.terminal_size: IntegerSize2D
         if terminal_size is None:
             self.terminal_size = IntegerSize2D(0, 0)
@@ -69,10 +77,14 @@ class IlludState(State):
         cursor: Cursor = Cursor(buffer_, 0)
         terminal_size: IntegerSize2D = Terminal.get_size()
         window: Window = Window(size=terminal_size, buffer_=buffer_)
+        text: Text = [[' ' for _ in range(terminal_size.width)]
+                      for _ in range(terminal_size.height)]
+        canvas: Canvas = Canvas(terminal_size, text)
         file: File = File(path)
         illud_state = IlludState(buffer_,
                                  cursor,
                                  window=window,
+                                 canvas=canvas,
                                  terminal_size=terminal_size,
                                  file=file)
 

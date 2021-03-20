@@ -1,12 +1,14 @@
 """A position in a string buffer."""
 from typing import Any
 
+from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.python.decorators.operators.equality.equal_instance_attributes import \
     equal_instance_attributes
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
 from seligimus.python.decorators.standard_representation import standard_representation
 
 from illud.buffer import Buffer
+from illud.canvas import Canvas
 from illud.characters import WHITESPACE
 
 
@@ -138,3 +140,26 @@ class Cursor():
 
             if self.index == self.buffer.end:
                 return
+
+    def draw(self, offset: IntegerPosition2D, canvas: Canvas) -> None:
+        """Draw a cursor on the terminal."""
+        canvas_position: IntegerPosition2D
+        if not self.buffer:
+            canvas_position = IntegerPosition2D(0, 0)
+        else:
+            row: int = self.buffer.get_row(self.index)
+            column: int
+            if self.index >= len(self.buffer):
+                column = self.buffer.get_column(self.index - 1) + 1
+            else:
+                column = self.buffer.get_column(self.index)
+            canvas_position = IntegerPosition2D(column, row)
+        canvas_position -= offset
+
+        if not 0 <= canvas_position.x < canvas.size.width:
+            return
+
+        if not 0 <= canvas_position.y < canvas.size.height:
+            return
+
+        canvas.invert(canvas_position)

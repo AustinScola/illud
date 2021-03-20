@@ -4,10 +4,12 @@ from typing import Any, Dict, Optional
 from unittest.mock import MagicMock, patch
 
 import pytest
+from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.ansi.escape_codes.screen import DISABLE_ALTERNATIVE_SCREEN
 from illud.buffer import Buffer
+from illud.canvas import Canvas
 from illud.character import Character
 from illud.cursor import Cursor
 from illud.exceptions.quit_exception import QuitException
@@ -119,20 +121,21 @@ def test_evaluate(initial_state: IlludState, input_: IlludInput,
     assert illud._state == expected_state_after  # pylint: disable=protected-access
 
 
-# yapf: disable
+# yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('illud_state, result, expected_output', [
-    (IlludState(window=Window(size=IntegerSize2D(1, 1))), None, '\x1b[;H \x1b[;H\x1b[7m \x1b[;2H\x1b[m'),
-    (IlludState(cursor=Cursor(Buffer('foo'), 0), window=Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo'))), None, '\x1b[;Hfoo\x1b[;H\x1b[7mf\x1b[;2H\x1b[m'),
-    (IlludState(cursor=Cursor(Buffer('foo'), 1), window=Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo'))), None, '\x1b[;Hfoo\x1b[;2H\x1b[7mo\x1b[;3H\x1b[m'),
+    (IlludState(window=Window(size=IntegerSize2D(1, 1)), canvas=Canvas(IntegerSize2D(1, 1), [[' ']])), None, '\x1b[;H \x1b[;H\x1b[7m \x1b[;2H\x1b[m'),
+    (IlludState(cursor=Cursor(Buffer('foo'), 0), window=Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo')), canvas=Canvas(IntegerSize2D(3, 1), [[' ', ' ', ' ']])), None, '\x1b[;Hfoo\x1b[;H\x1b[7mf\x1b[;2H\x1b[m'),
+    (IlludState(cursor=Cursor(Buffer('foo'), 1), window=Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo')), canvas=Canvas(IntegerSize2D(3, 1), [[' ', ' ', ' ']], inversions=[IntegerPosition2D()])), None, '\x1b[;Hfoo\x1b[;2H\x1b[7mo\x1b[;3H\x1b[m'),
 ])
-# yapf: enable
+# yapf: enable # pylint: enable=line-too-long
 def test_print(illud_state: IlludState, result: Any, expected_output: str) -> None:
     """Test illud.illud.Illud.print."""
     standard_output_mock = MagicMock(StandardOutput)
+    illud_state.canvas._standard_output = standard_output_mock  # pylint: disable=protected-access
+    illud_state.canvas._terminal_cursor._standard_output = standard_output_mock  # pylint: disable=protected-access
     with patch('illud.terminal.StandardInput'), \
         patch('illud.terminal.StandardOutput', return_value=standard_output_mock), \
-        patch('illud.terminal.Terminal.clear_screen'), \
-        patch('illud.terminal_cursor.TerminalCursor._get_position_from_terminal'):
+        patch('illud.terminal.Terminal.clear_screen'):
 
         illud: Illud = Illud(illud_state)
         standard_output_mock.write.reset_mock()
@@ -159,8 +162,7 @@ def test_catch(exception: Exception, expect_reraises: bool, expect_exits: bool,
     """Test illud.illud.Illud.catch."""
     standard_output_mock = MagicMock(StandardOutput)
     with patch('illud.terminal.StandardInput'), \
-        patch('illud.terminal.StandardOutput', return_value=standard_output_mock), \
-        patch('illud.terminal_cursor.TerminalCursor._get_position_from_terminal'):
+        patch('illud.terminal.StandardOutput', return_value=standard_output_mock):
 
         terminal_mock = Terminal()
         standard_output_mock.write.reset_mock()

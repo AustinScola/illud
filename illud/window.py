@@ -9,6 +9,7 @@ from seligimus.python.decorators.operators.equality.equal_type import equal_type
 from seligimus.python.decorators.standard_representation import standard_representation
 
 from illud.buffer import Buffer
+from illud.canvas import Canvas
 from illud.exceptions.no_columns_exception import NoColumnsException
 from illud.exceptions.no_rows_exception import NoRowsException
 
@@ -107,3 +108,70 @@ class Window():
         if row < self.offset.y:
             offset = IntegerPosition2D(0, row - self.offset.y)
             self.move_view(offset)
+
+    def draw(self, canvas: Canvas) -> None:  # pylint: disable=too-many-branches, too-many-locals
+        """Draw a window on the terminal."""
+        if not self.size.width or not self.size.height:
+            return
+
+        buffer_index: int = 0
+
+        row_offset: int = self.offset.y
+        if row_offset > 0:
+            try:
+                for _ in range(row_offset):
+                    buffer_index = self.buffer.index('\n', buffer_index) + 1
+            except ValueError:
+                buffer_index = len(self.buffer)
+        else:
+            for row in range(-row_offset):
+                for column in range(self.size.width):
+                    canvas[row][column] = ' '
+
+        column_offset: int = self.offset.x
+        try:
+            starting_row: int = 0 if row_offset > 0 else -row_offset
+            ending_row: int = self.bottom_row + 1
+            for row in range(starting_row, ending_row):
+
+                if column_offset < 0:
+                    spaces: int
+                    if -column_offset > self.size.width:
+                        spaces = self.size.width
+                    else:
+                        spaces = -column_offset
+                    for beginning_column in range(0, spaces):
+                        canvas[row][beginning_column] = ' '
+                else:
+                    for column in range(column_offset):
+                        character: str = self.buffer[buffer_index]
+                        if character == '\n':
+                            break
+                        buffer_index += 1
+
+                starting_column: int = 0 if column_offset > 0 else -column_offset
+                ending_column: int = self.right_column + 1
+                for column in range(starting_column, ending_column):
+                    character = self.buffer[buffer_index]
+
+                    if character == '\n':
+                        for remaining_column in range(column, self.right_column + 1):
+                            canvas[row][remaining_column] = ' '
+                        buffer_index += 1
+                        break
+
+                    canvas[row][column] = character
+
+                    buffer_index += 1
+                else:
+                    try:
+                        buffer_index = self.buffer.index('\n', buffer_index) + 1
+                    except ValueError:
+                        buffer_index = len(self.buffer)
+        except IndexError:
+            for remaining_column in range(column, self.right_column + 1):
+                canvas[row][remaining_column] = ' '
+
+            for row in range(row + 1, self.position.y + self.size.height):
+                for column in range(starting_column, ending_column):
+                    canvas[row][column] = ' '
