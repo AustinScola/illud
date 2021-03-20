@@ -4,10 +4,10 @@ import os
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
-from illud.ansi.escape_codes.color import INVERT, RESET
 from illud.ansi.escape_codes.cursor import MOVE_CURSOR_HOME
 from illud.ansi.escape_codes.erase import CLEAR_SCREEN
 from illud.ansi.escape_codes.screen import DISABLE_ALTERNATIVE_SCREEN, ENABLE_ALTERNATIVE_SCREEN
+from illud.canvas import Canvas
 from illud.character import Character
 from illud.cursor import Cursor
 from illud.inputs.standard_input import StandardInput
@@ -58,7 +58,8 @@ class Terminal():
         self._standard_output.write(MOVE_CURSOR_HOME)
         self._standard_output.flush()
 
-    def draw_window(self, window: Window) -> None:  # pylint: disable=too-many-branches
+    @staticmethod
+    def draw_window(window: Window, canvas: Canvas) -> None:  # pylint: disable=too-many-branches, too-many-locals
         """Draw a window on the terminal."""
         if not window.size.width or not window.size.height:
             return
@@ -74,15 +75,14 @@ class Terminal():
                 buffer_index = len(window.buffer)
         else:
             for row in range(-row_offset):
-                self._cursor.move(IntegerPosition2D(0, row))
-                self._standard_output.write(' ' * window.size.width)
+                for column in range(window.size.width):
+                    canvas[row][column] = ' '
 
         column_offset: int = window.offset.x
         try:
             starting_row: int = 0 if row_offset > 0 else -row_offset
             ending_row: int = window.bottom_row + 1
             for row in range(starting_row, ending_row):
-                self._cursor.move(IntegerPosition2D(window.position.x, row))
 
                 if column_offset < 0:
                     spaces: int
@@ -90,7 +90,8 @@ class Terminal():
                         spaces = window.size.width
                     else:
                         spaces = -column_offset
-                    self._standard_output.write(' ' * spaces)
+                    for beginning_column in range(0, spaces):
+                        canvas[row][beginning_column] = ' '
                 else:
                     for column in range(column_offset):
                         character: str = window.buffer[buffer_index]
@@ -104,12 +105,12 @@ class Terminal():
                     character = window.buffer[buffer_index]
 
                     if character == '\n':
-                        remaining_columns: int = window.right_column - column + 1
-                        self._standard_output.write(' ' * remaining_columns)
+                        for remaining_column in range(column, window.right_column + 1):
+                            canvas[row][remaining_column] = ' '
                         buffer_index += 1
                         break
 
-                    self._standard_output.write(character)
+                    canvas[row][column] = character
 
                     buffer_index += 1
                 else:
@@ -118,19 +119,19 @@ class Terminal():
                     except ValueError:
                         buffer_index = len(window.buffer)
         except IndexError:
-            remaining_columns = window.right_column - column + 1
-            if remaining_columns:
-                self._standard_output.write(' ' * remaining_columns)
+            for remaining_column in range(column, window.right_column + 1):
+                canvas[row][remaining_column] = ' '
 
             for row in range(row + 1, window.position.y + window.size.height):
-                self._cursor.move(IntegerPosition2D(window.position.x, row))
-                self._standard_output.write(' ' * window.size.width)
+                for column in range(starting_column, ending_column):
+                    canvas[row][column] = ' '
 
     def update(self) -> None:
         """Update the terminal contents."""
         self._standard_output.flush()
 
-    def draw_cursor(self, cursor: Cursor, offset: IntegerPosition2D) -> None:
+    @staticmethod
+    def draw_cursor(cursor: Cursor, offset: IntegerPosition2D, canvas: Canvas) -> None:
         """Draw a cursor on the terminal."""
         cursor_position_in_terminal: IntegerPosition2D
         if not cursor.buffer:
@@ -145,20 +146,10 @@ class Terminal():
             cursor_position_in_terminal = IntegerPosition2D(column, row)
         cursor_position_in_terminal -= offset
 
-        if cursor_position_in_terminal.x < 0 or cursor_position_in_terminal.y < 0:
+        if not 0 <= cursor_position_in_terminal.x < canvas.size.width:
             return
 
-        self._cursor.move(cursor_position_in_terminal)
-        self._standard_output.write(INVERT)
+        if not 0 <= cursor_position_in_terminal.y < canvas.size.height:
+            return
 
-        character: str
-        try:
-            character = cursor.buffer[cursor.index]
-            if character == '\n':
-                character = ' '
-        except IndexError:
-            character = ' '
-        self._standard_output.write(character)
-
-        self._cursor.move(cursor_position_in_terminal + IntegerPosition2D(1, 0))
-        self._standard_output.write(RESET)
+        canvas.invert(cursor_position_in_terminal)

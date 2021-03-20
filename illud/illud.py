@@ -2,6 +2,7 @@
 import sys
 from typing import Any, Optional
 
+from illud.canvas import Canvas
 from illud.character import Character
 from illud.cursor import Cursor
 from illud.exceptions.quit_exception import QuitException
@@ -54,11 +55,17 @@ class Illud(REPL):
             self._signal_handler.handle(self._state, signal)
 
     def print(self, result: Any) -> None:
+        canvas: Canvas = self._state.canvas
+        canvas.remove_inversions()
+
         window: Window = self._state.window
-        self._terminal.draw_window(window)
+
+        self._terminal.draw_window(window, canvas)
 
         cursor: Cursor = self._state.cursor
-        self._terminal.draw_cursor(cursor, window.offset)
+        self._terminal.draw_cursor(cursor, window.offset, canvas)
+
+        canvas.render()
 
         self._terminal.update()
 
