@@ -8,6 +8,7 @@ from seligimus.python.decorators.operators.equality.equal_instance_attributes im
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
 from seligimus.python.decorators.standard_representation import standard_representation
 
+from illud.characters import NEWLINE
 from illud.exceptions.buffer_has_no_end_exception import BufferHasNoEndException
 from illud.exceptions.buffer_index_exception import BufferIndexException
 
@@ -89,6 +90,15 @@ class Buffer():
             column += 1
 
         return column
+
+    def get_line_start(self, index: int) -> int:
+        """Return the index of the start of the line which the given index is part of."""
+        line_start: int
+        try:
+            line_start = self.reverse_index(NEWLINE, start=0, end=index) + 1
+        except ValueError:
+            line_start = 0
+        return line_start
 
     def insert(self, string: str, index: int) -> None:
         """Insert a string at the given index in the buffer."""

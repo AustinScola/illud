@@ -284,6 +284,27 @@ def test_get_column(buffer_: Buffer, index: int, expected_exception: Optional[Bu
         assert column == expected_column
 
 
+# yapf: disable
+@pytest.mark.parametrize('buffer_, index, expected_line_start', [
+    (Buffer(), 0, 0),
+    (Buffer('a'), 0, 0),
+    (Buffer('a'), 1, 0),
+    (Buffer('ab'), 0, 0),
+    (Buffer('ab'), 1, 0),
+    (Buffer('abc'), 2, 0),
+    (Buffer('abc\n'), 3, 0),
+    (Buffer('foo\nbar'), 4, 4),
+    (Buffer('foo\nbar'), 5, 4),
+    (Buffer('foo\nbar'), 6, 4),
+])
+# yapf: enable
+def test_get_line_start(buffer_: Buffer, index: int, expected_line_start: int) -> None:
+    """Test illud.buffer.Buffer.get_line_start."""
+    line_start: int = buffer_.get_line_start(index)
+
+    assert line_start == expected_line_start
+
+
 # pylint: enable=too-many-arguments
 
 
