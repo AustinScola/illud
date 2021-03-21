@@ -41,6 +41,7 @@ def test_inheritance() -> None:
     (IlludState(), Character('k'), IlludState(), False),
     (IlludState(), Character('f'), IlludState(), False),
     (IlludState(), Character('d'), IlludState(), False),
+    (IlludState(cursor=Cursor(Buffer('foo'), 1), window=Window(size=IntegerSize2D(2, 1), buffer_=Buffer('foo'), offset=IntegerPosition2D(1, 0))), Character('D'), IlludState(cursor=Cursor(Buffer('foo'), 0), window=Window(size=IntegerSize2D(2, 1), buffer_=Buffer('foo'))), False),
     (IlludState(cursor=Cursor(Buffer('foo bar'))), Character('w'), IlludState(cursor=Cursor(Buffer('foo bar'), 4)), False),
     (IlludState(cursor=Cursor(Buffer('foo bar')), window=Window(size=IntegerSize2D(2, 1), buffer_=Buffer('foo bar'))), Character('w'), IlludState(cursor=Cursor(Buffer('foo bar'), 4), window=Window(size=IntegerSize2D(2, 1), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(3, 0))), False),
     (IlludState(cursor=Cursor(Buffer('foo'))), Character('x'), IlludState(cursor=Cursor(Buffer('oo'))), False),
