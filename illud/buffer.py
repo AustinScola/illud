@@ -79,17 +79,14 @@ class Buffer():
 
     def get_column(self, index: int) -> int:
         """Return the column number of an index in the buffer."""
-        if not 0 <= index < len(self):
+        if not 0 <= index <= len(self):
             raise BufferIndexException(index, len(self))
 
         column: int = 0
-        if self[index] == '\n' and index == 0:
-            pass
-        else:
-            for character in self[:index][::-1]:
-                if character == '\n':
-                    break
-                column += 1
+        for character in self[:index][::-1]:
+            if character == '\n':
+                break
+            column += 1
 
         return column
 

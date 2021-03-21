@@ -203,8 +203,10 @@ def test_reverse_index(buffer_: Buffer, substring: str, start: Optional[int], pa
 
 # yapf: disable
 @pytest.mark.parametrize('buffer_, index, expected_exception, expected_position', [
-    (Buffer(), 0, BufferIndexException(0, 0), None),
+    (Buffer(), 0, None, IntegerPosition2D(0, 0)),
     (Buffer(), 1, BufferIndexException(1, 0), None),
+    (Buffer('a'), 1, None, IntegerPosition2D(1, 0)),
+    (Buffer('\n'), 1, None, IntegerPosition2D(0, 1)),
     (Buffer('foo'), 0, None, IntegerPosition2D()),
     (Buffer('foo'), 1, None, IntegerPosition2D(1, 0)),
     (Buffer('foo\nbar'), 0, None, IntegerPosition2D()),
@@ -257,7 +259,8 @@ def test_get_row(buffer_: Buffer, index: int, expected_exception: Optional[Buffe
 
 # yapf: disable
 @pytest.mark.parametrize('buffer_, index, expected_exception, expected_column', [
-    (Buffer(), 0, BufferIndexException(0, 0), None),
+    (Buffer(), 0, None, 0),
+    (Buffer(), 1, BufferIndexException(1, 0), None),
     (Buffer(' '), 0, None, 0),
     (Buffer('\n'), 0, None, 0),
     (Buffer('foo'), 0, None, 0),
