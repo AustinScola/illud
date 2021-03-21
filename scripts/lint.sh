@@ -10,4 +10,4 @@ cd "${ILLUD}"
 source "${ILLUD}/scripts/library/venv.sh"
 use_venv "test" frozen_test_requirements.txt
 
-python3 -m pylint illud tests
+find . -path ./venvs -prune -false -o -name "*.py" | xargs python3 -m pylint
