@@ -22,6 +22,7 @@ class Insert(Mode):  # pylint: disable=too-few-public-methods
             state.mode = Normal()
         elif character.value == CARRIAGE_RETURN:
             state.cursor.insert(NEWLINE)
+            state.window.adjust_view_to_include(state.cursor.index)
         elif character.printable:
             string: str = character.value
             state.cursor.insert(string)

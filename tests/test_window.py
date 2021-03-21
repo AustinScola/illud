@@ -214,6 +214,7 @@ def test_move_view(window: Window, offset: IntegerPosition2D,
 @pytest.mark.parametrize('window, index, expected_window', [
     (Window(size=IntegerSize2D(4, 3)), 0, Window(size=IntegerSize2D(4, 3))),
     (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo')), 0, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo'))),
+    (Window(size=IntegerSize2D(1, 1), buffer_=Buffer('\n')), 1, Window(size=IntegerSize2D(1, 1), buffer_=Buffer('\n'), offset=IntegerPosition2D(0, 1))),
     (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar')), 4, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(1, 0))),
     (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar')), 5, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(2, 0))),
     (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(1, 0)), 6, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(3, 0))),
