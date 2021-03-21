@@ -37,7 +37,7 @@ class IlludState(State):
 
         self.cursor: Cursor
         if cursor is None:
-            self.cursor = Cursor(Buffer(), 0)
+            self.cursor = Cursor()
         else:
             self.cursor = cursor
 
@@ -74,7 +74,7 @@ class IlludState(State):
             contents: str = system_file.read()
 
         buffer_: Buffer = Buffer(contents)
-        cursor: Cursor = Cursor(buffer_, 0)
+        cursor: Cursor = Cursor(buffer_)
         terminal_size: IntegerSize2D = Terminal.get_size()
         window: Window = Window(size=terminal_size, buffer_=buffer_)
         text: Text = [[' ' for _ in range(terminal_size.width)]

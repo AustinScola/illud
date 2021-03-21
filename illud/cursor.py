@@ -1,5 +1,5 @@
 """A position in a string buffer."""
-from typing import Any
+from typing import Any, Optional
 
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.python.decorators.operators.equality.equal_instance_attributes import \
@@ -14,9 +14,9 @@ from illud.characters import WHITESPACE
 
 class Cursor():
     """A position in a string buffer."""
-    def __init__(self, buffer_: Buffer, index: int):
-        self.buffer: Buffer = buffer_
-        self.index: int = index
+    def __init__(self, buffer_: Optional[Buffer] = None, index: Optional[int] = None):
+        self.buffer: Buffer = buffer_ if buffer_ is not None else Buffer()
+        self.index: int = index if index is not None else 0
 
     @equal_type
     @equal_instance_attributes
