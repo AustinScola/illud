@@ -1,5 +1,5 @@
 """Test illud.cursor."""
-from typing import Any
+from typing import Any, Optional
 
 import pytest
 from seligimus.maths.integer_position_2d import IntegerPosition2D
@@ -11,17 +11,20 @@ from illud.cursor import Cursor
 
 
 # yapf: disable
-@pytest.mark.parametrize('buffer_,  index', [
-    (Buffer(), 0),
-    (Buffer('foo'), 1),
+@pytest.mark.parametrize('buffer_, index, expected_buffer, expected_index', [
+    (None, None, Buffer(), 0),
+    (Buffer(), None, Buffer(), 0),
+    (None, 0, Buffer(), 0),
+    (Buffer('foo'), 1, Buffer('foo'), 1),
 ])
 # yapf: enable
-def test_init(buffer_: Buffer, index: int) -> None:
+def test_init(buffer_: Optional[Buffer], index: Optional[int], expected_buffer: Buffer,
+              expected_index: int) -> None:
     """Test illud.cursor.Cursor.__init__."""
     cursor: Cursor = Cursor(buffer_, index)
 
-    assert cursor.index == index
-    assert cursor.buffer is buffer_
+    assert cursor.buffer == expected_buffer
+    assert cursor.index == expected_index
 
 
 # yapf: disable
@@ -41,8 +44,8 @@ def test_eq(cursor: Cursor, other: Any, expected_equality: bool) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('cursor, expected_representation', [
-    (Cursor(Buffer(), 0), 'Cursor(Buffer(), 0)'),
-    (Cursor(Buffer('foo'), 0), "Cursor(Buffer(string='foo'), 0)"),
+    (Cursor(Buffer(), 0), 'Cursor(buffer_=Buffer(), index=0)'),
+    (Cursor(Buffer('foo'), 0), "Cursor(buffer_=Buffer(string='foo'), index=0)"),
 ])
 # yapf: enable
 def test_repr(cursor: Cursor, expected_representation: str) -> None:
