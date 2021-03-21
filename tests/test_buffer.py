@@ -284,6 +284,47 @@ def test_get_column(buffer_: Buffer, index: int, expected_exception: Optional[Bu
         assert column == expected_column
 
 
+# yapf: disable
+@pytest.mark.parametrize('buffer_, index, expected_line_start', [
+    (Buffer(), 0, 0),
+    (Buffer('a'), 0, 0),
+    (Buffer('a'), 1, 0),
+    (Buffer('ab'), 0, 0),
+    (Buffer('ab'), 1, 0),
+    (Buffer('abc'), 2, 0),
+    (Buffer('abc\n'), 3, 0),
+    (Buffer('foo\nbar'), 4, 4),
+    (Buffer('foo\nbar'), 5, 4),
+    (Buffer('foo\nbar'), 6, 4),
+])
+# yapf: enable
+def test_get_line_start(buffer_: Buffer, index: int, expected_line_start: int) -> None:
+    """Test illud.buffer.Buffer.get_line_start."""
+    line_start: int = buffer_.get_line_start(index)
+
+    assert line_start == expected_line_start
+
+
+# yapf: disable
+@pytest.mark.parametrize('buffer_, index, expected_line_end', [
+    (Buffer(), 0, 0),
+    (Buffer('a'), 0, 1),
+    (Buffer('a'), 1, 1),
+    (Buffer('a\n'), 1, 1),
+    (Buffer('abc'), 0, 3),
+    (Buffer('abc'), 1, 3),
+    (Buffer('abc'), 2, 3),
+    (Buffer('abc\n'), 2, 3),
+    (Buffer('foo\nbar'), 2, 3),
+])
+# yapf: enable
+def test_get_line_end(buffer_: Buffer, index: int, expected_line_end: int) -> None:
+    """Test illud.buffer.Buffer.get_line_end."""
+    line_end: int = buffer_.get_line_end(index)
+
+    assert line_end == expected_line_end
+
+
 # pylint: enable=too-many-arguments
 
 
