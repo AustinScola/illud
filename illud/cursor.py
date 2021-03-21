@@ -141,6 +141,10 @@ class Cursor():
             if self.index == self.buffer.end:
                 return
 
+    def move_to_line_start(self) -> None:
+        """Move the cursor to the start of the current line."""
+        self.index = self.buffer.get_line_start(self.index)
+
     def draw(self, offset: IntegerPosition2D, canvas: Canvas) -> None:
         """Draw a cursor on the terminal."""
         canvas_position: IntegerPosition2D

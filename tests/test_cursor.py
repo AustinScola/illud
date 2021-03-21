@@ -205,6 +205,26 @@ def test_next_word(cursor: Cursor, expected_cursor_after: Cursor) -> None:
     assert cursor == expected_cursor_after
 
 
+# yapf: disable
+@pytest.mark.parametrize('cursor, expected_cursor_after', [
+    (Cursor(), Cursor()),
+    (Cursor(Buffer('a')), Cursor(Buffer('a'))),
+    (Cursor(Buffer('ab'), 0), Cursor(Buffer('ab'), 0)),
+    (Cursor(Buffer('ab'), 1), Cursor(Buffer('ab'), 0)),
+    (Cursor(Buffer('abc'), 2), Cursor(Buffer('abc'), 0)),
+    (Cursor(Buffer('abc\n'), 3), Cursor(Buffer('abc\n'), 0)),
+    (Cursor(Buffer('foo\nbar'), 4), Cursor(Buffer('foo\nbar'), 4)),
+    (Cursor(Buffer('foo\nbar'), 5), Cursor(Buffer('foo\nbar'), 4)),
+    (Cursor(Buffer('foo\nbar'), 6), Cursor(Buffer('foo\nbar'), 4)),
+])
+# yapf: enable
+def test_move_to_line_start(cursor: Cursor, expected_cursor_after: Cursor) -> None:
+    """Test illud.cursor.Cursor.move_to_line_start."""
+    cursor.move_to_line_start()
+
+    assert cursor == expected_cursor_after
+
+
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('cursor, offset, canvas, expected_canvas_after', [
     (Cursor(), IntegerPosition2D(), Canvas(), Canvas()),
