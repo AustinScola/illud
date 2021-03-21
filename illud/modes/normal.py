@@ -30,6 +30,9 @@ class Normal(Mode):  # pylint: disable=too-few-public-methods
         elif character.value == 'D':
             state.cursor.move_to_line_start()
             state.window.adjust_view_to_include(state.cursor.index)
+        elif character.value == 'F':
+            state.cursor.move_to_line_end()
+            state.window.adjust_view_to_include(state.cursor.index)
         elif character.value == 'w':
             state.cursor.next_word()
             state.window.adjust_view_to_include(state.cursor.index)
