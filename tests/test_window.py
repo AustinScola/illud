@@ -210,6 +210,62 @@ def test_move_view(window: Window, offset: IntegerPosition2D,
     assert window.offset == expected_offset_after
 
 
+# yapf: disable
+@pytest.mark.parametrize('window, expected_window_after', [
+    (Window(), Window()),
+    (Window(offset=IntegerPosition2D(1, 0)), Window()),
+    (Window(offset=IntegerPosition2D(2, 0)), Window(offset=IntegerPosition2D(1, 0))),
+])
+# yapf: enable
+def test_move_view_left(window: Window, expected_window_after: Window) -> None:
+    """Test illud.window.Window.move_view_left."""
+    window.move_view_left()
+
+    assert window == expected_window_after
+
+
+# yapf: disable
+@pytest.mark.parametrize('window, expected_window_after', [
+    (Window(), Window(offset=IntegerPosition2D(1, 0))),
+    (Window(offset=IntegerPosition2D(1, 0)), Window(offset=IntegerPosition2D(2, 0))),
+    (Window(offset=IntegerPosition2D(2, 0)), Window(offset=IntegerPosition2D(3, 0))),
+])
+# yapf: enable
+def test_move_view_right(window: Window, expected_window_after: Window) -> None:
+    """Test illud.window.Window.move_view_right."""
+    window.move_view_right()
+
+    assert window == expected_window_after
+
+
+# yapf: disable
+@pytest.mark.parametrize('window, expected_window_after', [
+    (Window(), Window()),
+    (Window(offset=IntegerPosition2D(0, 1)), Window()),
+    (Window(offset=IntegerPosition2D(0, 2)), Window(offset=IntegerPosition2D(0, 1))),
+])
+# yapf: enable
+def test_move_view_up(window: Window, expected_window_after: Window) -> None:
+    """Test illud.window.Window.move_view_up."""
+    window.move_view_up()
+
+    assert window == expected_window_after
+
+
+# yapf: disable
+@pytest.mark.parametrize('window, expected_window_after', [
+    (Window(), Window(offset=IntegerPosition2D(0, 1))),
+    (Window(offset=IntegerPosition2D(0, 1)), Window(offset=IntegerPosition2D(0, 2))),
+    (Window(offset=IntegerPosition2D(0, 2)), Window(offset=IntegerPosition2D(0, 3))),
+])
+# yapf: enable
+def test_move_view_down(window: Window, expected_window_after: Window) -> None:
+    """Test illud.window.Window.move_view_down."""
+    window.move_view_down()
+
+    assert window == expected_window_after
+
+
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('window, index, expected_window', [
     (Window(size=IntegerSize2D(4, 3)), 0, Window(size=IntegerSize2D(4, 3))),

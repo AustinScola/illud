@@ -85,6 +85,24 @@ class Window():
         """Move the view of the buffer by an offset."""
         self.offset += offset
 
+    def move_view_left(self) -> None:
+        """Move the view of the buffer left."""
+        if self.offset.x > 0:
+            self.offset.x -= 1
+
+    def move_view_right(self) -> None:
+        """Move the view of the buffer right."""
+        self.offset.x += 1
+
+    def move_view_up(self) -> None:
+        """Move the view of the buffer up."""
+        if self.offset.y > 0:
+            self.offset.y -= 1
+
+    def move_view_down(self) -> None:
+        """Move the view of the buffer down."""
+        self.offset.y += 1
+
     def adjust_view_to_include(self, index: int) -> None:
         """Move the view so that it inlcudes an index of the buffer."""
         if not self.buffer:

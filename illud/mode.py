@@ -1,7 +1,6 @@
 """A manner of operation."""
 from typing import TYPE_CHECKING, Any
 
-from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
 
 from illud.character import Character
@@ -25,17 +24,13 @@ class Mode():
             raise QuitException
 
         if character.value == CONTROL_D:
-            left = IntegerPosition2D(-1, 0)
-            state.window.move_view(left)
+            state.window.move_view_left()
         elif character.value == CONTROL_F:
-            right = IntegerPosition2D(1, 0)
-            state.window.move_view(right)
+            state.window.move_view_right()
         elif character.value == CONTROL_J:
-            down = IntegerPosition2D(0, 1)
-            state.window.move_view(down)
+            state.window.move_view_down()
         elif character.value == CONTROL_K:
-            up = IntegerPosition2D(0, -1)  # pylint: disable=invalid-name
-            state.window.move_view(up)
+            state.window.move_view_up()
         elif character.value == CONTROL_W:
             if state.file is not None:
                 state.file.write(state.buffer)
