@@ -124,7 +124,7 @@ def test_evaluate(initial_state: IlludState, input_: IlludInput,
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('illud_state, result, expected_output', [
     (IlludState(window=Window(size=IntegerSize2D(1, 1)), canvas=Canvas(IntegerSize2D(1, 1), [[' ']])), None, '\x1b[;H \x1b[;H\x1b[7m \x1b[;2H\x1b[m'),
-    (IlludState(cursor=Cursor(Buffer('foo'), 0), window=Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo')), canvas=Canvas(IntegerSize2D(3, 1), [[' ', ' ', ' ']])), None, '\x1b[;Hfoo\x1b[;H\x1b[7mf\x1b[;2H\x1b[m'),
+    (IlludState(cursor=Cursor(Buffer('foo')), window=Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo')), canvas=Canvas(IntegerSize2D(3, 1), [[' ', ' ', ' ']])), None, '\x1b[;Hfoo\x1b[;H\x1b[7mf\x1b[;2H\x1b[m'),
     (IlludState(cursor=Cursor(Buffer('foo'), 1), window=Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo')), canvas=Canvas(IntegerSize2D(3, 1), [[' ', ' ', ' ']], inversions=[IntegerPosition2D()])), None, '\x1b[;Hfoo\x1b[;2H\x1b[7mo\x1b[;3H\x1b[m'),
 ])
 # yapf: enable # pylint: enable=line-too-long

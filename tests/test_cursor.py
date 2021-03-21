@@ -29,10 +29,10 @@ def test_init(buffer_: Optional[Buffer], index: Optional[int], expected_buffer: 
 
 # yapf: disable
 @pytest.mark.parametrize('cursor, other, expected_equality', [
-    (Cursor(Buffer(), 0), 'foo', False),
-    (Cursor(Buffer('foo'), 0), Cursor(Buffer('foo'), 1), False),
-    (Cursor(Buffer('foo'), 0), Cursor(Buffer('bar'), 1), False),
-    (Cursor(Buffer('foo'), 0), Cursor(Buffer('foo'), 0), True),
+    (Cursor(), 'foo', False),
+    (Cursor(Buffer('foo')), Cursor(Buffer('foo'), 1), False),
+    (Cursor(Buffer('foo')), Cursor(Buffer('bar'), 1), False),
+    (Cursor(Buffer('foo')), Cursor(Buffer('foo')), True),
 ])
 # yapf: enable
 def test_eq(cursor: Cursor, other: Any, expected_equality: bool) -> None:
@@ -44,8 +44,8 @@ def test_eq(cursor: Cursor, other: Any, expected_equality: bool) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('cursor, expected_representation', [
-    (Cursor(Buffer(), 0), 'Cursor(buffer_=Buffer(), index=0)'),
-    (Cursor(Buffer('foo'), 0), "Cursor(buffer_=Buffer(string='foo'), index=0)"),
+    (Cursor(), 'Cursor(buffer_=Buffer(), index=0)'),
+    (Cursor(Buffer('foo')), "Cursor(buffer_=Buffer(string='foo'), index=0)"),
 ])
 # yapf: enable
 def test_repr(cursor: Cursor, expected_representation: str) -> None:
@@ -57,9 +57,9 @@ def test_repr(cursor: Cursor, expected_representation: str) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('cursor, expected_cursor_after', [
-    (Cursor(Buffer(), 0), Cursor(Buffer(), 0)),
-    (Cursor(Buffer('foo'), 0), Cursor(Buffer('foo'), 0)),
-    (Cursor(Buffer('foo'), 1), Cursor(Buffer('foo'), 0)),
+    (Cursor(), Cursor()),
+    (Cursor(Buffer('foo')), Cursor(Buffer('foo'))),
+    (Cursor(Buffer('foo'), 1), Cursor(Buffer('foo'))),
     (Cursor(Buffer('foo'), 2), Cursor(Buffer('foo'), 1)),
     (Cursor(Buffer('foo\nbar'), 3), Cursor(Buffer('foo\nbar'), 2)),
     (Cursor(Buffer('foo\nbar'), 4), Cursor(Buffer('foo\nbar'), 4)),
@@ -76,8 +76,8 @@ def test_move_left(cursor: Cursor, expected_cursor_after: Cursor) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('cursor, expected_cursor_after', [
-    (Cursor(Buffer(), 0), Cursor(Buffer(), 0)),
-    (Cursor(Buffer('foo'), 0), Cursor(Buffer('foo'), 1)),
+    (Cursor(), Cursor()),
+    (Cursor(Buffer('foo')), Cursor(Buffer('foo'), 1)),
     (Cursor(Buffer('foo'), 1), Cursor(Buffer('foo'), 2)),
     (Cursor(Buffer('foo'), 2), Cursor(Buffer('foo'), 2)),
     (Cursor(Buffer('foo\nbar'), 3), Cursor(Buffer('foo\nbar'), 3)),
@@ -95,8 +95,8 @@ def test_move_right(cursor: Cursor, expected_cursor_after: Cursor) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('cursor, expected_cursor_after', [
-    (Cursor(Buffer(), 0), Cursor(Buffer(), 0)),
-    (Cursor(Buffer('foo'), 0), Cursor(Buffer('foo'), 0)),
+    (Cursor(), Cursor()),
+    (Cursor(Buffer('foo')), Cursor(Buffer('foo'))),
     (Cursor(Buffer('foo'), 1), Cursor(Buffer('foo'), 1)),
     (Cursor(Buffer('foo\nbar'), 3), Cursor(Buffer('foo\nbar'), 3)),
     (Cursor(Buffer('foo\nbar'), 4), Cursor(Buffer('foo\nbar'), 0)),
@@ -118,12 +118,12 @@ def test_move_up(cursor: Cursor, expected_cursor_after: Cursor) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('cursor, expected_cursor_after', [
-    (Cursor(Buffer(), 0), Cursor(Buffer(), 0)),
-    (Cursor(Buffer('foo'), 0), Cursor(Buffer('foo'), 0)),
+    (Cursor(), Cursor()),
+    (Cursor(Buffer('foo')), Cursor(Buffer('foo'))),
     (Cursor(Buffer('foo'), 1), Cursor(Buffer('foo'), 1)),
-    (Cursor(Buffer('foo\n'), 0), Cursor(Buffer('foo\n'), 0)),
+    (Cursor(Buffer('foo\n')), Cursor(Buffer('foo\n'))),
     (Cursor(Buffer('foo\n'), 1), Cursor(Buffer('foo\n'), 1)),
-    (Cursor(Buffer('foo\nbar'), 0), Cursor(Buffer('foo\nbar'), 4)),
+    (Cursor(Buffer('foo\nbar')), Cursor(Buffer('foo\nbar'), 4)),
     (Cursor(Buffer('foo\nbar'), 1), Cursor(Buffer('foo\nbar'), 5)),
     (Cursor(Buffer('wibble\nfoo\nbar',), 5), Cursor(Buffer('wibble\nfoo\nbar'), 10)),
     (Cursor(Buffer('spam\nham'), 3), Cursor(Buffer('spam\nham'), 7)),
@@ -139,10 +139,10 @@ def test_move_down(cursor: Cursor, expected_cursor_after: Cursor) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('cursor, string, expected_cursor_after', [
-    (Cursor(Buffer(), 0), '', Cursor(Buffer(), 0)),
-    (Cursor(Buffer(), 0), 'f', Cursor(Buffer('f'), 1)),
-    (Cursor(Buffer(), 0), 'foo', Cursor(Buffer('foo'), 3)),
-    (Cursor(Buffer('bar'), 0), 'foo', Cursor(Buffer('foobar'), 3)),
+    (Cursor(), '', Cursor()),
+    (Cursor(), 'f', Cursor(Buffer('f'), 1)),
+    (Cursor(), 'foo', Cursor(Buffer('foo'), 3)),
+    (Cursor(Buffer('bar')), 'foo', Cursor(Buffer('foobar'), 3)),
     (Cursor(Buffer('foo'), 1), '', Cursor(Buffer('foo'), 1)),
     (Cursor(Buffer('fo'), 1), 'o', Cursor(Buffer('foo'), 2)),
     (Cursor(Buffer('foo'), 3), 'bar', Cursor(Buffer('foobar'), 6)),
@@ -157,7 +157,7 @@ def test_insert(cursor: Cursor, string: str, expected_cursor_after: Cursor) -> N
 
 # yapf: disable
 @pytest.mark.parametrize('cursor, expected_cursor_after', [
-    (Cursor(Buffer('foo'), 1), Cursor(Buffer('oo'), 0)),
+    (Cursor(Buffer('foo'), 1), Cursor(Buffer('oo'))),
     (Cursor(Buffer('foo'), 2), Cursor(Buffer('fo'), 1)),
     (Cursor(Buffer('foo'), 3), Cursor(Buffer('fo'), 2)),
 ])
@@ -171,8 +171,8 @@ def test_backspace(cursor: Cursor, expected_cursor_after: Cursor) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('cursor, expected_cursor_after', [
-    (Cursor(Buffer(), 0), Cursor(Buffer(), 0)),
-    (Cursor(Buffer('foo'), 0), Cursor(Buffer('oo'), 0)),
+    (Cursor(), Cursor()),
+    (Cursor(Buffer('foo')), Cursor(Buffer('oo'))),
     (Cursor(Buffer('foo'), 1), Cursor(Buffer('fo'), 1)),
     (Cursor(Buffer('foo'), 2), Cursor(Buffer('fo'), 1)),
     (Cursor(Buffer('foo\n'), 3), Cursor(Buffer('foo'), 2)),
@@ -187,8 +187,8 @@ def test_delete(cursor: Cursor, expected_cursor_after: Cursor) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('cursor, expected_cursor_after', [
-    (Cursor(Buffer(), 0), Cursor(Buffer(), 0)),
-    (Cursor(Buffer('a b'), 0), Cursor(Buffer('a b'), 2)),
+    (Cursor(), Cursor()),
+    (Cursor(Buffer('a b')), Cursor(Buffer('a b'), 2)),
     (Cursor(Buffer('a b'), 1), Cursor(Buffer('a b'), 2)),
     (Cursor(Buffer('a b'), 2), Cursor(Buffer('a b'), 2)),
     (Cursor(Buffer('foo bar'), 1), Cursor(Buffer('foo bar'), 4)),
@@ -207,8 +207,8 @@ def test_next_word(cursor: Cursor, expected_cursor_after: Cursor) -> None:
 
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('cursor, offset, canvas, expected_canvas_after', [
-    (Cursor(Buffer(), 0), IntegerPosition2D(), Canvas(), Canvas()),
-    (Cursor(Buffer('foo'), 0), IntegerPosition2D(), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1), inversions=[IntegerPosition2D()])),
+    (Cursor(), IntegerPosition2D(), Canvas(), Canvas()),
+    (Cursor(Buffer('foo')), IntegerPosition2D(), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1), inversions=[IntegerPosition2D()])),
     (Cursor(Buffer('foo'), 1), IntegerPosition2D(), Canvas(size=IntegerSize2D(3, 2)), Canvas(size=IntegerSize2D(3, 2), inversions=[IntegerPosition2D(1, 0)])),
     (Cursor(Buffer('foo'), 2), IntegerPosition2D(), Canvas(size=IntegerSize2D(3, 2)), Canvas(size=IntegerSize2D(3, 2), inversions=[IntegerPosition2D(2, 0)])),
     (Cursor(Buffer('foo\n'), 3), IntegerPosition2D(), Canvas(size=IntegerSize2D(4, 2)), Canvas(size=IntegerSize2D(4, 2), inversions=[IntegerPosition2D(3, 0)])),
@@ -217,13 +217,13 @@ def test_next_word(cursor: Cursor, expected_cursor_after: Cursor) -> None:
     (Cursor(Buffer('foo\nbar'), 5), IntegerPosition2D(), Canvas(size=IntegerSize2D(4, 2)), Canvas(size=IntegerSize2D(4, 2), inversions=[IntegerPosition2D(1, 1)])),
     (Cursor(Buffer('foo\nbar'), 6), IntegerPosition2D(), Canvas(size=IntegerSize2D(4, 2)), Canvas(size=IntegerSize2D(4, 2), inversions=[IntegerPosition2D(2, 1)])),
     (Cursor(Buffer('foo\nbar'), 7), IntegerPosition2D(), Canvas(size=IntegerSize2D(4, 2)), Canvas(size=IntegerSize2D(4, 2), inversions=[IntegerPosition2D(3, 1)])),
-    (Cursor(Buffer(), 0), IntegerPosition2D(1, 0), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1))),
-    (Cursor(Buffer('foo'), 0), IntegerPosition2D(1, 0), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1))),
-    (Cursor(Buffer('foo'), 0), IntegerPosition2D(2, 0), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1))),
-    (Cursor(Buffer('foo'), 0), IntegerPosition2D(-1, 0), Canvas(size=IntegerSize2D(3, 2)), Canvas(size=IntegerSize2D(3, 2), inversions=[IntegerPosition2D(1, 0)])),
-    (Cursor(Buffer('foo'), 0), IntegerPosition2D(0, 1), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1))),
-    (Cursor(Buffer('foo'), 0), IntegerPosition2D(0, -1), Canvas(size=IntegerSize2D(3, 2)), Canvas(size=IntegerSize2D(3, 2), inversions=[IntegerPosition2D(0, 1)])),
-    (Cursor(Buffer('foo'), 0), IntegerPosition2D(0, -2), Canvas(size=IntegerSize2D(3, 3)), Canvas(size=IntegerSize2D(3, 3), inversions=[IntegerPosition2D(0, 2)])),
+    (Cursor(), IntegerPosition2D(1, 0), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1))),
+    (Cursor(Buffer('foo')), IntegerPosition2D(1, 0), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1))),
+    (Cursor(Buffer('foo')), IntegerPosition2D(2, 0), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1))),
+    (Cursor(Buffer('foo')), IntegerPosition2D(-1, 0), Canvas(size=IntegerSize2D(3, 2)), Canvas(size=IntegerSize2D(3, 2), inversions=[IntegerPosition2D(1, 0)])),
+    (Cursor(Buffer('foo')), IntegerPosition2D(0, 1), Canvas(size=IntegerSize2D(1, 1)), Canvas(size=IntegerSize2D(1, 1))),
+    (Cursor(Buffer('foo')), IntegerPosition2D(0, -1), Canvas(size=IntegerSize2D(3, 2)), Canvas(size=IntegerSize2D(3, 2), inversions=[IntegerPosition2D(0, 1)])),
+    (Cursor(Buffer('foo')), IntegerPosition2D(0, -2), Canvas(size=IntegerSize2D(3, 3)), Canvas(size=IntegerSize2D(3, 3), inversions=[IntegerPosition2D(0, 2)])),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_draw_cursor(cursor: Cursor, offset: IntegerPosition2D, canvas: Canvas,

@@ -38,7 +38,7 @@ def _run_illud(parsed_arguments: argparse.Namespace) -> None:
         illud_state = IlludState.from_file(parsed_arguments.file)
     else:
         buffer_: Buffer = Buffer()
-        cursor: Cursor = Cursor(buffer_, 0)
+        cursor: Cursor = Cursor(buffer_)
         terminal_size: IntegerSize2D = Terminal.get_size()
         window: Window = Window(size=terminal_size, buffer_=buffer_)
         text: Text = [[' ' for _ in range(terminal_size.width)]

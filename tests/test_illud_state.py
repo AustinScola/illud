@@ -24,15 +24,15 @@ def test_inheritance() -> None:
 
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('arguments, keyword_arguments, expected_buffer, expected_cursor, expected_mode, expected_window, expected_canvas, expected_terminal_size, expected_file', [
-    ([], {}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), None),
-    ([Buffer(), Cursor(Buffer(), 0), Normal(), Window(), Canvas(), IntegerSize2D(0, 0)], {}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), None),
-    ([], {'buffer_': Buffer()}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), None),
-    ([], {'cursor': Cursor(Buffer(), 0)}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), None),
-    ([], {'mode': Normal()}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), None),
-    ([], {'window': Window()}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), None),
-    ([], {'canvas': Canvas()}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), None),
-    ([], {'terminal_size': IntegerSize2D(0, 0)}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), None),
-    ([], {'file': File('foo')}, Buffer(), Cursor(Buffer(), 0), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), File('foo')),
+    ([], {}, Buffer(), Cursor(), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), None),
+    ([Buffer(), Cursor(), Normal(), Window(), Canvas(), IntegerSize2D(0, 0)], {}, Buffer(), Cursor(), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), None),
+    ([], {'buffer_': Buffer()}, Buffer(), Cursor(), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), None),
+    ([], {'cursor': Cursor()}, Buffer(), Cursor(), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), None),
+    ([], {'mode': Normal()}, Buffer(), Cursor(), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), None),
+    ([], {'window': Window()}, Buffer(), Cursor(), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), None),
+    ([], {'canvas': Canvas()}, Buffer(), Cursor(), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), None),
+    ([], {'terminal_size': IntegerSize2D(0, 0)}, Buffer(), Cursor(), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), None),
+    ([], {'file': File('foo')}, Buffer(), Cursor(), Normal(), Window(), Canvas(), IntegerSize2D(0, 0), File('foo')),
 ])
 # yapf: enable # pylint: enable=line-too-long
 # pylint: disable=too-many-arguments
@@ -55,7 +55,7 @@ def test_init(arguments: List[Any], keyword_arguments: Dict[str, Any], expected_
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('path, file_contents, terminal_size, expected_illud_state', [
     ('foo.txt', '', IntegerSize2D(0, 0), IlludState(file=File('foo.txt'))),
-    ('foo.txt', 'Lorem ipsum dolor sit amet', IntegerSize2D(120, 80), IlludState(Buffer('Lorem ipsum dolor sit amet'), Cursor(Buffer('Lorem ipsum dolor sit amet'), 0), window=Window(size=IntegerSize2D(120, 80), buffer_=Buffer('Lorem ipsum dolor sit amet')), canvas=Canvas(IntegerSize2D(120, 80), [[' ' for _ in range(120)] for _ in range(80)]), terminal_size=IntegerSize2D(120, 80), file=File('foo.txt'))),
+    ('foo.txt', 'Lorem ipsum dolor sit amet', IntegerSize2D(120, 80), IlludState(Buffer('Lorem ipsum dolor sit amet'), Cursor(Buffer('Lorem ipsum dolor sit amet')), window=Window(size=IntegerSize2D(120, 80), buffer_=Buffer('Lorem ipsum dolor sit amet')), canvas=Canvas(IntegerSize2D(120, 80), [[' ' for _ in range(120)] for _ in range(80)]), terminal_size=IntegerSize2D(120, 80), file=File('foo.txt'))),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_from_file(path: str, file_contents: str, terminal_size: IntegerSize2D,

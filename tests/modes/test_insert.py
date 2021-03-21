@@ -30,11 +30,11 @@ _buffer = Buffer()
     (IlludState(mode=Insert()), Character(CONTROL_C), None, True),
     (IlludState(mode=Insert()), Character(ESCAPE), IlludState(mode=Normal()), False),
     (IlludState(mode=Insert()), Character('a'), IlludState(cursor=Cursor(Buffer('a'), 1), mode=Insert()), False),
-    (IlludState(cursor=Cursor(Buffer('foo'), 0), mode=Insert()), Character(BACKSPACE), IlludState(cursor=Cursor(Buffer('foo'), 0), mode=Insert()), False),
+    (IlludState(cursor=Cursor(Buffer('foo')), mode=Insert()), Character(BACKSPACE), IlludState(cursor=Cursor(Buffer('foo')), mode=Insert()), False),
     (IlludState(cursor=Cursor(Buffer('foo'), 2), mode=Insert()), Character(BACKSPACE), IlludState(cursor=Cursor(Buffer('fo'), 1), mode=Insert()), False),
-    (IlludState(cursor=Cursor(Buffer(), 0), mode=Insert()), Character(CARRIAGE_RETURN), IlludState(cursor=Cursor(Buffer('\n'), 1), mode=Insert()), False),
+    (IlludState(cursor=Cursor(), mode=Insert()), Character(CARRIAGE_RETURN), IlludState(cursor=Cursor(Buffer('\n'), 1), mode=Insert()), False),
     (IlludState(cursor=Cursor(Buffer('foo'), 2), mode=Insert()), Character(CARRIAGE_RETURN), IlludState(cursor=Cursor(Buffer('fo\no'), 3), mode=Insert()), False),
-    (IlludState(mode=Insert(), cursor=Cursor(_buffer, 0), window=Window(buffer_=_buffer, size=IntegerSize2D(1, 1))), Character(CARRIAGE_RETURN), IlludState(cursor=Cursor(Buffer('\n'), 1), mode=Insert(), window=Window(size=IntegerSize2D(1, 1), buffer_=Buffer('\n'), offset=IntegerPosition2D(0, 1))), False),
+    (IlludState(mode=Insert(), cursor=Cursor(_buffer), window=Window(buffer_=_buffer, size=IntegerSize2D(1, 1))), Character(CARRIAGE_RETURN), IlludState(cursor=Cursor(Buffer('\n'), 1), mode=Insert(), window=Window(size=IntegerSize2D(1, 1), buffer_=Buffer('\n'), offset=IntegerPosition2D(0, 1))), False),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_evaluate(state: IlludState, character: Character,
