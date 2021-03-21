@@ -100,6 +100,21 @@ class Buffer():
             line_start = 0
         return line_start
 
+    def get_line_end(self, index: int) -> int:
+        """Return the index of the end of the line which the given index is part of."""
+        line_end: int
+        if index >= len(self):
+            if not self:
+                line_end = 0
+            else:
+                line_end = len(self)
+        else:
+            try:
+                line_end = self.index(NEWLINE, index, len(self))
+            except ValueError:
+                line_end = len(self)
+        return line_end
+
     def insert(self, string: str, index: int) -> None:
         """Insert a string at the given index in the buffer."""
         self.string = self.string[:index] + string + self.string[index:]
