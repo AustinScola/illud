@@ -26,5 +26,6 @@ class Insert(Mode):  # pylint: disable=too-few-public-methods
         elif character.printable:
             string: str = character.value
             state.cursor.insert(string)
+            state.window.adjust_view_to_include(state.cursor.index)
         elif character.value == BACKSPACE:
             state.cursor.backspace()

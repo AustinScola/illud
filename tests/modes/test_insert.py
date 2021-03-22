@@ -22,7 +22,8 @@ def test_inheritance() -> None:
     assert issubclass(Insert, Mode)
 
 
-_buffer = Buffer()
+_buffer_0 = Buffer('fo')
+_buffer_1 = Buffer()
 
 
 # yapf: disable # pylint: disable=line-too-long
@@ -30,11 +31,12 @@ _buffer = Buffer()
     (IlludState(mode=Insert()), Character(CONTROL_C), None, True),
     (IlludState(mode=Insert()), Character(ESCAPE), IlludState(mode=Normal()), False),
     (IlludState(mode=Insert()), Character('a'), IlludState(cursor=Cursor(Buffer('a'), 1), mode=Insert()), False),
+    (IlludState(cursor=Cursor(_buffer_0, 2), mode=Insert(), window=Window(size=IntegerSize2D(2, 1), buffer_=_buffer_0, offset=IntegerPosition2D(1, 0))), Character('o'), IlludState(cursor=Cursor(Buffer('foo'), 3), mode=Insert(), window=Window(size=IntegerSize2D(2, 1), buffer_=Buffer('foo'), offset=IntegerPosition2D(2, 0))), False),
     (IlludState(cursor=Cursor(Buffer('foo')), mode=Insert()), Character(BACKSPACE), IlludState(cursor=Cursor(Buffer('foo')), mode=Insert()), False),
     (IlludState(cursor=Cursor(Buffer('foo'), 2), mode=Insert()), Character(BACKSPACE), IlludState(cursor=Cursor(Buffer('fo'), 1), mode=Insert()), False),
     (IlludState(cursor=Cursor(), mode=Insert()), Character(CARRIAGE_RETURN), IlludState(cursor=Cursor(Buffer('\n'), 1), mode=Insert()), False),
     (IlludState(cursor=Cursor(Buffer('foo'), 2), mode=Insert()), Character(CARRIAGE_RETURN), IlludState(cursor=Cursor(Buffer('fo\no'), 3), mode=Insert()), False),
-    (IlludState(mode=Insert(), cursor=Cursor(_buffer), window=Window(buffer_=_buffer, size=IntegerSize2D(1, 1))), Character(CARRIAGE_RETURN), IlludState(cursor=Cursor(Buffer('\n'), 1), mode=Insert(), window=Window(size=IntegerSize2D(1, 1), buffer_=Buffer('\n'), offset=IntegerPosition2D(0, 1))), False),
+    (IlludState(mode=Insert(), cursor=Cursor(_buffer_1), window=Window(buffer_=_buffer_1, size=IntegerSize2D(1, 1))), Character(CARRIAGE_RETURN), IlludState(cursor=Cursor(Buffer('\n'), 1), mode=Insert(), window=Window(size=IntegerSize2D(1, 1), buffer_=Buffer('\n'), offset=IntegerPosition2D(0, 1))), False),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_evaluate(state: IlludState, character: Character,
