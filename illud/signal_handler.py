@@ -15,4 +15,5 @@ class SignalHandler():  # pylint:disable=too-few-public-methods
         if signal == TerminalSizeChange():
             terminal_size: IntegerSize2D = Terminal.get_size()
             state.terminal_size = terminal_size
+            state.canvas.resize(terminal_size)
             state.window.size = terminal_size
