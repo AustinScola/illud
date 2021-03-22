@@ -1,4 +1,5 @@
 """A text canvas."""
+from itertools import repeat
 from typing import Any, List, Optional
 
 from seligimus.maths.integer_position_2d import IntegerPosition2D
@@ -46,6 +47,25 @@ class Canvas():
     def __getitem__(self, index: int) -> List[str]:
         line: List[str] = self.text[index]
         return line
+
+    def resize(self, size: IntegerSize2D) -> None:
+        """Change the size of the canvas."""
+        if size.y > self.size.y:
+            new_lines = [[' ' for _ in range(size.x)] for _ in range(size.y - self.size.y)]
+            self.text.extend(new_lines)
+        elif size.y < self.size.y:
+            self.text = self.text[:size.y]
+
+        if size.x > self.size.x:
+            for line, _ in zip(self.text, range(self.size.y)):
+                number_of_new_columns: int = size.x - self.size.x
+                new_columns = list(repeat(' ', number_of_new_columns))
+                line.extend(new_columns)
+        elif size.x < self.size.x:
+            for row, line in enumerate(self.text):
+                self.text[row] = line[:size.x]
+
+        self.size = size
 
     def invert(self, position: IntegerPosition2D) -> None:
         """Invert the both the text and background color of a position."""

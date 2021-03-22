@@ -72,6 +72,23 @@ def test_repr(canvas: Canvas, expected_representation: str) -> None:
 
 
 # yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('canvas, size, expected_canvas_after', [
+    (Canvas(), IntegerSize2D(0, 0), Canvas()),
+    (Canvas(), IntegerSize2D(1, 1), Canvas(IntegerSize2D(1, 1), [[' ']])),
+    (Canvas(), IntegerSize2D(3, 2), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], [' ', ' ', ' ']])),
+    (Canvas(), IntegerSize2D(3, 2), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], [' ', ' ', ' ']])),
+    (Canvas(IntegerSize2D(1, 1), [['a']]), IntegerSize2D(3, 2), Canvas(IntegerSize2D(3, 2), [['a', ' ', ' '], [' ', ' ', ' ']])),
+    (Canvas(IntegerSize2D(3, 2), [['f', 'o', 'o'], ['b', 'a', 'r']]), IntegerSize2D(1, 1), Canvas(IntegerSize2D(1, 1), [['f']])),
+])
+# yapf: enable # pylint: enable=line-too-long
+def test_resize(canvas: Canvas, size: IntegerSize2D, expected_canvas_after: Canvas) -> None:
+    """Test illud.canvas.Canvas.resize."""
+    canvas.resize(size)
+
+    assert canvas == expected_canvas_after
+
+
+# yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('canvas, index, expected_line', [
     (Canvas(IntegerSize2D(1, 1), [[' ']]), 0, [' ']),
     (Canvas(IntegerSize2D(3, 3), [['f', 'o', 'o'], ['b', 'a', 'r'], ['b', 'a', 'z']]), 1, ['b', 'a', 'r']),
