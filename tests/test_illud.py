@@ -105,7 +105,7 @@ def test_read(signals: Signals, character: Character, expected_input: IlludInput
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('initial_state, input_, terminal_size, expected_state_after', [
     (IlludState(), Character('i'), None, IlludState(mode=Insert())),
-    (IlludState(), TerminalSizeChange(), IntegerSize2D(120, 80), IlludState(window=Window(size=IntegerSize2D(120, 80)), terminal_size=IntegerSize2D(120, 80))),
+    (IlludState(), TerminalSizeChange(), IntegerSize2D(120, 80), IlludState(window=Window(size=IntegerSize2D(120, 80)), canvas=Canvas(IntegerSize2D(120, 80), [[' ' for _ in range(120)] for _ in range(80)]), terminal_size=IntegerSize2D(120, 80))),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_evaluate(initial_state: IlludState, input_: IlludInput,
