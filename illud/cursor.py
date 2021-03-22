@@ -107,7 +107,7 @@ class Cursor():
 
     def delete(self) -> None:
         """Remove the character at the cursor position."""
-        if not self.buffer:
+        if not self.buffer or self.index == len(self.buffer):
             return
 
         self.buffer.delete(self.index)
