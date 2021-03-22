@@ -160,6 +160,9 @@ def test_index(buffer_: Buffer, substring: str, start: Optional[int], pass_start
         assert index == expected_index
 
 
+# pylint: enable=too-many-arguments
+
+
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('buffer_, substring, start, pass_start, end, pass_end, expected_index, expected_exception', [
     (Buffer(), '', None, False, None, False, 0, None),
@@ -199,6 +202,9 @@ def test_reverse_index(buffer_: Buffer, substring: str, start: Optional[int], pa
         index = buffer_.reverse_index(substring, **keyword_arguments)
 
         assert index == expected_index
+
+
+# pylint: enable=too-many-arguments
 
 
 # yapf: disable
@@ -323,9 +329,6 @@ def test_get_line_end(buffer_: Buffer, index: int, expected_line_end: int) -> No
     line_end: int = buffer_.get_line_end(index)
 
     assert line_end == expected_line_end
-
-
-# pylint: enable=too-many-arguments
 
 
 # yapf: disable
