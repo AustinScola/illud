@@ -3,9 +3,7 @@
 from typing import Any, Optional, Union
 
 from seligimus.maths.integer_position_2d import IntegerPosition2D
-from seligimus.python.decorators.operators.equality.equal_instance_attributes import \
-    equal_instance_attributes
-from seligimus.python.decorators.operators.equality.equal_type import equal_type
+from seligimus.python.decorators.operators.equality.standard_equality import standard_equality
 from seligimus.python.decorators.standard_representation import standard_representation
 
 from illud.characters import NEWLINE
@@ -28,10 +26,9 @@ class Buffer():
 
         return length - 1
 
-    @equal_type
-    @equal_instance_attributes
+    @standard_equality
     def __eq__(self, other: Any) -> bool:
-        return True
+        pass  # pragma: no cover
 
     @standard_representation(parameter_to_attribute_name={'buffer_': 'buffer'})
     def __repr__(self) -> str:

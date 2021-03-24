@@ -4,9 +4,7 @@ from typing import Any, List, Optional
 
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
-from seligimus.python.decorators.operators.equality.equal_instance_attributes import \
-    equal_instance_attributes
-from seligimus.python.decorators.operators.equality.equal_type import equal_type
+from seligimus.python.decorators.operators.equality.standard_equality import standard_equality
 from seligimus.python.decorators.standard_representation import standard_representation
 
 from illud.ansi.escape_codes.color import INVERT, RESET
@@ -35,10 +33,9 @@ class Canvas():
         self._standard_output = StandardOutput()
         self._terminal_cursor = TerminalCursor(self._standard_output)
 
-    @equal_type
-    @equal_instance_attributes
+    @standard_equality
     def __eq__(self, other: Any) -> bool:
-        return True
+        pass  # pragma: no cover
 
     @standard_representation(parameter_to_attribute_name={'inversions': '_inversions'})
     def __repr__(self) -> str:
