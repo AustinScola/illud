@@ -2,9 +2,7 @@
 from typing import Any, Optional
 
 from seligimus.maths.integer_position_2d import IntegerPosition2D
-from seligimus.python.decorators.operators.equality.equal_instance_attributes import \
-    equal_instance_attributes
-from seligimus.python.decorators.operators.equality.equal_type import equal_type
+from seligimus.python.decorators.operators.equality.standard_equality import standard_equality
 from seligimus.python.decorators.standard_representation import standard_representation
 
 from illud.buffer import Buffer
@@ -18,10 +16,9 @@ class Cursor():
         self.buffer: Buffer = buffer_ if buffer_ is not None else Buffer()
         self.index: int = index if index is not None else 0
 
-    @equal_type
-    @equal_instance_attributes
+    @standard_equality
     def __eq__(self, other: Any) -> bool:
-        return True
+        pass  # pragma: no cover
 
     @standard_representation(parameter_to_attribute_name={'buffer_': 'buffer'})
     def __repr__(self) -> str:
