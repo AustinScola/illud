@@ -146,6 +146,32 @@ class Cursor():
         """Move the cursor to the end of the current line."""
         self.index = self.buffer.get_line_end(self.index)
 
+    def move_to_first_line(self) -> None:
+        """Move the cursor to the first line."""
+        try:
+            first_line_length: int = self.buffer.index('\n')
+        except ValueError:
+            return
+
+        current_column: int = self.buffer.get_column(self.index)
+        new_column: int = min(current_column, first_line_length)
+
+        self.index = new_column
+
+    def move_to_last_line(self) -> None:
+        """Move the cursor to the last line."""
+        try:
+            end: int = len(self.buffer) - 1
+            last_line_start: int = self.buffer.reverse_index('\n', end=end) + 1
+        except ValueError:
+            return
+
+        last_line_length: int = len(self.buffer) - last_line_start
+        current_column: int = self.buffer.get_column(self.index)
+        new_column: int = min(current_column, last_line_length - 1)
+
+        self.index = last_line_start + new_column
+
     def draw(self, offset: IntegerPosition2D, canvas: Canvas) -> None:
         """Draw a cursor on the terminal."""
         canvas_position: IntegerPosition2D
