@@ -70,6 +70,7 @@ class Illud(REPL):
 
     def catch(self, exception: Exception) -> None:
         self._terminal.disable_alternative_screen()
+        self._terminal.show_cursor()
 
         if isinstance(exception, QuitException):
             sys.exit()

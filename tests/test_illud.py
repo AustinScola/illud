@@ -7,6 +7,7 @@ import pytest
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
+from illud.ansi.escape_codes.cursor import SHOW_CURSOR
 from illud.ansi.escape_codes.screen import DISABLE_ALTERNATIVE_SCREEN
 from illud.buffer import Buffer
 from illud.canvas import Canvas
@@ -152,9 +153,9 @@ def test_print(illud_state: IlludState, result: Any, expected_output: str) -> No
 
 # yapf: disable
 @pytest.mark.parametrize('exception, expect_reraises, expect_exits, expected_output', [
-    (Exception(), True, False, DISABLE_ALTERNATIVE_SCREEN),
-    (TypeError(), True, False, DISABLE_ALTERNATIVE_SCREEN),
-    (QuitException(), False, True, DISABLE_ALTERNATIVE_SCREEN),
+    (Exception(), True, False, DISABLE_ALTERNATIVE_SCREEN + SHOW_CURSOR),
+    (TypeError(), True, False, DISABLE_ALTERNATIVE_SCREEN + SHOW_CURSOR),
+    (QuitException(), False, True, DISABLE_ALTERNATIVE_SCREEN + SHOW_CURSOR),
 ])
 # yapf: enable
 def test_catch(exception: Exception, expect_reraises: bool, expect_exits: bool,
