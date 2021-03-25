@@ -243,6 +243,44 @@ def test_move_to_line_end(cursor: Cursor, expected_cursor_after: Cursor) -> None
     assert cursor == expected_cursor_after
 
 
+# yapf: disable
+@pytest.mark.parametrize('cursor, expected_cursor_after', [
+    (Cursor(), Cursor()),
+    (Cursor(Buffer('foo')), Cursor(Buffer('foo'))),
+    (Cursor(Buffer('foo\nbar'), 4), Cursor(Buffer('foo\nbar'))),
+    (Cursor(Buffer('foo\nbar'), 6), Cursor(Buffer('foo\nbar'), 2)),
+    (Cursor(Buffer('foo\nbar\nbaz'), 9), Cursor(Buffer('foo\nbar\nbaz'), 1)),
+    (Cursor(Buffer('foo\nwibble'), 9), Cursor(Buffer('foo\nwibble'), 3)),
+])
+# yapf: enable
+def test_move_to_first_line(cursor: Cursor, expected_cursor_after: Cursor) -> None:
+    """Test illud.cursor.Cursor.move_to_first_line."""
+    cursor.move_to_first_line()
+
+    assert cursor == expected_cursor_after
+
+
+# yapf: disable
+@pytest.mark.parametrize('cursor, expected_cursor_after', [
+    (Cursor(), Cursor()),
+    (Cursor(Buffer('\n')), Cursor(Buffer('\n'))),
+    (Cursor(Buffer('\n\n')), Cursor(Buffer('\n\n'), 1)),
+    (Cursor(Buffer('foo')), Cursor(Buffer('foo'))),
+    (Cursor(Buffer('foo\n')), Cursor(Buffer('foo\n'))),
+    (Cursor(Buffer('foo\nbar')), Cursor(Buffer('foo\nbar'), 4)),
+    (Cursor(Buffer('foo\nbar'), 2), Cursor(Buffer('foo\nbar'), 6)),
+    (Cursor(Buffer('foo\nbar\n')), Cursor(Buffer('foo\nbar\n'), 4)),
+    (Cursor(Buffer('foo\nbar\nbaz'), 2), Cursor(Buffer('foo\nbar\nbaz'), 10)),
+    (Cursor(Buffer('foo bar\nbaz'), 4), Cursor(Buffer('foo bar\nbaz'), 10)),
+])
+# yapf: enable
+def test_move_to_last_line(cursor: Cursor, expected_cursor_after: Cursor) -> None:
+    """Test illud.cursor.Cursor.move_to_last_line."""
+    cursor.move_to_last_line()
+
+    assert cursor == expected_cursor_after
+
+
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('cursor, offset, canvas, expected_canvas_after', [
     (Cursor(), IntegerPosition2D(), Canvas(), Canvas()),
