@@ -14,6 +14,7 @@ from illud.illud_state import IlludState
 from illud.mode import Mode
 from illud.modes.insert import Insert
 from illud.modes.normal import Normal
+from illud.modes.select import Select
 from illud.window import Window
 
 
@@ -25,6 +26,7 @@ def test_inheritance() -> None:
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('state_before, character, expected_state_after, expect_exits', [
     (IlludState(), Character('i'), IlludState(mode=Insert()), False),
+    (IlludState(), Character('s'), IlludState(mode=Select()), False),
     (IlludState(), Character('d'), IlludState(), False),
     (IlludState(cursor=Cursor(Buffer('foo'), 1)), Character('d'), IlludState(cursor=Cursor(Buffer('foo'))), False),
     (IlludState(), Character('f'), IlludState(), False),

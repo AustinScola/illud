@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 from illud.character import Character
 from illud.mode import Mode
 from illud.modes.insert import Insert
+from illud.modes.select import Select
 
 if TYPE_CHECKING:
     from illud.illud_state import IlludState  # pylint: disable=cyclic-import # pragma: no cover
@@ -46,3 +47,5 @@ class Normal(Mode):  # pylint: disable=too-few-public-methods
             state.cursor.delete()
         elif character.value == 'i':
             state.mode = Insert()
+        elif character.value == 's':
+            state.mode = Select()
