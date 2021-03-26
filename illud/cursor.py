@@ -12,9 +12,9 @@ from illud.characters import WHITESPACE
 
 class Cursor():
     """A position in a string buffer."""
-    def __init__(self, buffer_: Optional[Buffer] = None, index: Optional[int] = None):
+    def __init__(self, buffer_: Optional[Buffer] = None, index: int = 0):
         self.buffer: Buffer = buffer_ if buffer_ is not None else Buffer()
-        self.index: int = index if index is not None else 0
+        self.index: int = index
 
     @standard_equality
     def __eq__(self, other: Any) -> bool:
