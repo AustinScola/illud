@@ -27,42 +27,13 @@ class IlludState(State):
                  canvas: Optional[Canvas] = None,
                  terminal_size: Optional[IntegerSize2D] = None,
                  file: Optional[File] = None):
-        self.buffer: Buffer
-        if buffer_ is None:
-            self.buffer = Buffer()
-        else:
-            self.buffer = buffer_
-
-        self.cursor: Cursor
-        if cursor is None:
-            self.cursor = Cursor()
-        else:
-            self.cursor = cursor
-
-        self.mode: Mode
-        if mode is None:
-            self.mode = Normal()
-        else:
-            self.mode = mode
-
-        self.window: Window
-        if window is None:
-            self.window = Window()
-        else:
-            self.window = window
-
-        self.canvas: Canvas
-        if canvas is None:
-            self.canvas = Canvas()
-        else:
-            self.canvas = canvas
-
-        self.terminal_size: IntegerSize2D
-        if terminal_size is None:
-            self.terminal_size = IntegerSize2D(0, 0)
-        else:
-            self.terminal_size = terminal_size
-
+        self.buffer: Buffer = buffer_ if buffer_ is not None else Buffer()
+        self.cursor: Cursor = cursor if cursor is not None else Cursor()
+        self.mode: Mode = mode if mode is not None else Normal()
+        self.window: Window = window if window is not None else Window()
+        self.canvas: Canvas = canvas if canvas is not None else Canvas()
+        self.terminal_size: IntegerSize2D = terminal_size if terminal_size is not None \
+            else IntegerSize2D(0, 0)
         self.file: Optional[File] = file
 
     @staticmethod
