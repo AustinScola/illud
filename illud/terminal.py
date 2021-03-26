@@ -3,7 +3,7 @@ import os
 
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
-from illud.ansi.escape_codes.cursor import MOVE_CURSOR_HOME, SHOW_CURSOR
+from illud.ansi.escape_codes.cursor import SHOW_CURSOR
 from illud.ansi.escape_codes.erase import CLEAR_SCREEN
 from illud.ansi.escape_codes.screen import DISABLE_ALTERNATIVE_SCREEN, ENABLE_ALTERNATIVE_SCREEN
 from illud.character import Character
@@ -47,11 +47,6 @@ class Terminal():
     def clear_screen(self) -> None:
         """Clear the terminal of all characters."""
         self._standard_output.write(CLEAR_SCREEN)
-        self._standard_output.flush()
-
-    def move_cursor_home(self) -> None:
-        """Move the terminal cursor to the top left position of the terminal."""
-        self._standard_output.write(MOVE_CURSOR_HOME)
         self._standard_output.flush()
 
     def show_cursor(self) -> None:
