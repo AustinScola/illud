@@ -20,3 +20,6 @@ class Select(Mode):  # pylint: disable=too-few-public-methods
             from illud.modes.normal import \
                 Normal  # pylint: disable=import-outside-toplevel, cyclic-import
             state.mode = Normal()
+        elif character.value == 'f':
+            if state.selection is not None:
+                state.selection.expand_right()
