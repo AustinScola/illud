@@ -31,6 +31,17 @@ class Selection():
     def __repr__(self) -> str:
         pass  # pragma: no cover
 
+    def expand_right(self) -> None:
+        """Expand the selection to the right."""
+        if not self.buffer:
+            return
+
+        if self.end == self.buffer.end:
+            return
+
+        if self.buffer[self.end] != '\n':
+            self.end += 1
+
     def draw(self, canvas: Canvas, offset: IntegerPosition2D) -> None:
         """Draw the selection on the canvas."""
         if not self.buffer:

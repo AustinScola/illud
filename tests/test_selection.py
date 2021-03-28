@@ -77,6 +77,22 @@ def test_repr(selection: Selection, expected_representation: str) -> None:
     assert representation == expected_representation
 
 
+# yapf: disable
+@pytest.mark.parametrize('selection, expected_selection_after', [
+    (Selection(), Selection()),
+    (Selection(Buffer('a')), Selection(Buffer('a'))),
+    (Selection(Buffer('foo'), 1), Selection(Buffer('foo'), 1, 2)),
+    (Selection(Buffer('foo\nbar'), 2), Selection(Buffer('foo\nbar'), 2, 3)),
+    (Selection(Buffer('foo\nbar'), 3), Selection(Buffer('foo\nbar'), 3)),
+])
+# yapf: enable
+def test_expand_right(selection: Selection, expected_selection_after: Selection) -> None:
+    """Test illud.selection.Selection.expand_right."""
+    selection.expand_right()
+
+    assert selection == expected_selection_after
+
+
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('selection, canvas, offset, expected_canvas_after', [
     (Selection(), Canvas(), IntegerPosition2D(), Canvas()),
