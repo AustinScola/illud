@@ -52,7 +52,7 @@ class Selection():
     def draw(self, canvas: Canvas, offset: IntegerPosition2D) -> None:
         """Draw the selection on the canvas."""
         if not self.buffer:
-            canvas_position = IntegerPosition2D(0, 0) - offset
+            canvas_position = -offset
 
             if not 0 <= canvas_position.x < canvas.size.width:
                 return
