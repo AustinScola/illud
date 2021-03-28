@@ -2,6 +2,7 @@
 from typing import TYPE_CHECKING, Any
 
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
+from seligimus.python.decorators.standard_representation import standard_representation
 
 from illud.character import Character
 from illud.characters import CONTROL_C, CONTROL_D, CONTROL_F, CONTROL_J, CONTROL_K, CONTROL_W
@@ -16,6 +17,10 @@ class Mode():
     @equal_type
     def __eq__(self, other: Any) -> bool:
         return True
+
+    @standard_representation
+    def __repr__(self) -> str:
+        pass  # pragma: no cover
 
     @staticmethod
     def evaluate(state: 'IlludState', character: Character) -> None:

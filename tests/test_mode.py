@@ -29,6 +29,18 @@ def test_eq(mode: Mode, other: Any, expected_equality: bool) -> None:
     assert equality == expected_equality
 
 
+# yapf: disable
+@pytest.mark.parametrize('mode, expected_representation', [
+    (Mode(), 'Mode()'),
+])
+# yapf: enable
+def test_repr(mode: Mode, expected_representation: str) -> None:
+    """Test illud.mode.Mode.__repr__."""
+    representation: str = repr(mode)
+
+    assert representation == expected_representation
+
+
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('state_before, character, expected_state_after, expect_writes, expect_exits', [
     (IlludState(), Character('i'), IlludState(), False, False),
