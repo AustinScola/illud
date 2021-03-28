@@ -25,6 +25,7 @@ class IlludState(State):
                  buffer_: Optional[Buffer] = None,
                  cursor: Optional[Cursor] = None,
                  selection: Optional[Selection] = None,
+                 clipboard: Optional[Buffer] = None,
                  mode: Optional[Mode] = None,
                  window: Optional[Window] = None,
                  canvas: Optional[Canvas] = None,
@@ -33,6 +34,7 @@ class IlludState(State):
         self.buffer: Buffer = buffer_ if buffer_ is not None else Buffer()
         self.cursor: Cursor = cursor if cursor is not None else Cursor()
         self.selection: Optional[Selection] = selection
+        self.clipboard: Optional[Buffer] = clipboard
         self.mode: Mode = mode if mode is not None else Normal()
         self.window: Window = window if window is not None else Window()
         self.canvas: Canvas = canvas if canvas is not None else Canvas()
