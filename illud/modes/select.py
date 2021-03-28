@@ -23,3 +23,10 @@ class Select(Mode):  # pylint: disable=too-few-public-methods
         elif character.value == 'f':
             if state.selection is not None:
                 state.selection.expand_right()
+        elif character.value == 'y':
+            if state.selection is not None:
+                state.clipboard = state.selection.text
+                state.selection = None
+            from illud.modes.normal import \
+                Normal  # pylint: disable=import-outside-toplevel, cyclic-import
+            state.mode = Normal()

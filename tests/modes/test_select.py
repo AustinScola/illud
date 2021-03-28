@@ -24,6 +24,7 @@ def test_inheritance() -> None:
     (IlludState(mode=Select()), Character(CONTROL_C), None, True),
     (IlludState(mode=Select()), Character(ESCAPE), IlludState(mode=Normal()), False),
     (IlludState(mode=Select(), selection=Selection(Buffer('foo'))), Character('f'), IlludState(mode=Select(), selection=Selection(Buffer('foo'), end=1)), False),
+    (IlludState(mode=Select(), selection=Selection(Buffer('foo'), 1, 2)), Character('y'), IlludState(mode=Normal(), clipboard=Buffer('oo')), False),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_evaluate(state: IlludState, character: Character,
