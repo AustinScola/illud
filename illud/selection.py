@@ -23,6 +23,13 @@ class Selection():
         selection: Selection = Selection(cursor.buffer, cursor.index)
         return selection
 
+    @property
+    def text(self) -> Buffer:
+        """Return the text selection."""
+        substring: str = self.buffer[self.start:self.end + 1]
+        text: Buffer = Buffer(substring)
+        return text
+
     @standard_equality
     def __eq__(self, other: Any) -> bool:
         pass  # pragma: no cover

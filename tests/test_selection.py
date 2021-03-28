@@ -49,6 +49,21 @@ def test_from_cursor(cursor: Cursor, expected_selection: Selection) -> None:
 
 
 # yapf: disable
+@pytest.mark.parametrize('selection, expected_text', [
+    (Selection(), Buffer()),
+    (Selection(Buffer('foo')), Buffer('f')),
+    (Selection(Buffer('foo'), 1, 2), Buffer('oo')),
+    (Selection(Buffer('foo'), 0, 2), Buffer('foo')),
+])
+# yapf: enable
+def test_text(selection: Selection, expected_text: Buffer) -> None:
+    """Test illud.selection.Selection.text."""
+    text: Buffer = selection.text
+
+    assert text == expected_text
+
+
+# yapf: disable
 @pytest.mark.parametrize('selection, other, expected_equality', [
     (Selection(), 'foo', False),
     (Selection(Buffer('foo')), Selection(), False),
