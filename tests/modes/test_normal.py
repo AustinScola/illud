@@ -14,6 +14,8 @@ from illud.illud_state import IlludState
 from illud.mode import Mode
 from illud.modes.insert import Insert
 from illud.modes.normal import Normal
+from illud.modes.select import Select
+from illud.selection import Selection
 from illud.window import Window
 
 
@@ -25,6 +27,8 @@ def test_inheritance() -> None:
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('state_before, character, expected_state_after, expect_exits', [
     (IlludState(), Character('i'), IlludState(mode=Insert()), False),
+    (IlludState(), Character('s'), IlludState(mode=Select(), selection=Selection()), False),
+    (IlludState(cursor=Cursor(Buffer('foo'), 1)), Character('s'), IlludState(mode=Select(), cursor=Cursor(Buffer('foo'), 1), selection=Selection(Buffer('foo'), 1, 1)), False),
     (IlludState(), Character('d'), IlludState(), False),
     (IlludState(cursor=Cursor(Buffer('foo'), 1)), Character('d'), IlludState(cursor=Cursor(Buffer('foo'))), False),
     (IlludState(), Character('f'), IlludState(), False),
@@ -46,6 +50,7 @@ def test_inheritance() -> None:
     (IlludState(cursor=Cursor(Buffer('foo bar'))), Character('w'), IlludState(cursor=Cursor(Buffer('foo bar'), 4)), False),
     (IlludState(cursor=Cursor(Buffer('foo bar')), window=Window(size=IntegerSize2D(2, 1), buffer_=Buffer('foo bar'))), Character('w'), IlludState(cursor=Cursor(Buffer('foo bar'), 4), window=Window(size=IntegerSize2D(2, 1), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(3, 0))), False),
     (IlludState(cursor=Cursor(Buffer('foo'))), Character('x'), IlludState(cursor=Cursor(Buffer('oo'))), False),
+    (IlludState(cursor=Cursor(Buffer('foobaz'), 3), clipboard=Buffer('bar')), Character('p'), IlludState(cursor=Cursor(Buffer('foobarbaz'), 6), clipboard=Buffer('bar')), False),
     (IlludState(), Character(CONTROL_C), None, True),
 ])
 # yapf: enable # pylint: enable=line-too-long

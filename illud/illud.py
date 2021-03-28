@@ -10,7 +10,9 @@ from illud.illud_input import IlludInput
 from illud.illud_state import IlludState
 from illud.inputs.signal_listener import SignalListener
 from illud.mode import Mode
+from illud.modes.select import Select
 from illud.repl import REPL
+from illud.selection import Selection
 from illud.signal_ import Signal
 from illud.signal_handler import SignalHandler
 from illud.terminal import Terminal
@@ -61,8 +63,13 @@ class Illud(REPL):
         window: Window = self._state.window
         window.draw(canvas)
 
-        cursor: Cursor = self._state.cursor
-        cursor.draw(window.offset, canvas)
+        if self._state.mode == Select():
+            selection: Optional[Selection] = self._state.selection
+            if selection is not None:
+                selection.draw(canvas, window.offset)
+        else:
+            cursor: Cursor = self._state.cursor
+            cursor.draw(window.offset, canvas)
 
         canvas.render()
 

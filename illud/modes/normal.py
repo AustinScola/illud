@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING
 from illud.character import Character
 from illud.mode import Mode
 from illud.modes.insert import Insert
+from illud.modes.select import Select
+from illud.selection import Selection
 
 if TYPE_CHECKING:
     from illud.illud_state import IlludState  # pylint: disable=cyclic-import # pragma: no cover
@@ -12,7 +14,7 @@ if TYPE_CHECKING:
 class Normal(Mode):  # pylint: disable=too-few-public-methods
     """Mode for navigating and manipulating text."""
     @staticmethod
-    def evaluate(state: 'IlludState', character: Character) -> None:
+    def evaluate(state: 'IlludState', character: Character) -> None:  # pylint: disable=too-many-branches
         super(Normal, Normal).evaluate(state, character)
 
         if character.value == 'd':
@@ -46,3 +48,9 @@ class Normal(Mode):  # pylint: disable=too-few-public-methods
             state.cursor.delete()
         elif character.value == 'i':
             state.mode = Insert()
+        elif character.value == 's':
+            state.mode = Select()
+            state.selection = Selection.from_cursor(state.cursor)
+        elif character.value == 'p':
+            if state.clipboard:
+                state.cursor.insert(state.clipboard.string)
