@@ -3,6 +3,7 @@ from typing import Any, Optional
 
 from seligimus.maths.integer_size_2d import IntegerSize2D
 from seligimus.python.decorators.operators.equality.standard_equality import standard_equality
+from seligimus.python.decorators.standard_representation import standard_representation
 
 from illud.buffer import Buffer
 from illud.canvas import Canvas, Text
@@ -61,4 +62,8 @@ class IlludState(State):
 
     @standard_equality
     def __eq__(self, other: Any) -> bool:
+        pass  # pragma: no cover
+
+    @standard_representation(parameter_to_attribute_name={'buffer_': 'buffer'})
+    def __repr__(self) -> str:
         pass  # pragma: no cover

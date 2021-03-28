@@ -93,3 +93,15 @@ def test_eq(illud_state: IlludState, other: Any, expected_equality: bool) -> Non
     equality: bool = illud_state == other
 
     assert equality == expected_equality
+
+
+# yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('illud_state, expected_representation', [
+    (IlludState(), 'IlludState(buffer_=Buffer(), cursor=Cursor(buffer_=Buffer()), mode=Normal(), window=Window(position=IntegerPosition2D(), size=IntegerSize2D(0, 0), buffer_=Buffer(), offset=IntegerPosition2D()), canvas=Canvas(size=IntegerSize2D(0, 0), text=[], inversions=[]), terminal_size=IntegerSize2D(0, 0))'),
+])
+# yapf: enable # pylint: enable=line-too-long
+def test_repr(illud_state: IlludState, expected_representation: str) -> None:
+    """Test illud.illud_state.IlludState.__repr__."""
+    representation: str = repr(illud_state)
+
+    assert representation == expected_representation
