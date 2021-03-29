@@ -16,6 +16,13 @@ class Cursor():
         self.buffer: Buffer = buffer_ if buffer_ is not None else Buffer()
         self.index: int = index
 
+    @property
+    def character(self) -> Optional[str]:
+        """Return the character at the index in the buffer."""
+        if self.index < len(self.buffer):
+            return self.buffer[self.index]
+        return None
+
     @standard_equality
     def __eq__(self, other: Any) -> bool:
         pass  # pragma: no cover

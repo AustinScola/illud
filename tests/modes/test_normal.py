@@ -49,7 +49,7 @@ def test_inheritance() -> None:
     (IlludState(cursor=Cursor(Buffer('foo\nbar\nbaz')), window=Window(size=IntegerSize2D(2, 1), buffer_=Buffer('foo\nbar\nbaz'))), Character('J'), IlludState(cursor=Cursor(Buffer('foo\nbar\nbaz'), 8), window=Window(size=IntegerSize2D(2, 1), buffer_=Buffer('foo\nbar\nbaz'), offset=IntegerPosition2D(0, 2))), False),
     (IlludState(cursor=Cursor(Buffer('foo bar'))), Character('w'), IlludState(cursor=Cursor(Buffer('foo bar'), 4)), False),
     (IlludState(cursor=Cursor(Buffer('foo bar')), window=Window(size=IntegerSize2D(2, 1), buffer_=Buffer('foo bar'))), Character('w'), IlludState(cursor=Cursor(Buffer('foo bar'), 4), window=Window(size=IntegerSize2D(2, 1), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(3, 0))), False),
-    (IlludState(cursor=Cursor(Buffer('foo'))), Character('x'), IlludState(cursor=Cursor(Buffer('oo'))), False),
+    (IlludState(cursor=Cursor(Buffer('foo'))), Character('x'), IlludState(cursor=Cursor(Buffer('oo')), clipboard=Buffer('f')), False),
     (IlludState(cursor=Cursor(Buffer('foobaz'), 3), clipboard=Buffer('bar')), Character('p'), IlludState(cursor=Cursor(Buffer('foobarbaz'), 6), clipboard=Buffer('bar')), False),
     (IlludState(), Character(CONTROL_C), None, True),
 ])
