@@ -1,6 +1,7 @@
 """Mode for navigating and manipulating text."""
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
+from illud.buffer import Buffer
 from illud.character import Character
 from illud.mode import Mode
 from illud.modes.insert import Insert
@@ -45,6 +46,9 @@ class Normal(Mode):  # pylint: disable=too-few-public-methods
             state.cursor.next_word()
             state.window.adjust_view_to_include(state.cursor.index)
         elif character.value == 'x':
+            cursor_character: Optional[str] = state.cursor.character
+            if cursor_character is not None:
+                state.clipboard = Buffer(cursor_character)
             state.cursor.delete()
         elif character.value == 'i':
             state.mode = Insert()
