@@ -13,6 +13,7 @@ from illud.mode import Mode
 from illud.modes.normal import Normal
 from illud.selection import Selection
 from illud.state import State
+from illud.status_bar import StatusBar
 from illud.terminal import Terminal
 from illud.window import Window
 
@@ -28,6 +29,7 @@ class IlludState(State):
                  clipboard: Optional[Buffer] = None,
                  mode: Optional[Mode] = None,
                  window: Optional[Window] = None,
+                 status_bar: Optional[StatusBar] = None,
                  canvas: Optional[Canvas] = None,
                  terminal_size: Optional[IntegerSize2D] = None,
                  file: Optional[File] = None):
@@ -37,6 +39,7 @@ class IlludState(State):
         self.clipboard: Optional[Buffer] = clipboard
         self.mode: Mode = mode if mode is not None else Normal()
         self.window: Window = window if window is not None else Window()
+        self.status_bar: StatusBar = status_bar if status_bar is not None else StatusBar()
         self.canvas: Canvas = canvas if canvas is not None else Canvas()
         self.terminal_size: IntegerSize2D = terminal_size if terminal_size is not None \
             else IntegerSize2D(0, 0)
