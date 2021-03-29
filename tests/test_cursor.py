@@ -1,5 +1,5 @@
 """Test illud.cursor."""
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import pytest
 from seligimus.maths.integer_position_2d import IntegerPosition2D
@@ -28,6 +28,22 @@ def test_init(arguments: List[Any], keyword_arguments: Dict[str, Any], expected_
 
     assert cursor.buffer == expected_buffer
     assert cursor.index == expected_index
+
+
+# yapf: disable
+@pytest.mark.parametrize('cursor, expected_character', [
+    (Cursor(), None),
+    (Cursor(Buffer('foo'), 0), 'f'),
+    (Cursor(Buffer('foo'), 1), 'o'),
+    (Cursor(Buffer('foo'), 2), 'o'),
+    (Cursor(Buffer('foo'), 3), None),
+])
+# yapf: enable
+def test_character(cursor: Cursor, expected_character: Optional[str]) -> None:
+    """Test illud.cursor.Cursor.character."""
+    character: Optional[str] = cursor.character
+
+    assert character == expected_character
 
 
 # yapf: disable
