@@ -42,11 +42,13 @@ def _run_illud(parsed_arguments: argparse.Namespace) -> None:
         terminal_size: IntegerSize2D = Terminal.get_size()
         window: Window = Window(size=terminal_size, buffer_=buffer_)
         canvas: Canvas = Canvas(terminal_size).fill(' ')
-        illud_state = IlludState(buffer_,
-                                 cursor,
+        illud_state = IlludState(terminal_size,
+                                 buffer_=buffer_,
+                                 cursor=cursor,
+                                 selection=None,
+                                 clipboard=None,
                                  window=window,
-                                 canvas=canvas,
-                                 terminal_size=terminal_size)
+                                 canvas=canvas)
 
     illud: Illud = Illud(illud_state)
 

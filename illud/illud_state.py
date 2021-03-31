@@ -23,6 +23,7 @@ class IlludState(State):
 
     # pylint: disable=too-many-arguments, too-many-instance-attributes
     def __init__(self,
+                 terminal_size: Optional[IntegerSize2D] = None,
                  buffer_: Optional[Buffer] = None,
                  cursor: Optional[Cursor] = None,
                  selection: Optional[Selection] = None,
@@ -31,8 +32,9 @@ class IlludState(State):
                  window: Optional[Window] = None,
                  status_bar: Optional[StatusBar] = None,
                  canvas: Optional[Canvas] = None,
-                 terminal_size: Optional[IntegerSize2D] = None,
                  file: Optional[File] = None):
+        self.terminal_size: IntegerSize2D = terminal_size if terminal_size is not None \
+            else IntegerSize2D(0, 0)
         self.buffer: Buffer = buffer_ if buffer_ is not None else Buffer()
         self.cursor: Cursor = cursor if cursor is not None else Cursor()
         self.selection: Optional[Selection] = selection
@@ -41,8 +43,6 @@ class IlludState(State):
         self.window: Window = window if window is not None else Window()
         self.status_bar: StatusBar = status_bar if status_bar is not None else StatusBar()
         self.canvas: Canvas = canvas if canvas is not None else Canvas()
-        self.terminal_size: IntegerSize2D = terminal_size if terminal_size is not None \
-            else IntegerSize2D(0, 0)
         self.file: Optional[File] = file
 
     @staticmethod
@@ -57,11 +57,11 @@ class IlludState(State):
         window: Window = Window(size=terminal_size, buffer_=buffer_)
         canvas: Canvas = Canvas(terminal_size).fill(' ')
         file: File = File(path)
-        illud_state = IlludState(buffer_,
-                                 cursor,
+        illud_state = IlludState(terminal_size=terminal_size,
+                                 buffer_=buffer_,
+                                 cursor=cursor,
                                  window=window,
                                  canvas=canvas,
-                                 terminal_size=terminal_size,
                                  file=file)
 
         return illud_state

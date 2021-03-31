@@ -40,7 +40,7 @@ def test_inheritance() -> None:
     (None, False, IntegerSize2D(0, 0), IlludState(terminal_size=IntegerSize2D(0, 0))),
     (None, False, IntegerSize2D(120, 80), IlludState(terminal_size=IntegerSize2D(120, 80))),
     (IlludState(), True, None, IlludState()),
-    (IlludState(Buffer('foo')), True, None, IlludState(Buffer('foo'))),
+    (IlludState(buffer_=Buffer('foo')), True, None, IlludState(buffer_=Buffer('foo'))),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_init(illud_initial_state: Optional[IlludState], pass_illud_initial_state: bool,
