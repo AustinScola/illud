@@ -1,6 +1,7 @@
 """Persistent information of Illud."""
 from typing import Any, Optional
 
+from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 from seligimus.python.decorators.operators.equality.standard_equality import standard_equality
 from seligimus.python.decorators.standard_representation import standard_representation
@@ -53,14 +54,25 @@ class IlludState(State):
 
         buffer_: Buffer = Buffer(contents)
         cursor: Cursor = Cursor(buffer_)
+
         terminal_size: IntegerSize2D = Terminal.get_size()
-        window: Window = Window(size=terminal_size, buffer_=buffer_)
+
+        window_size: IntegerSize2D = IntegerSize2D(terminal_size.x, max(terminal_size.y - 1, 0))
+        window: Window = Window(size=window_size, buffer_=buffer_)
+
+        status_bar_position = IntegerPosition2D(0, max(terminal_size.y - 1, 0))
+        status_bar_size = IntegerSize2D(
+            terminal_size.x, 1) if terminal_size.y > 1 else IntegerSize2D(terminal_size.x, 0)
+        status_bar: StatusBar = StatusBar(position=status_bar_position, size=status_bar_size)
+
         canvas: Canvas = Canvas(terminal_size).fill(' ')
         file: File = File(path)
+
         illud_state = IlludState(terminal_size=terminal_size,
                                  buffer_=buffer_,
                                  cursor=cursor,
                                  window=window,
+                                 status_bar=status_bar,
                                  canvas=canvas,
                                  file=file)
 

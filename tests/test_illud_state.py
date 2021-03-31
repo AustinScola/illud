@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional
 from unittest.mock import mock_open, patch
 
 import pytest
+from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.buffer import Buffer
@@ -65,7 +66,7 @@ def test_init(arguments: List[Any], keyword_arguments: Dict[str, Any],
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('path, file_contents, terminal_size, expected_illud_state', [
     ('foo.txt', '', IntegerSize2D(0, 0), IlludState(file=File('foo.txt'))),
-    ('foo.txt', 'Lorem ipsum dolor sit amet', IntegerSize2D(120, 80), IlludState(terminal_size=IntegerSize2D(120, 80), buffer_=Buffer('Lorem ipsum dolor sit amet'), cursor=Cursor(Buffer('Lorem ipsum dolor sit amet')), window=Window(size=IntegerSize2D(120, 80), buffer_=Buffer('Lorem ipsum dolor sit amet')), canvas=Canvas(IntegerSize2D(120, 80)).fill(' '), file=File('foo.txt'))),
+    ('foo.txt', 'Lorem ipsum dolor sit amet', IntegerSize2D(120, 80), IlludState(terminal_size=IntegerSize2D(120, 80), buffer_=Buffer('Lorem ipsum dolor sit amet'), cursor=Cursor(Buffer('Lorem ipsum dolor sit amet')), window=Window(size=IntegerSize2D(120, 79), buffer_=Buffer('Lorem ipsum dolor sit amet')), status_bar=StatusBar(position=IntegerPosition2D(0, 79), size=IntegerSize2D(120, 1)), canvas=Canvas(IntegerSize2D(120, 80)).fill(' '), file=File('foo.txt'))),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_from_file(path: str, file_contents: str, terminal_size: IntegerSize2D,
