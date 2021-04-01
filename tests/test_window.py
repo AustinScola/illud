@@ -318,6 +318,10 @@ def test_adjust_view_to_include(window: Window, index: int, expected_window: Win
     (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo'), offset=IntegerPosition2D(0, -1)), Canvas(IntegerSize2D(3, 2), [['x', 'x', 'x'], ['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], ['f', 'o', 'o']])),
     (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar'), offset=IntegerPosition2D(0, -1)), Canvas(IntegerSize2D(3, 2), [['x', 'x', 'x'], ['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], ['f', 'o', 'o']])),
     (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo'), offset=IntegerPosition2D(0, -2)), Canvas(IntegerSize2D(3, 2), [['x', 'x', 'x'], ['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], [' ', ' ', ' ']])),
+    (Window(size=IntegerSize2D(4, 2), buffer_=Buffer('foo\nbar\n'), offset=IntegerPosition2D(1, 1)), Canvas(IntegerSize2D(4, 2), [['x', 'x', 'x', 'x'], ['x', 'x', 'x', 'x']]), Canvas(IntegerSize2D(4, 2), [['a', 'r', ' ', ' '], [' ', ' ', ' ', ' ']])),
+    (Window(position=IntegerPosition2D(1, 0), size=IntegerSize2D(1, 1)), Canvas(IntegerSize2D(2, 1), [['x', 'x']]), Canvas(IntegerSize2D(2, 1), [['x', ' ']])),
+    (Window(position=IntegerPosition2D(0, 1), size=IntegerSize2D(1, 1)), Canvas(IntegerSize2D(2, 2), [['x', 'x'], ['x', 'x']]), Canvas(IntegerSize2D(2, 2), [['x', 'x'], [' ', 'x']])),
+    (Window(position=IntegerPosition2D(1, 1), size=IntegerSize2D(1, 1)), Canvas(IntegerSize2D(3, 3), [['x', 'x', 'x'], ['x', 'x', 'x'], ['x', 'x', 'x']]), Canvas(IntegerSize2D(3, 3), [['x', 'x', 'x'], ['x', ' ', 'x'], ['x', 'x', 'x']])),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_draw(window: Window, canvas: Canvas, expected_canvas_after: Canvas) -> None:
