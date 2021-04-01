@@ -88,6 +88,24 @@ def test_resize(canvas: Canvas, size: IntegerSize2D, expected_canvas_after: Canv
     assert canvas == expected_canvas_after
 
 
+# yapf: disable
+@pytest.mark.parametrize('canvas, character, expected_canvas_after', [
+    (Canvas(), ' ', Canvas()),
+    (Canvas(IntegerSize2D(1, 1)), 'x', Canvas(IntegerSize2D(1, 1), [['x']])),
+    (Canvas(IntegerSize2D(1, 1)), 'a', Canvas(IntegerSize2D(1, 1), [['a']])),
+    (Canvas(IntegerSize2D(1, 2)), 'x', Canvas(IntegerSize2D(1, 2), [['x'], ['x']])),
+    (Canvas(IntegerSize2D(2, 2)), 'x', Canvas(IntegerSize2D(2, 2), [['x', 'x'], ['x', 'x']])),
+    (Canvas(IntegerSize2D(2, 1)), 'x', Canvas(IntegerSize2D(2, 1), [['x', 'x']])),
+])
+# yapf: enable
+def test_fill(canvas: Canvas, character: str, expected_canvas_after: Canvas) -> None:
+    """Test illud.canvas.Canvas.fill."""
+    filled_canvas: Canvas = canvas.fill(character)
+
+    assert filled_canvas is canvas
+    assert canvas == expected_canvas_after
+
+
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('canvas, index, expected_line', [
     (Canvas(IntegerSize2D(1, 1), [[' ']]), 0, [' ']),
