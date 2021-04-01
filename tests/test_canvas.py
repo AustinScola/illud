@@ -74,9 +74,9 @@ def test_repr(canvas: Canvas, expected_representation: str) -> None:
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('canvas, size, expected_canvas_after', [
     (Canvas(), IntegerSize2D(0, 0), Canvas()),
-    (Canvas(), IntegerSize2D(1, 1), Canvas(IntegerSize2D(1, 1), [[' ']])),
-    (Canvas(), IntegerSize2D(3, 2), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], [' ', ' ', ' ']])),
-    (Canvas(), IntegerSize2D(3, 2), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], [' ', ' ', ' ']])),
+    (Canvas(), IntegerSize2D(1, 1), Canvas(IntegerSize2D(1, 1)).fill(' ')),
+    (Canvas(), IntegerSize2D(3, 2), Canvas(IntegerSize2D(3, 2)).fill(' ')),
+    (Canvas(), IntegerSize2D(3, 2), Canvas(IntegerSize2D(3, 2)).fill(' ')),
     (Canvas(IntegerSize2D(1, 1), [['a']]), IntegerSize2D(3, 2), Canvas(IntegerSize2D(3, 2), [['a', ' ', ' '], [' ', ' ', ' ']])),
     (Canvas(IntegerSize2D(3, 2), [['f', 'o', 'o'], ['b', 'a', 'r']]), IntegerSize2D(1, 1), Canvas(IntegerSize2D(1, 1), [['f']])),
 ])
@@ -151,8 +151,8 @@ def test_remove_inversions(canvas: Canvas, expected_canvas_after: Canvas) -> Non
     (Canvas(), ''),
     (Canvas(IntegerSize2D(1, 1), [[' ']]), '\x1b[;H '),
     (Canvas(IntegerSize2D(1, 1), [['a']]), '\x1b[;Ha'),
-    (Canvas(IntegerSize2D(2, 1), [[' '], [' ']]), '\x1b[;H \x1b[2;H '),
-    (Canvas(IntegerSize2D(2, 2), [[' ', ' '], [' ', ' ']]), '\x1b[;H  \x1b[2;H  '),
+    (Canvas(IntegerSize2D(2, 1)).fill(' '), '\x1b[;H  '),
+    (Canvas(IntegerSize2D(2, 2)).fill(' '), '\x1b[;H  \x1b[2;H  '),
     (Canvas(IntegerSize2D(1, 1), [[' ']], [IntegerPosition2D()]), '\x1b[;H \x1b[;H\x1b[7m \x1b[;2H\x1b[m'),
 ])
 # yapf: enable # pylint: enable=line-too-long
