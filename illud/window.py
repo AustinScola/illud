@@ -124,69 +124,70 @@ class Window():
             offset = IntegerPosition2D(0, row - self.offset.y)
             self.move_view(offset)
 
-    def draw(self, canvas: Canvas) -> None:  # pylint: disable=too-many-branches, too-many-locals
+    def draw(self, canvas: Canvas) -> None:  # pylint: disable=too-many-branches
         """Draw a window on the terminal."""
-        if not self.size.width or not self.size.height:
-            return
+        for canvas_row in range(self.position.y, self.position.y - self.offset.y):
+            for canvas_column in range(self.position.x, self.position.x + self.size.x):
+                canvas[canvas_row][canvas_column] = ' '
 
-        buffer_index: int = 0
+        if self.offset.x < 0:
+            for canvas_row in range(self.position.y - self.offset.y, self.position.y + self.size.y):
+                for canvas_column in range(self.position.x,
+                                           min(self.position.x - self.offset.x + 1, self.size.x)):
+                    canvas[canvas_row][canvas_column] = ' '
 
-        row_offset: int = self.offset.y
-        if row_offset > 0:
+        canvas_row_start = self.position.y if self.offset.y > 0 else self.position.y - self.offset.y
+        canvas_row_end = self.position.y + self.size.y
+        canvas_column_start = self.position.x if self.offset.x > 0 \
+            else self.position.x - self.offset.x
+        canvas_column_end = self.position.x + self.size.x
+        if self.buffer:  # pylint: disable=too-many-nested-blocks
             try:
-                for _ in range(row_offset):
-                    buffer_index = self.buffer.index('\n', buffer_index) + 1
-            except ValueError:
-                buffer_index = len(self.buffer)
-        else:
-            for row in range(-row_offset):
-                for column in range(self.size.width):
-                    canvas[row][column] = ' '
+                buffer_index: int = 0
 
-        column_offset: int = self.offset.x
-        try:
-            starting_row: int = 0 if row_offset > 0 else -row_offset
-            ending_row: int = self.bottom_row + 1
-            for row in range(starting_row, ending_row):
+                canvas_row = canvas_row_start
+                canvas_column = canvas_column_start
 
-                if column_offset < 0:
-                    spaces: int
-                    if -column_offset > self.size.width:
-                        spaces = self.size.width
-                    else:
-                        spaces = -column_offset
-                    for beginning_column in range(0, spaces):
-                        canvas[row][beginning_column] = ' '
-                else:
-                    for column in range(column_offset):
+                for _ in range(self.offset.y):
+                    while True:
                         character: str = self.buffer[buffer_index]
+                        buffer_index += 1
                         if character == '\n':
                             break
+
+                for canvas_row in range(canvas_row_start, canvas_row_end):
+
+                    canvas_column = canvas_column_start
+
+                    if self.offset.x > 0:
+                        for buffer_index in range(buffer_index, buffer_index + self.offset.x + 1):
+                            character = self.buffer[buffer_index]
+                            if character == '\n':
+                                break
+
+                    for canvas_column in range(canvas_column_start, canvas_column_end):
+                        character = self.buffer[buffer_index]
+
+                        if character == '\n':
+                            for canvas_column in range(canvas_column, canvas_column_end):  # pylint: disable=redefined-outer-name
+                                canvas[canvas_row][canvas_column] = ' '
+                            buffer_index += 1
+                            break
+                        canvas[canvas_row][canvas_column] = character
                         buffer_index += 1
+                    else:
+                        try:
+                            buffer_index = self.buffer.index('\n', buffer_index) + 1
+                        except ValueError:
+                            buffer_index = len(self.buffer)
+            except IndexError:
+                for canvas_column in range(canvas_column, canvas_column_end):
+                    canvas[canvas_row][canvas_column] = ' '
 
-                starting_column: int = 0 if column_offset > 0 else -column_offset
-                ending_column: int = self.right_column + 1
-                for column in range(starting_column, ending_column):
-                    character = self.buffer[buffer_index]
-
-                    if character == '\n':
-                        for remaining_column in range(column, self.right_column + 1):
-                            canvas[row][remaining_column] = ' '
-                        buffer_index += 1
-                        break
-
-                    canvas[row][column] = character
-
-                    buffer_index += 1
-                else:
-                    try:
-                        buffer_index = self.buffer.index('\n', buffer_index) + 1
-                    except ValueError:
-                        buffer_index = len(self.buffer)
-        except IndexError:
-            for remaining_column in range(column, self.right_column + 1):
-                canvas[row][remaining_column] = ' '
-
-            for row in range(row + 1, self.position.y + self.size.height):
-                for column in range(starting_column, ending_column):
-                    canvas[row][column] = ' '
+                for canvas_row in range(canvas_row + 1, canvas_row_end):
+                    for canvas_column in range(canvas_column_start, canvas_column_end):
+                        canvas[canvas_row][canvas_column] = ' '
+        else:
+            for canvas_row in range(canvas_row_start, canvas_row_end):
+                for canvas_column in range(canvas_column_start, canvas_column_end):
+                    canvas[canvas_row][canvas_column] = ' '
