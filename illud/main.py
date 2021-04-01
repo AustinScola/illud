@@ -5,7 +5,7 @@ from typing import List
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.buffer import Buffer
-from illud.canvas import Canvas, Text
+from illud.canvas import Canvas
 from illud.cursor import Cursor
 from illud.illud import Illud
 from illud.illud_state import IlludState
@@ -41,9 +41,7 @@ def _run_illud(parsed_arguments: argparse.Namespace) -> None:
         cursor: Cursor = Cursor(buffer_)
         terminal_size: IntegerSize2D = Terminal.get_size()
         window: Window = Window(size=terminal_size, buffer_=buffer_)
-        text: Text = [[' ' for _ in range(terminal_size.width)]
-                      for _ in range(terminal_size.height)]
-        canvas: Canvas = Canvas(terminal_size, text)
+        canvas: Canvas = Canvas(terminal_size).fill(' ')
         illud_state = IlludState(buffer_,
                                  cursor,
                                  window=window,

@@ -61,7 +61,7 @@ def test_init(arguments: List[Any], keyword_arguments: Dict[str, Any], expected_
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('path, file_contents, terminal_size, expected_illud_state', [
     ('foo.txt', '', IntegerSize2D(0, 0), IlludState(file=File('foo.txt'))),
-    ('foo.txt', 'Lorem ipsum dolor sit amet', IntegerSize2D(120, 80), IlludState(Buffer('Lorem ipsum dolor sit amet'), Cursor(Buffer('Lorem ipsum dolor sit amet')), window=Window(size=IntegerSize2D(120, 80), buffer_=Buffer('Lorem ipsum dolor sit amet')), canvas=Canvas(IntegerSize2D(120, 80), [[' ' for _ in range(120)] for _ in range(80)]), terminal_size=IntegerSize2D(120, 80), file=File('foo.txt'))),
+    ('foo.txt', 'Lorem ipsum dolor sit amet', IntegerSize2D(120, 80), IlludState(Buffer('Lorem ipsum dolor sit amet'), Cursor(Buffer('Lorem ipsum dolor sit amet')), window=Window(size=IntegerSize2D(120, 80), buffer_=Buffer('Lorem ipsum dolor sit amet')), canvas=Canvas(IntegerSize2D(120, 80)).fill(' '), terminal_size=IntegerSize2D(120, 80), file=File('foo.txt'))),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_from_file(path: str, file_contents: str, terminal_size: IntegerSize2D,

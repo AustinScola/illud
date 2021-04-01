@@ -64,6 +64,14 @@ class Canvas():
 
         self.size = size
 
+    def fill(self, character: str) -> 'Canvas':
+        """Fill the canvas the given character."""
+        for row in range(self.size.height):
+            for column in range(self.size.width):
+                self.text[row][column] = character
+
+        return self
+
     def invert(self, position: IntegerPosition2D) -> None:
         """Invert the both the text and background color of a position."""
         if position not in self._inversions:

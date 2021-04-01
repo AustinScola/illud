@@ -108,7 +108,7 @@ def test_read(signals: Signals, character: Character, expected_input: IlludInput
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('initial_state, input_, terminal_size, expected_state_after', [
     (IlludState(), Character('i'), None, IlludState(mode=Insert())),
-    (IlludState(), TerminalSizeChange(), IntegerSize2D(120, 80), IlludState(window=Window(size=IntegerSize2D(120, 80)), canvas=Canvas(IntegerSize2D(120, 80), [[' ' for _ in range(120)] for _ in range(80)]), terminal_size=IntegerSize2D(120, 80))),
+    (IlludState(), TerminalSizeChange(), IntegerSize2D(120, 80), IlludState(window=Window(size=IntegerSize2D(120, 80)), canvas=Canvas(IntegerSize2D(120, 80)).fill(' '), terminal_size=IntegerSize2D(120, 80))),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_evaluate(initial_state: IlludState, input_: IlludInput,
@@ -126,10 +126,10 @@ def test_evaluate(initial_state: IlludState, input_: IlludInput,
 
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('illud_state, result, expected_output', [
-    (IlludState(window=Window(size=IntegerSize2D(1, 1)), canvas=Canvas(IntegerSize2D(1, 1), [[' ']])), None, '\x1b[;H \x1b[;H\x1b[7m \x1b[;2H\x1b[m'),
-    (IlludState(cursor=Cursor(Buffer('foo')), window=Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo')), canvas=Canvas(IntegerSize2D(3, 1), [[' ', ' ', ' ']])), None, '\x1b[;Hfoo\x1b[;H\x1b[7mf\x1b[;2H\x1b[m'),
-    (IlludState(cursor=Cursor(Buffer('foo'), 1), window=Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo')), canvas=Canvas(IntegerSize2D(3, 1), [[' ', ' ', ' ']], inversions=[IntegerPosition2D()])), None, '\x1b[;Hfoo\x1b[;2H\x1b[7mo\x1b[;3H\x1b[m'),
-    (IlludState(mode=Select(), selection=Selection(Buffer('foo'), 1), window=Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo')), canvas=Canvas(IntegerSize2D(3, 1), [[' ', ' ', ' ']], inversions=[IntegerPosition2D()])), None, '\x1b[;Hfoo\x1b[;2H\x1b[7mo\x1b[;3H\x1b[m'),
+    (IlludState(window=Window(size=IntegerSize2D(1, 1)), canvas=Canvas(IntegerSize2D(1, 1)).fill(' ')), None, '\x1b[;H \x1b[;H\x1b[7m \x1b[;2H\x1b[m'),
+    (IlludState(cursor=Cursor(Buffer('foo')), window=Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo')), canvas=Canvas(IntegerSize2D(3, 1)).fill(' ')), None, '\x1b[;Hfoo\x1b[;H\x1b[7mf\x1b[;2H\x1b[m'),
+    (IlludState(cursor=Cursor(Buffer('foo'), 1), window=Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo')), canvas=Canvas(IntegerSize2D(3, 1), inversions=[IntegerPosition2D()]).fill(' ')), None, '\x1b[;Hfoo\x1b[;2H\x1b[7mo\x1b[;3H\x1b[m'),
+    (IlludState(mode=Select(), selection=Selection(Buffer('foo'), 1), window=Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo')), canvas=Canvas(IntegerSize2D(3, 1), inversions=[IntegerPosition2D()]).fill(' ')), None, '\x1b[;Hfoo\x1b[;2H\x1b[7mo\x1b[;3H\x1b[m'),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_print(illud_state: IlludState, result: Any, expected_output: str) -> None:
