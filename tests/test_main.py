@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Optional, Union
 from unittest.mock import MagicMock, patch
 
 import pytest
+from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.buffer import Buffer
@@ -13,6 +14,7 @@ from illud.file import File
 from illud.illud import Illud
 from illud.illud_state import IlludState
 from illud.main import _parse_arguments, _run_illud, _set_up_argument_parser, main
+from illud.status_bar import StatusBar
 from illud.window import Window
 
 
@@ -77,8 +79,8 @@ def test_parse_arguments(argument_parser: argparse.ArgumentParser, arguments: Li
 
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('parsed_arguments, illud_state_from_file, terminal_size, expected_init_arguments', [
-    (argparse.Namespace(file=None), None, IntegerSize2D(120, 80), [IlludState(Buffer(), Cursor(), window=Window(size=IntegerSize2D(120, 80)), canvas=Canvas(IntegerSize2D(120, 80)).fill(' '), terminal_size=IntegerSize2D(120, 80))]),
-    (argparse.Namespace(file='foo.py'), IlludState(Buffer('Lorem ipsum'), canvas=Canvas(IntegerSize2D(120, 80)).fill('x'), terminal_size=IntegerSize2D(120, 80), file=File('foo.py')), IntegerSize2D(120, 80), [IlludState(Buffer('Lorem ipsum'), canvas=Canvas(IntegerSize2D(120, 80)).fill('x'), terminal_size=IntegerSize2D(120, 80), file=File('foo.py'))]),
+    (argparse.Namespace(file=None), None, IntegerSize2D(120, 80), [IlludState(terminal_size=IntegerSize2D(120, 80), buffer_=Buffer(), cursor=Cursor(), window=Window(size=IntegerSize2D(120, 79)), status_bar=StatusBar(position=IntegerPosition2D(0, 79), size=IntegerSize2D(120, 1)), canvas=Canvas(IntegerSize2D(120, 80)).fill(' '))]),
+    (argparse.Namespace(file='foo.py'), IlludState(terminal_size=IntegerSize2D(120, 80), buffer_=Buffer('Lorem ipsum'), canvas=Canvas(IntegerSize2D(120, 80)).fill(' '), file=File('foo.py')), IntegerSize2D(120, 80), [IlludState(terminal_size=IntegerSize2D(120, 80), buffer_=Buffer('Lorem ipsum'), canvas=Canvas(IntegerSize2D(120, 80)).fill(' '), file=File('foo.py'))]),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_run_illud(parsed_arguments: argparse.Namespace, illud_state_from_file: Optional[str],

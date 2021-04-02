@@ -71,6 +71,9 @@ class Illud(REPL):
             cursor: Cursor = self._state.cursor
             cursor.draw(window.offset, canvas)
 
+        if self._state.status_bar:
+            self._state.status_bar.draw(canvas)
+
         canvas.render()
 
         self._terminal.update()

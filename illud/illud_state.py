@@ -1,6 +1,7 @@
 """Persistent information of Illud."""
 from typing import Any, Optional
 
+from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 from seligimus.python.decorators.operators.equality.standard_equality import standard_equality
 from seligimus.python.decorators.standard_representation import standard_representation
@@ -13,6 +14,7 @@ from illud.mode import Mode
 from illud.modes.normal import Normal
 from illud.selection import Selection
 from illud.state import State
+from illud.status_bar import StatusBar
 from illud.terminal import Terminal
 from illud.window import Window
 
@@ -22,24 +24,26 @@ class IlludState(State):
 
     # pylint: disable=too-many-arguments, too-many-instance-attributes
     def __init__(self,
+                 terminal_size: Optional[IntegerSize2D] = None,
                  buffer_: Optional[Buffer] = None,
                  cursor: Optional[Cursor] = None,
                  selection: Optional[Selection] = None,
                  clipboard: Optional[Buffer] = None,
                  mode: Optional[Mode] = None,
                  window: Optional[Window] = None,
+                 status_bar: Optional[StatusBar] = None,
                  canvas: Optional[Canvas] = None,
-                 terminal_size: Optional[IntegerSize2D] = None,
                  file: Optional[File] = None):
+        self.terminal_size: IntegerSize2D = terminal_size if terminal_size is not None \
+            else IntegerSize2D(0, 0)
         self.buffer: Buffer = buffer_ if buffer_ is not None else Buffer()
         self.cursor: Cursor = cursor if cursor is not None else Cursor()
         self.selection: Optional[Selection] = selection
         self.clipboard: Optional[Buffer] = clipboard
         self.mode: Mode = mode if mode is not None else Normal()
         self.window: Window = window if window is not None else Window()
+        self.status_bar: StatusBar = status_bar if status_bar is not None else StatusBar()
         self.canvas: Canvas = canvas if canvas is not None else Canvas()
-        self.terminal_size: IntegerSize2D = terminal_size if terminal_size is not None \
-            else IntegerSize2D(0, 0)
         self.file: Optional[File] = file
 
     @staticmethod
@@ -50,15 +54,26 @@ class IlludState(State):
 
         buffer_: Buffer = Buffer(contents)
         cursor: Cursor = Cursor(buffer_)
+
         terminal_size: IntegerSize2D = Terminal.get_size()
-        window: Window = Window(size=terminal_size, buffer_=buffer_)
+
+        window_size: IntegerSize2D = IntegerSize2D(terminal_size.x, max(terminal_size.y - 1, 0))
+        window: Window = Window(size=window_size, buffer_=buffer_)
+
+        status_bar_position = IntegerPosition2D(0, max(terminal_size.y - 1, 0))
+        status_bar_size = IntegerSize2D(
+            terminal_size.x, 1) if terminal_size.y > 1 else IntegerSize2D(terminal_size.x, 0)
+        status_bar: StatusBar = StatusBar(position=status_bar_position, size=status_bar_size)
+
         canvas: Canvas = Canvas(terminal_size).fill(' ')
         file: File = File(path)
-        illud_state = IlludState(buffer_,
-                                 cursor,
+
+        illud_state = IlludState(terminal_size=terminal_size,
+                                 buffer_=buffer_,
+                                 cursor=cursor,
                                  window=window,
+                                 status_bar=status_bar,
                                  canvas=canvas,
-                                 terminal_size=terminal_size,
                                  file=file)
 
         return illud_state
