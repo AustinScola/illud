@@ -48,10 +48,10 @@ def test_call(input_or_exception: List[Any], result_or_exception: List[Any],
         assert read_mock.call_count == expected_input_call_count
 
         assert evaluate_mock.call_count == expected_evaluate_call_count
-        evaluate_mock.assert_has_calls(map(call, expected_inputs))
+        evaluate_mock.assert_has_calls(list(map(call, expected_inputs)))
 
         assert print_mock.call_count == expected_print_call_count
-        print_mock.assert_has_calls(map(call, expected_results))
+        print_mock.assert_has_calls(list(map(call, expected_results)))
 
         if expect_catch_called:
             catch_mock.assert_called_once()
