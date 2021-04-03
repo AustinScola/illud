@@ -49,8 +49,12 @@ class IlludState(State):
     @staticmethod
     def from_file(path: str) -> 'IlludState':
         """Return Illud state for a file with contents."""
-        with open(path) as system_file:
-            contents: str = system_file.read()
+        contents: str
+        try:
+            with open(path) as system_file:
+                contents = system_file.read()
+        except FileNotFoundError:
+            contents = ''
 
         buffer_: Buffer = Buffer(contents)
         cursor: Cursor = Cursor(buffer_)
