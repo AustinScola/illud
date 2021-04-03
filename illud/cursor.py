@@ -116,7 +116,7 @@ class Cursor():
 
         self.buffer.delete(self.index)
 
-        if self.index > self.buffer.end:
+        if 0 < self.index > self.buffer.end:
             self.index = self.buffer.end
 
     def next_word(self) -> None:
