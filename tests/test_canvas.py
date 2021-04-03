@@ -107,6 +107,27 @@ def test_fill(canvas: Canvas, character: str, expected_canvas_after: Canvas) -> 
 
 
 # yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('canvas, position, size, character, expected_canvas_after', [
+    (Canvas(), IntegerPosition2D(), IntegerSize2D(0, 0), ' ', Canvas()),
+    (Canvas(IntegerSize2D(1, 1)), IntegerPosition2D(), IntegerSize2D(0, 0), ' ', Canvas(IntegerSize2D(1, 1))),
+    (Canvas(IntegerSize2D(1, 1)), IntegerPosition2D(), IntegerSize2D(1, 1), 'x', Canvas(IntegerSize2D(1, 1), [['x']])),
+    (Canvas(IntegerSize2D(3, 3)), IntegerPosition2D(1, 1), IntegerSize2D(1, 1), 'x', Canvas(IntegerSize2D(3, 3), [['', '', ''], ['', 'x', ''], ['', '', '']])),
+    (Canvas(IntegerSize2D(3, 3)), IntegerPosition2D(1, 2), IntegerSize2D(1, 1), 'x', Canvas(IntegerSize2D(3, 3), [['', '', ''], ['', '', ''], ['', 'x', '']])),
+    (Canvas(IntegerSize2D(3, 3)), IntegerPosition2D(2, 1), IntegerSize2D(1, 1), 'x', Canvas(IntegerSize2D(3, 3), [['', '', ''], ['', '', 'x'], ['', '', '']])),
+    (Canvas(IntegerSize2D(3, 3)), IntegerPosition2D(1, 1), IntegerSize2D(2, 1), 'x', Canvas(IntegerSize2D(3, 3), [['', '', ''], ['', 'x', 'x'], ['', '', '']])),
+    (Canvas(IntegerSize2D(3, 3)), IntegerPosition2D(1, 1), IntegerSize2D(1, 2), 'x', Canvas(IntegerSize2D(3, 3), [['', '', ''], ['', 'x', ''], ['', 'x', '']])),
+    (Canvas(IntegerSize2D(3, 3)), IntegerPosition2D(1, 1), IntegerSize2D(2, 2), 'x', Canvas(IntegerSize2D(3, 3), [['', '', ''], ['', 'x', 'x'], ['', 'x', 'x']])),
+])
+# yapf: enable # pylint: enable=line-too-long
+def test_fill_rectangle(canvas: Canvas, position: IntegerPosition2D, size: IntegerSize2D,
+                        character: str, expected_canvas_after: Canvas) -> None:
+    """Test illud.canvas.Canvas.fill_rectangle."""
+    canvas.fill_rectangle(position, size, character)
+
+    assert canvas == expected_canvas_after
+
+
+# yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('canvas, index, expected_line', [
     (Canvas(IntegerSize2D(1, 1), [[' ']]), 0, [' ']),
     (Canvas(IntegerSize2D(3, 3), [['f', 'o', 'o'], ['b', 'a', 'r'], ['b', 'a', 'z']]), 1, ['b', 'a', 'r']),

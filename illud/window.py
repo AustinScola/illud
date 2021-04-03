@@ -126,68 +126,66 @@ class Window():
 
     def draw(self, canvas: Canvas) -> None:  # pylint: disable=too-many-branches
         """Draw a window on the terminal."""
-        for canvas_row in range(self.position.y, self.position.y - self.offset.y):
-            for canvas_column in range(self.position.x, self.position.x + self.size.x):
-                canvas[canvas_row][canvas_column] = ' '
+        if not self.buffer:
+            canvas.fill_rectangle(self.position, self.size, ' ')
+            return
+
+        canvas.fill_rectangle(self.position, IntegerSize2D(self.size.x, -self.offset.y), ' ')
 
         if self.offset.x < 0:
-            for canvas_row in range(self.position.y - self.offset.y, self.position.y + self.size.y):
-                for canvas_column in range(self.position.x,
-                                           min(self.position.x - self.offset.x + 1, self.size.x)):
-                    canvas[canvas_row][canvas_column] = ' '
+            fill_position: IntegerPosition2D = IntegerPosition2D(self.position.x,
+                                                                 self.position.y - self.offset.y)
+            fill_size: IntegerSize2D = IntegerSize2D(min(-self.offset.x + 1, self.size.x),
+                                                     self.size.y)
+            canvas.fill_rectangle(fill_position, fill_size, ' ')
 
         canvas_row_start = self.position.y if self.offset.y > 0 else self.position.y - self.offset.y
         canvas_row_end = self.position.y + self.size.y
         canvas_column_start = self.position.x if self.offset.x > 0 \
             else self.position.x - self.offset.x
         canvas_column_end = self.position.x + self.size.x
-        if self.buffer:  # pylint: disable=too-many-nested-blocks
-            try:
-                buffer_index: int = 0
+        try:
+            buffer_index: int = 0
 
-                canvas_row = canvas_row_start
+            canvas_row = canvas_row_start
+            canvas_column = canvas_column_start
+
+            for _ in range(self.offset.y):
+                while True:
+                    character: str = self.buffer[buffer_index]
+                    buffer_index += 1
+                    if character == '\n':
+                        break
+
+            for canvas_row in range(canvas_row_start, canvas_row_end):
+
                 canvas_column = canvas_column_start
 
-                for _ in range(self.offset.y):
-                    while True:
-                        character: str = self.buffer[buffer_index]
-                        buffer_index += 1
-                        if character == '\n':
-                            break
-
-                for canvas_row in range(canvas_row_start, canvas_row_end):
-
-                    canvas_column = canvas_column_start
-
-                    if self.offset.x > 0:
-                        for buffer_index in range(buffer_index, buffer_index + self.offset.x + 1):
-                            character = self.buffer[buffer_index]
-                            if character == '\n':
-                                break
-
-                    for canvas_column in range(canvas_column_start, canvas_column_end):
+                if self.offset.x > 0:
+                    for buffer_index in range(buffer_index, buffer_index + self.offset.x + 1):
                         character = self.buffer[buffer_index]
-
                         if character == '\n':
-                            for canvas_column in range(canvas_column, canvas_column_end):  # pylint: disable=redefined-outer-name
-                                canvas[canvas_row][canvas_column] = ' '
-                            buffer_index += 1
                             break
-                        canvas[canvas_row][canvas_column] = character
-                        buffer_index += 1
-                    else:
-                        try:
-                            buffer_index = self.buffer.index('\n', buffer_index) + 1
-                        except ValueError:
-                            buffer_index = len(self.buffer)
-            except IndexError:
-                for canvas_column in range(canvas_column, canvas_column_end):
-                    canvas[canvas_row][canvas_column] = ' '
 
-                for canvas_row in range(canvas_row + 1, canvas_row_end):
-                    for canvas_column in range(canvas_column_start, canvas_column_end):
-                        canvas[canvas_row][canvas_column] = ' '
-        else:
-            for canvas_row in range(canvas_row_start, canvas_row_end):
+                for canvas_column in range(canvas_column_start, canvas_column_end):
+                    character = self.buffer[buffer_index]
+
+                    if character == '\n':
+                        for canvas_column in range(canvas_column, canvas_column_end):  # pylint: disable=redefined-outer-name
+                            canvas[canvas_row][canvas_column] = ' '
+                        buffer_index += 1
+                        break
+                    canvas[canvas_row][canvas_column] = character
+                    buffer_index += 1
+                else:
+                    try:
+                        buffer_index = self.buffer.index('\n', buffer_index) + 1
+                    except ValueError:
+                        buffer_index = len(self.buffer)
+        except IndexError:
+            for canvas_column in range(canvas_column, canvas_column_end):
+                canvas[canvas_row][canvas_column] = ' '
+
+            for canvas_row in range(canvas_row + 1, canvas_row_end):
                 for canvas_column in range(canvas_column_start, canvas_column_end):
                     canvas[canvas_row][canvas_column] = ' '
