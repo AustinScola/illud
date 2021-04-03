@@ -357,6 +357,7 @@ def test_insert(buffer_: Buffer, string: str, index: int, expected_buffer_after:
     (Buffer(), -1, BufferIndexException(-1, 0), None),
     (Buffer(), 0, BufferIndexException(0, 0), None),
     (Buffer(), 1, BufferIndexException(1, 0), None),
+    (Buffer('a'), 0, None, Buffer()),
     (Buffer('spam'), -1, BufferIndexException(-1, 4), None),
     (Buffer('spam'), 0, None, Buffer('pam')),
     (Buffer('spam'), 1, None, Buffer('sam')),

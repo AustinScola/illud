@@ -192,6 +192,7 @@ def test_backspace(cursor: Cursor, expected_cursor_after: Cursor) -> None:
 # yapf: disable
 @pytest.mark.parametrize('cursor, expected_cursor_after', [
     (Cursor(), Cursor()),
+    (Cursor(Buffer('a'), 0), Cursor()),
     (Cursor(Buffer('a'), 1), Cursor(Buffer('a'), 1)),
     (Cursor(Buffer('foo')), Cursor(Buffer('oo'))),
     (Cursor(Buffer('foo'), 1), Cursor(Buffer('fo'), 1)),
