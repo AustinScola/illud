@@ -186,11 +186,7 @@ class Cursor():
             canvas_position = IntegerPosition2D(0, 0)
         else:
             row: int = self.buffer.get_row(self.index)
-            column: int
-            if self.index >= len(self.buffer):
-                column = self.buffer.get_column(self.index - 1) + 1
-            else:
-                column = self.buffer.get_column(self.index)
+            column: int = self.buffer.get_column(self.index)
             canvas_position = IntegerPosition2D(column, row)
         canvas_position -= offset
 
