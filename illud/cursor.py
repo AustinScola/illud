@@ -188,7 +188,7 @@ class Cursor():
             row: int = self.buffer.get_row(self.index)
             column: int = self.buffer.get_column(self.index)
             canvas_position = IntegerPosition2D(column, row)
-        canvas_position -= offset
+        canvas_position += offset
 
         if not 0 <= canvas_position.x < canvas.size.width:
             return

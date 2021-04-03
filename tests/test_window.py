@@ -198,8 +198,8 @@ def test_repr(window: Window, expected_representation: str) -> None:
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('window, offset, expected_offset_after', [
     (Window(size=IntegerSize2D(4, 3)), IntegerPosition2D(0, 0), IntegerPosition2D(0, 0)),
-    (Window(size=IntegerSize2D(4, 3)), IntegerPosition2D(-1, 0), IntegerPosition2D(-1, 0)),
-    (Window(size=IntegerSize2D(4, 3), offset=IntegerPosition2D(1, 1)), IntegerPosition2D(-1, 0), IntegerPosition2D(0, 1)),
+    (Window(size=IntegerSize2D(4, 3)), IntegerPosition2D(1, 0), IntegerPosition2D(-1, 0)),
+    (Window(size=IntegerSize2D(4, 3), offset=IntegerPosition2D(1, 1)), IntegerPosition2D(1, 0), IntegerPosition2D(0, 1)),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_move_view(window: Window, offset: IntegerPosition2D,
@@ -213,8 +213,8 @@ def test_move_view(window: Window, offset: IntegerPosition2D,
 # yapf: disable
 @pytest.mark.parametrize('window, expected_window_after', [
     (Window(), Window()),
-    (Window(offset=IntegerPosition2D(1, 0)), Window()),
-    (Window(offset=IntegerPosition2D(2, 0)), Window(offset=IntegerPosition2D(1, 0))),
+    (Window(offset=IntegerPosition2D(-1, 0)), Window()),
+    (Window(offset=IntegerPosition2D(-2, 0)), Window(offset=IntegerPosition2D(-1, 0))),
 ])
 # yapf: enable
 def test_move_view_left(window: Window, expected_window_after: Window) -> None:
@@ -226,9 +226,9 @@ def test_move_view_left(window: Window, expected_window_after: Window) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('window, expected_window_after', [
-    (Window(), Window(offset=IntegerPosition2D(1, 0))),
-    (Window(offset=IntegerPosition2D(1, 0)), Window(offset=IntegerPosition2D(2, 0))),
-    (Window(offset=IntegerPosition2D(2, 0)), Window(offset=IntegerPosition2D(3, 0))),
+    (Window(), Window(offset=IntegerPosition2D(-1, 0))),
+    (Window(offset=IntegerPosition2D(-1, 0)), Window(offset=IntegerPosition2D(-2, 0))),
+    (Window(offset=IntegerPosition2D(-2, 0)), Window(offset=IntegerPosition2D(-3, 0))),
 ])
 # yapf: enable
 def test_move_view_right(window: Window, expected_window_after: Window) -> None:
@@ -241,8 +241,8 @@ def test_move_view_right(window: Window, expected_window_after: Window) -> None:
 # yapf: disable
 @pytest.mark.parametrize('window, expected_window_after', [
     (Window(), Window()),
-    (Window(offset=IntegerPosition2D(0, 1)), Window()),
-    (Window(offset=IntegerPosition2D(0, 2)), Window(offset=IntegerPosition2D(0, 1))),
+    (Window(offset=IntegerPosition2D(0, -1)), Window()),
+    (Window(offset=IntegerPosition2D(0, -2)), Window(offset=IntegerPosition2D(0, -1))),
 ])
 # yapf: enable
 def test_move_view_up(window: Window, expected_window_after: Window) -> None:
@@ -254,9 +254,9 @@ def test_move_view_up(window: Window, expected_window_after: Window) -> None:
 
 # yapf: disable
 @pytest.mark.parametrize('window, expected_window_after', [
-    (Window(), Window(offset=IntegerPosition2D(0, 1))),
-    (Window(offset=IntegerPosition2D(0, 1)), Window(offset=IntegerPosition2D(0, 2))),
-    (Window(offset=IntegerPosition2D(0, 2)), Window(offset=IntegerPosition2D(0, 3))),
+    (Window(), Window(offset=IntegerPosition2D(0, -1))),
+    (Window(offset=IntegerPosition2D(0, -1)), Window(offset=IntegerPosition2D(0, -2))),
+    (Window(offset=IntegerPosition2D(0, -2)), Window(offset=IntegerPosition2D(0, -3))),
 ])
 # yapf: enable
 def test_move_view_down(window: Window, expected_window_after: Window) -> None:
@@ -270,14 +270,14 @@ def test_move_view_down(window: Window, expected_window_after: Window) -> None:
 @pytest.mark.parametrize('window, index, expected_window', [
     (Window(size=IntegerSize2D(4, 3)), 0, Window(size=IntegerSize2D(4, 3))),
     (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo')), 0, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo'))),
-    (Window(size=IntegerSize2D(1, 1), buffer_=Buffer('\n')), 1, Window(size=IntegerSize2D(1, 1), buffer_=Buffer('\n'), offset=IntegerPosition2D(0, 1))),
-    (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar')), 4, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(1, 0))),
-    (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar')), 5, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(2, 0))),
-    (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(1, 0)), 6, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(3, 0))),
-    (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(1, 0)), 0, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'))),
-    (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(2, 0)), 0, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'))),
-    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar\nbaz')), 8, Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar\nbaz'), offset=IntegerPosition2D(0, 1))),
-    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar\nbaz'), offset=IntegerPosition2D(0, 1)), 0, Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar\nbaz'))),
+    (Window(size=IntegerSize2D(1, 1), buffer_=Buffer('\n')), 1, Window(size=IntegerSize2D(1, 1), buffer_=Buffer('\n'), offset=IntegerPosition2D(0, -1))),
+    (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar')), 4, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(-1, 0))),
+    (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar')), 5, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(-2, 0))),
+    (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(-1, 0)), 6, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(-3, 0))),
+    (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(-1, 0)), 0, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'))),
+    (Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'), offset=IntegerPosition2D(-2, 0)), 0, Window(size=IntegerSize2D(4, 3), buffer_=Buffer('foo bar'))),
+    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar\nbaz')), 8, Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar\nbaz'), offset=IntegerPosition2D(0, -1))),
+    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar\nbaz'), offset=IntegerPosition2D(0, -1)), 0, Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar\nbaz'))),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_adjust_view_to_include(window: Window, index: int, expected_window: Window) -> None:
@@ -307,18 +307,18 @@ def test_adjust_view_to_include(window: Window, index: int, expected_window: Win
     (Window(size=IntegerSize2D(2, 2), buffer_=Buffer('f\nb')), Canvas(IntegerSize2D(2, 2)).fill('x'), Canvas(IntegerSize2D(2, 2), [['f', ' '], ['b', ' ']])),
     (Window(size=IntegerSize2D(5, 2), buffer_=Buffer('foo\nbar')), Canvas(IntegerSize2D(5, 2)).fill('x'), Canvas(IntegerSize2D(5, 2), [['f', 'o', 'o', ' ', ' '], ['b', 'a', 'r', ' ', ' ']])),
     (Window(size=IntegerSize2D(5, 3), buffer_=Buffer('foo\nbar\nbaz')), Canvas(IntegerSize2D(5, 3)).fill('x'), Canvas(IntegerSize2D(5, 3), [['f', 'o', 'o', ' ', ' '], ['b', 'a', 'r', ' ', ' '], ['b', 'a', 'z', ' ', ' ']])),
-    (Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo'), offset=IntegerPosition2D(1, 0)), Canvas(IntegerSize2D(3, 1)).fill('x'), Canvas(IntegerSize2D(3, 1), [['o', 'o', ' ']])),
-    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar'), offset=IntegerPosition2D(1, 0)), Canvas(IntegerSize2D(3, 2)).fill('x'), Canvas(IntegerSize2D(3, 2), [['o', 'o', ' '], ['a', 'r', ' ']])),
-    (Window(size=IntegerSize2D(3, 3), buffer_=Buffer('foo\n\nbar'), offset=IntegerPosition2D(1, 0)), Canvas(IntegerSize2D(3, 3)).fill('x'), Canvas(IntegerSize2D(3, 3), [['o', 'o', ' '], [' ', ' ', ' '], ['a', 'r', ' ']])),
-    (Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo'), offset=IntegerPosition2D(-1, 0)), Canvas(IntegerSize2D(3, 1)).fill('x'), Canvas(IntegerSize2D(3, 1), [[' ', 'f', 'o']])),
-    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar'), offset=IntegerPosition2D(-1, 0)), Canvas(IntegerSize2D(3, 2)).fill('x'), Canvas(IntegerSize2D(3, 2), [[' ', 'f', 'o'], [' ', 'b', 'a']])),
-    (Window(size=IntegerSize2D(3, 3), buffer_=Buffer('foo\n\nbar'), offset=IntegerPosition2D(-1, 0)), Canvas(IntegerSize2D(3, 3)).fill('x'), Canvas(IntegerSize2D(3, 3), [[' ', 'f', 'o'], [' ', ' ', ' '], [' ', 'b', 'a']])),
-    (Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo'), offset=IntegerPosition2D(-4, 0)), Canvas(IntegerSize2D(3, 1)).fill('x'), Canvas(IntegerSize2D(3, 1), [[' ', ' ', ' ']])),
-    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo'), offset=IntegerPosition2D(0, 1)), Canvas(IntegerSize2D(3, 2)).fill('x'), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], [' ', ' ', ' ']])),
-    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo'), offset=IntegerPosition2D(0, -1)), Canvas(IntegerSize2D(3, 2)).fill('x'), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], ['f', 'o', 'o']])),
-    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar'), offset=IntegerPosition2D(0, -1)), Canvas(IntegerSize2D(3, 2)).fill('x'), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], ['f', 'o', 'o']])),
-    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo'), offset=IntegerPosition2D(0, -2)), Canvas(IntegerSize2D(3, 2)).fill('x'), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], [' ', ' ', ' ']])),
-    (Window(size=IntegerSize2D(4, 2), buffer_=Buffer('foo\nbar\n'), offset=IntegerPosition2D(1, 1)), Canvas(IntegerSize2D(4, 2)).fill('x'), Canvas(IntegerSize2D(4, 2), [['a', 'r', ' ', ' '], [' ', ' ', ' ', ' ']])),
+    (Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo'), offset=IntegerPosition2D(-1, 0)), Canvas(IntegerSize2D(3, 1)).fill('x'), Canvas(IntegerSize2D(3, 1), [['o', 'o', ' ']])),
+    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar'), offset=IntegerPosition2D(-1, 0)), Canvas(IntegerSize2D(3, 2)).fill('x'), Canvas(IntegerSize2D(3, 2), [['o', 'o', ' '], ['a', 'r', ' ']])),
+    (Window(size=IntegerSize2D(3, 3), buffer_=Buffer('foo\n\nbar'), offset=IntegerPosition2D(-1, 0)), Canvas(IntegerSize2D(3, 3)).fill('x'), Canvas(IntegerSize2D(3, 3), [['o', 'o', ' '], [' ', ' ', ' '], ['a', 'r', ' ']])),
+    (Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo'), offset=IntegerPosition2D(1, 0)), Canvas(IntegerSize2D(3, 1)).fill('x'), Canvas(IntegerSize2D(3, 1), [[' ', 'f', 'o']])),
+    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar'), offset=IntegerPosition2D(1, 0)), Canvas(IntegerSize2D(3, 2)).fill('x'), Canvas(IntegerSize2D(3, 2), [[' ', 'f', 'o'], [' ', 'b', 'a']])),
+    (Window(size=IntegerSize2D(3, 3), buffer_=Buffer('foo\n\nbar'), offset=IntegerPosition2D(1, 0)), Canvas(IntegerSize2D(3, 3)).fill('x'), Canvas(IntegerSize2D(3, 3), [[' ', 'f', 'o'], [' ', ' ', ' '], [' ', 'b', 'a']])),
+    (Window(size=IntegerSize2D(3, 1), buffer_=Buffer('foo'), offset=IntegerPosition2D(4, 0)), Canvas(IntegerSize2D(3, 1)).fill('x'), Canvas(IntegerSize2D(3, 1), [[' ', ' ', ' ']])),
+    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo'), offset=IntegerPosition2D(0, -1)), Canvas(IntegerSize2D(3, 2)).fill('x'), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], [' ', ' ', ' ']])),
+    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo'), offset=IntegerPosition2D(0, 1)), Canvas(IntegerSize2D(3, 2)).fill('x'), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], ['f', 'o', 'o']])),
+    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo\nbar'), offset=IntegerPosition2D(0, 1)), Canvas(IntegerSize2D(3, 2)).fill('x'), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], ['f', 'o', 'o']])),
+    (Window(size=IntegerSize2D(3, 2), buffer_=Buffer('foo'), offset=IntegerPosition2D(0, 2)), Canvas(IntegerSize2D(3, 2)).fill('x'), Canvas(IntegerSize2D(3, 2), [[' ', ' ', ' '], [' ', ' ', ' ']])),
+    (Window(size=IntegerSize2D(4, 2), buffer_=Buffer('foo\nbar\n'), offset=IntegerPosition2D(-1, -1)), Canvas(IntegerSize2D(4, 2)).fill('x'), Canvas(IntegerSize2D(4, 2), [['a', 'r', ' ', ' '], [' ', ' ', ' ', ' ']])),
     (Window(position=IntegerPosition2D(1, 0), size=IntegerSize2D(1, 1)), Canvas(IntegerSize2D(2, 1)).fill('x'), Canvas(IntegerSize2D(2, 1), [['x', ' ']])),
     (Window(position=IntegerPosition2D(0, 1), size=IntegerSize2D(1, 1)), Canvas(IntegerSize2D(2, 2)).fill('x'), Canvas(IntegerSize2D(2, 2), [['x', 'x'], [' ', 'x']])),
     (Window(position=IntegerPosition2D(1, 1), size=IntegerSize2D(1, 1)), Canvas(IntegerSize2D(3, 3)).fill('x'), Canvas(IntegerSize2D(3, 3), [['x', 'x', 'x'], ['x', ' ', 'x'], ['x', 'x', 'x']])),
