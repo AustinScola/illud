@@ -72,6 +72,13 @@ class Canvas():
 
         return self
 
+    def fill_rectangle(self, position: IntegerPosition2D, size: IntegerSize2D,
+                       character: str) -> None:
+        """Fill a rectangular section of canvas with the given charcter."""
+        for row in range(position.y, position.y + size.height):
+            for column in range(position.x, position.x + size.width):
+                self.text[row][column] = character
+
     def invert(self, position: IntegerPosition2D) -> None:
         """Invert the both the text and background color of a position."""
         if position not in self._inversions:
