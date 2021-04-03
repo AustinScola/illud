@@ -80,25 +80,25 @@ class Window():
 
     def move_view(self, offset: IntegerPosition2D) -> None:
         """Move the view of the buffer by an offset."""
-        self.offset += offset
+        self.offset -= offset
 
     def move_view_left(self) -> None:
         """Move the view of the buffer left."""
-        if self.offset.x > 0:
-            self.offset.x -= 1
+        if self.offset.x < 0:
+            self.offset.x += 1
 
     def move_view_right(self) -> None:
         """Move the view of the buffer right."""
-        self.offset.x += 1
+        self.offset.x -= 1
 
     def move_view_up(self) -> None:
         """Move the view of the buffer up."""
-        if self.offset.y > 0:
-            self.offset.y -= 1
+        if self.offset.y < 0:
+            self.offset.y += 1
 
     def move_view_down(self) -> None:
         """Move the view of the buffer down."""
-        self.offset.y += 1
+        self.offset.y -= 1
 
     def adjust_view_to_include(self, index: int) -> None:
         """Move the view so that it inlcudes an index of the buffer."""
@@ -110,18 +110,18 @@ class Window():
         row: int = position.y
 
         offset: IntegerPosition2D
-        if column > self.offset.x + self.size.width - 1:
-            offset = IntegerPosition2D(column - (self.offset.x + self.size.width - 1), 0)
+        if column > self.size.width - self.offset.x - 1:
+            offset = IntegerPosition2D(column - (self.size.width - self.offset.x - 1), 0)
             self.move_view(offset)
-        elif column < self.offset.x:
-            offset = IntegerPosition2D(column - self.offset.x, 0)
+        elif column < -self.offset.x:
+            offset = IntegerPosition2D(column + self.offset.x, 0)
             self.move_view(offset)
 
-        if row > self.offset.y + self.size.height - 1:
-            offset = IntegerPosition2D(0, row - (self.offset.y + self.size.height - 1))
+        if row > self.size.height - self.offset.y - 1:
+            offset = IntegerPosition2D(0, row - (self.size.height - self.offset.y - 1))
             self.move_view(offset)
-        if row < self.offset.y:
-            offset = IntegerPosition2D(0, row - self.offset.y)
+        if row < -self.offset.y:
+            offset = IntegerPosition2D(0, row + self.offset.y)
             self.move_view(offset)
 
     def draw(self, canvas: Canvas) -> None:  # pylint: disable=too-many-branches
@@ -130,19 +130,20 @@ class Window():
             canvas.fill_rectangle(self.position, self.size, ' ')
             return
 
-        canvas.fill_rectangle(self.position, IntegerSize2D(self.size.x, -self.offset.y), ' ')
+        canvas.fill_rectangle(self.position, IntegerSize2D(self.size.x, self.offset.y), ' ')
 
-        if self.offset.x < 0:
+        if self.offset.x > 0:
             fill_position: IntegerPosition2D = IntegerPosition2D(self.position.x,
-                                                                 self.position.y - self.offset.y)
-            fill_size: IntegerSize2D = IntegerSize2D(min(-self.offset.x + 1, self.size.x),
+                                                                 self.position.y + self.offset.y)
+            fill_size: IntegerSize2D = IntegerSize2D(min(self.offset.x + 1, self.size.x),
                                                      self.size.y)
             canvas.fill_rectangle(fill_position, fill_size, ' ')
 
-        canvas_row_start = self.position.y if self.offset.y > 0 else self.position.y - self.offset.y
+        canvas_row_start = self.position.y if self.offset.y <= 0 \
+            else self.position.y + self.offset.y
         canvas_row_end = self.position.y + self.size.y
-        canvas_column_start = self.position.x if self.offset.x > 0 \
-            else self.position.x - self.offset.x
+        canvas_column_start = self.position.x if self.offset.x <= 0 \
+            else self.position.x + self.offset.x
         canvas_column_end = self.position.x + self.size.x
         try:
             buffer_index: int = 0
@@ -150,7 +151,7 @@ class Window():
             canvas_row = canvas_row_start
             canvas_column = canvas_column_start
 
-            for _ in range(self.offset.y):
+            for _ in range(-self.offset.y):
                 while True:
                     character: str = self.buffer[buffer_index]
                     buffer_index += 1
@@ -161,8 +162,8 @@ class Window():
 
                 canvas_column = canvas_column_start
 
-                if self.offset.x > 0:
-                    for buffer_index in range(buffer_index, buffer_index + self.offset.x + 1):
+                if self.offset.x < 0:
+                    for buffer_index in range(buffer_index, buffer_index - self.offset.x + 1):
                         character = self.buffer[buffer_index]
                         if character == '\n':
                             break
