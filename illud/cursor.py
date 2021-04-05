@@ -103,6 +103,10 @@ class Cursor():
         self.buffer.insert(string, self.index)
         self.index += len(string)
 
+    def replace(self, string: str) -> None:
+        """"Replace the character at the current position."""
+        self.buffer.replace(self.index, string)
+
     def backspace(self) -> None:
         """Remove the character in the position before the cursor."""
         if self.index:

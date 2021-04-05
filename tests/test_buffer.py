@@ -353,6 +353,30 @@ def test_insert(buffer_: Buffer, string: str, index: int, expected_buffer_after:
 
 
 # yapf: disable
+@pytest.mark.parametrize('buffer_, index, string, expected_result', [
+    (Buffer(), 0, '', BufferIndexException(0, 0)),
+    (Buffer('bat'), 0, 'c', Buffer('cat')),
+    (Buffer('bat'), 1, 'o', Buffer('bot')),
+    (Buffer('bat'), 2, 'r', Buffer('bar')),
+    (Buffer('bat'), 3, 's', BufferIndexException(3, 3)),
+    (Buffer('bat'), 4, 's', BufferIndexException(4, 3)),
+])
+# yapf: enable
+def test_replace(buffer_: Buffer, index: int, string: str,
+                 expected_result: Union[Buffer, Exception]) -> None:
+    """Test illud.buffer.Buffer.replace."""
+    if isinstance(expected_result, Exception):
+        expected_exception: Exception = expected_result
+        with pytest.raises(type(expected_exception), match=str(expected_exception)):
+            buffer_.replace(index, string)
+    else:
+        expected_buffer_after: Buffer = expected_result
+        buffer_.replace(index, string)
+
+        assert buffer_ == expected_buffer_after
+
+
+# yapf: disable
 @pytest.mark.parametrize('buffer_, index, expected_exception, expected_buffer_after', [
     (Buffer(), -1, BufferIndexException(-1, 0), None),
     (Buffer(), 0, BufferIndexException(0, 0), None),

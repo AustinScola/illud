@@ -5,6 +5,7 @@ from illud.buffer import Buffer
 from illud.character import Character
 from illud.mode import Mode
 from illud.modes.insert import Insert
+from illud.modes.replace import Replace
 from illud.modes.select import Select
 from illud.selection import Selection
 
@@ -57,6 +58,8 @@ class Normal(Mode):  # pylint: disable=too-few-public-methods
         elif character.value == 's':
             cls._change_mode(state, Select())
             state.selection = Selection.from_cursor(state.cursor)
+        elif character.value == 'r':
+            cls._change_mode(state, Replace())
         elif character.value == 'p':
             if state.clipboard:
                 state.cursor.insert(state.clipboard.string)
