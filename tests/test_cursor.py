@@ -176,6 +176,20 @@ def test_insert(cursor: Cursor, string: str, expected_cursor_after: Cursor) -> N
 
 
 # yapf: disable
+@pytest.mark.parametrize('cursor, string, expected_cursor_after', [
+    (Cursor(Buffer('bat')), 'c', Cursor(Buffer('cat'))),
+    (Cursor(Buffer('bat'), 1), 'o', Cursor(Buffer('bot'), 1)),
+    (Cursor(Buffer('bat'), 2), 'r', Cursor(Buffer('bar'), 2)),
+])
+# yapf: enable
+def test_replace(cursor: Cursor, string: str, expected_cursor_after: Cursor) -> None:
+    """Test illud.cursor.Cursor.replace."""
+    cursor.replace(string)
+
+    assert cursor == expected_cursor_after
+
+
+# yapf: disable
 @pytest.mark.parametrize('cursor, expected_cursor_after', [
     (Cursor(Buffer('foo'), 1), Cursor(Buffer('oo'))),
     (Cursor(Buffer('foo'), 2), Cursor(Buffer('fo'), 1)),
