@@ -6,13 +6,20 @@ import pytest
 from seligimus.maths.integer_position_2d import IntegerPosition2D
 from seligimus.maths.integer_size_2d import IntegerSize2D
 
+from illud.buffer import Buffer
 from illud.character import Character
 from illud.characters import CONTROL_C, CONTROL_D, CONTROL_F, CONTROL_J, CONTROL_K, CONTROL_W
 from illud.exceptions.quit_exception import QuitException
 from illud.file import File
 from illud.illud_state import IlludState
 from illud.mode import Mode
+from illud.status_bar import StatusBar
 from illud.window import Window
+
+
+def test_name() -> None:
+    """Test illud.mode.Mode.name."""
+    assert Mode.name == ''
 
 
 # yapf: disable
@@ -73,3 +80,20 @@ def test_evaluate(state_before: IlludState, character: Character,
             file_write_mock.assert_not_called()
 
     assert state_before == expected_state_after
+
+
+class Foo(Mode):  # pylint: disable=too-few-public-methods
+    """A mock mode."""
+    name: str = 'Foo'
+
+
+# yapf: disable
+@pytest.mark.parametrize('state, mode, expected_state_after', [
+    (IlludState(), Foo(), IlludState(mode=Foo(), status_bar=StatusBar(buffer_=Buffer('Foo')))),
+])
+# yapf: enable
+def test_change_mode(state: IlludState, mode: Mode, expected_state_after: IlludState) -> None:
+    """Test illud.mode.Mode._change_mode"""
+    Mode._change_mode(state, mode)  # pylint: disable=protected-access
+
+    assert state == expected_state_after

@@ -16,7 +16,13 @@ from illud.modes.insert import Insert
 from illud.modes.normal import Normal
 from illud.modes.select import Select
 from illud.selection import Selection
+from illud.status_bar import StatusBar
 from illud.window import Window
+
+
+def test_name() -> None:
+    """Test illud.modes.normal.Normal.name."""
+    assert Normal.name == 'Normal'
 
 
 def test_inheritance() -> None:
@@ -26,9 +32,9 @@ def test_inheritance() -> None:
 
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('state_before, character, expected_state_after, expect_exits', [
-    (IlludState(), Character('i'), IlludState(mode=Insert()), False),
-    (IlludState(), Character('s'), IlludState(mode=Select(), selection=Selection()), False),
-    (IlludState(cursor=Cursor(Buffer('foo'), 1)), Character('s'), IlludState(mode=Select(), cursor=Cursor(Buffer('foo'), 1), selection=Selection(Buffer('foo'), 1, 1)), False),
+    (IlludState(), Character('i'), IlludState(mode=Insert(), status_bar=StatusBar(buffer_=Buffer('Insert'))), False),
+    (IlludState(), Character('s'), IlludState(mode=Select(), status_bar=StatusBar(buffer_=Buffer('Select')), selection=Selection()), False),
+    (IlludState(cursor=Cursor(Buffer('foo'), 1)), Character('s'), IlludState(mode=Select(), cursor=Cursor(Buffer('foo'), 1), status_bar=StatusBar(buffer_=Buffer('Select')), selection=Selection(Buffer('foo'), 1, 1)), False),
     (IlludState(), Character('d'), IlludState(), False),
     (IlludState(cursor=Cursor(Buffer('foo'), 1)), Character('d'), IlludState(cursor=Cursor(Buffer('foo'))), False),
     (IlludState(), Character('f'), IlludState(), False),

@@ -14,7 +14,13 @@ from illud.illud_state import IlludState
 from illud.mode import Mode
 from illud.modes.insert import Insert
 from illud.modes.normal import Normal
+from illud.status_bar import StatusBar
 from illud.window import Window
+
+
+def test_name() -> None:
+    """Test illud.modes.insert.Insert.name."""
+    assert Insert.name == 'Insert'
 
 
 def test_inheritance() -> None:
@@ -29,7 +35,7 @@ _buffer_1 = Buffer()
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('state, character, expected_state_after, expect_exits', [
     (IlludState(mode=Insert()), Character(CONTROL_C), None, True),
-    (IlludState(mode=Insert()), Character(ESCAPE), IlludState(mode=Normal()), False),
+    (IlludState(mode=Insert()), Character(ESCAPE), IlludState(mode=Normal(), status_bar=StatusBar(buffer_=Buffer('Normal'))), False),
     (IlludState(mode=Insert()), Character('a'), IlludState(cursor=Cursor(Buffer('a'), 1), mode=Insert()), False),
     (IlludState(cursor=Cursor(_buffer_0, 2), mode=Insert(), window=Window(size=IntegerSize2D(2, 1), buffer_=_buffer_0, offset=IntegerPosition2D(-1, 0))), Character('o'), IlludState(cursor=Cursor(Buffer('foo'), 3), mode=Insert(), window=Window(size=IntegerSize2D(2, 1), buffer_=Buffer('foo'), offset=IntegerPosition2D(-2, 0))), False),
     (IlludState(cursor=Cursor(Buffer('foo')), mode=Insert()), Character(BACKSPACE), IlludState(cursor=Cursor(Buffer('foo')), mode=Insert()), False),

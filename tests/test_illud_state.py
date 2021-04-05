@@ -65,9 +65,9 @@ def test_init(arguments: List[Any], keyword_arguments: Dict[str, Any],
 
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('path, file_contents, file_exists, terminal_size, expected_illud_state', [
-    ('foo.txt', None, False, IntegerSize2D(0, 0), IlludState(file=File('foo.txt'))),
-    ('foo.txt', '', True, IntegerSize2D(0, 0), IlludState(file=File('foo.txt'))),
-    ('foo.txt', 'Lorem ipsum dolor sit amet', True, IntegerSize2D(120, 80), IlludState(terminal_size=IntegerSize2D(120, 80), buffer_=Buffer('Lorem ipsum dolor sit amet'), cursor=Cursor(Buffer('Lorem ipsum dolor sit amet')), window=Window(size=IntegerSize2D(120, 79), buffer_=Buffer('Lorem ipsum dolor sit amet')), status_bar=StatusBar(position=IntegerPosition2D(0, 79), size=IntegerSize2D(120, 1)), canvas=Canvas(IntegerSize2D(120, 80)).fill(' '), file=File('foo.txt'))),
+    ('foo.txt', None, False, IntegerSize2D(0, 0), IlludState(file=File('foo.txt'), status_bar=StatusBar(buffer_=Buffer('Normal')))),
+    ('foo.txt', '', True, IntegerSize2D(0, 0), IlludState(file=File('foo.txt'), status_bar=StatusBar(buffer_=Buffer('Normal')))),
+    ('foo.txt', 'Lorem ipsum dolor sit amet', True, IntegerSize2D(120, 80), IlludState(terminal_size=IntegerSize2D(120, 80), buffer_=Buffer('Lorem ipsum dolor sit amet'), cursor=Cursor(Buffer('Lorem ipsum dolor sit amet')), window=Window(size=IntegerSize2D(120, 79), buffer_=Buffer('Lorem ipsum dolor sit amet')), status_bar=StatusBar(position=IntegerPosition2D(0, 79), size=IntegerSize2D(120, 1), buffer_=Buffer('Normal')), canvas=Canvas(IntegerSize2D(120, 80)).fill(' '), file=File('foo.txt'))),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_from_file(path: str, file_contents: Optional[str], file_exists: bool,

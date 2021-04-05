@@ -79,7 +79,7 @@ def test_parse_arguments(argument_parser: argparse.ArgumentParser, arguments: Li
 
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('parsed_arguments, illud_state_from_file, terminal_size, expected_init_arguments', [
-    (argparse.Namespace(file=None), None, IntegerSize2D(120, 80), [IlludState(terminal_size=IntegerSize2D(120, 80), buffer_=Buffer(), cursor=Cursor(), window=Window(size=IntegerSize2D(120, 79)), status_bar=StatusBar(position=IntegerPosition2D(0, 79), size=IntegerSize2D(120, 1)), canvas=Canvas(IntegerSize2D(120, 80)).fill(' '))]),
+    (argparse.Namespace(file=None), None, IntegerSize2D(120, 80), [IlludState(terminal_size=IntegerSize2D(120, 80), buffer_=Buffer(), cursor=Cursor(), window=Window(size=IntegerSize2D(120, 79)), status_bar=StatusBar(position=IntegerPosition2D(0, 79), size=IntegerSize2D(120, 1), buffer_=Buffer('Normal')), canvas=Canvas(IntegerSize2D(120, 80)).fill(' '))]),
     (argparse.Namespace(file='foo.py'), IlludState(terminal_size=IntegerSize2D(120, 80), buffer_=Buffer('Lorem ipsum'), canvas=Canvas(IntegerSize2D(120, 80)).fill(' '), file=File('foo.py')), IntegerSize2D(120, 80), [IlludState(terminal_size=IntegerSize2D(120, 80), buffer_=Buffer('Lorem ipsum'), canvas=Canvas(IntegerSize2D(120, 80)).fill(' '), file=File('foo.py'))]),
 ])
 # yapf: enable # pylint: enable=line-too-long
