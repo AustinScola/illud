@@ -116,6 +116,13 @@ class Buffer():
         """Insert a string at the given index in the buffer."""
         self.string = self.string[:index] + string + self.string[index:]
 
+    def replace(self, index: int, string: str) -> None:
+        """Replace the index of the string with another string."""
+        if index < 0 or index >= len(self):
+            raise BufferIndexException(index, len(self))
+
+        self.string = self.string[:index] + string + self.string[index + 1:]
+
     def delete(self, index: int) -> None:
         """Delete the character at the given index in the buffer."""
         if not 0 <= index < len(self):
