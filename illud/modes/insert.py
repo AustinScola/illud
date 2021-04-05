@@ -11,15 +11,17 @@ if TYPE_CHECKING:
 
 class Insert(Mode):  # pylint: disable=too-few-public-methods
     """Mode for inserting text."""
-    @staticmethod
-    def evaluate(state: 'IlludState', character: Character) -> None:
+    name: str = 'Insert'
+
+    @classmethod
+    def evaluate(cls, state: 'IlludState', character: Character) -> None:
         """Evaluate the character for the given state."""
         super(Insert, Insert).evaluate(state, character)
 
         if character.value == ESCAPE:
             from illud.modes.normal import \
                 Normal  # pylint: disable=import-outside-toplevel, cyclic-import
-            state.mode = Normal()
+            cls._change_mode(state, Normal())
         elif character.value == CARRIAGE_RETURN:
             state.cursor.insert(NEWLINE)
             state.window.adjust_view_to_include(state.cursor.index)

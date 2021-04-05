@@ -11,15 +11,17 @@ if TYPE_CHECKING:
 
 class Select(Mode):  # pylint: disable=too-few-public-methods
     """Mode for selecting text."""
-    @staticmethod
-    def evaluate(state: 'IlludState', character: Character) -> None:
+    name: str = 'Select'
+
+    @classmethod
+    def evaluate(cls, state: 'IlludState', character: Character) -> None:
         """Evaluate the character for the given state."""
         super(Select, Select).evaluate(state, character)
 
         if character.value == ESCAPE:
             from illud.modes.normal import \
                 Normal  # pylint: disable=import-outside-toplevel, cyclic-import
-            state.mode = Normal()
+            cls._change_mode(state, Normal())
         elif character.value == 'f':
             if state.selection is not None:
                 state.selection.expand_right()
@@ -29,4 +31,4 @@ class Select(Mode):  # pylint: disable=too-few-public-methods
                 state.selection = None
             from illud.modes.normal import \
                 Normal  # pylint: disable=import-outside-toplevel, cyclic-import
-            state.mode = Normal()
+            cls._change_mode(state, Normal())

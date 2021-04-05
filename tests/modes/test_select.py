@@ -12,6 +12,12 @@ from illud.mode import Mode
 from illud.modes.normal import Normal
 from illud.modes.select import Select
 from illud.selection import Selection
+from illud.status_bar import StatusBar
+
+
+def test_name() -> None:
+    """Test illud.modes.select.Select.name."""
+    assert Select.name == 'Select'
 
 
 def test_inheritance() -> None:
@@ -22,9 +28,9 @@ def test_inheritance() -> None:
 # yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('state, character, expected_state_after, expect_exits', [
     (IlludState(mode=Select()), Character(CONTROL_C), None, True),
-    (IlludState(mode=Select()), Character(ESCAPE), IlludState(mode=Normal()), False),
+    (IlludState(mode=Select()), Character(ESCAPE), IlludState(mode=Normal(), status_bar=StatusBar(buffer_=Buffer('Normal'))), False),
     (IlludState(mode=Select(), selection=Selection(Buffer('foo'))), Character('f'), IlludState(mode=Select(), selection=Selection(Buffer('foo'), end=1)), False),
-    (IlludState(mode=Select(), selection=Selection(Buffer('foo'), 1, 2)), Character('y'), IlludState(mode=Normal(), clipboard=Buffer('oo')), False),
+    (IlludState(mode=Select(), selection=Selection(Buffer('foo'), 1, 2)), Character('y'), IlludState(mode=Normal(), status_bar=StatusBar(buffer_=Buffer('Normal')), clipboard=Buffer('oo')), False),
 ])
 # yapf: enable # pylint: enable=line-too-long
 def test_evaluate(state: IlludState, character: Character,

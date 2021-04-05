@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Any
 from seligimus.python.decorators.operators.equality.equal_type import equal_type
 from seligimus.python.decorators.standard_representation import standard_representation
 
+from illud.buffer import Buffer
 from illud.character import Character
 from illud.characters import CONTROL_C, CONTROL_D, CONTROL_F, CONTROL_J, CONTROL_K, CONTROL_W
 from illud.exceptions.quit_exception import QuitException
@@ -14,6 +15,8 @@ if TYPE_CHECKING:
 
 class Mode():
     """A manner of operation."""
+    name: str = ''
+
     @equal_type
     def __eq__(self, other: Any) -> bool:
         return True
@@ -22,8 +25,8 @@ class Mode():
     def __repr__(self) -> str:
         pass  # pragma: no cover
 
-    @staticmethod
-    def evaluate(state: 'IlludState', character: Character) -> None:
+    @classmethod
+    def evaluate(cls, state: 'IlludState', character: Character) -> None:
         """Evaluate the character for the given state."""
         if character.value == CONTROL_C:
             raise QuitException
@@ -39,3 +42,9 @@ class Mode():
         elif character.value == CONTROL_W:
             if state.file is not None:
                 state.file.write(state.buffer)
+
+    @staticmethod
+    def _change_mode(state: 'IlludState', mode: 'Mode') -> None:
+        """Change the current mode."""
+        state.status_bar.buffer = Buffer(mode.name)
+        state.mode = mode

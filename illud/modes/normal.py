@@ -14,8 +14,10 @@ if TYPE_CHECKING:
 
 class Normal(Mode):  # pylint: disable=too-few-public-methods
     """Mode for navigating and manipulating text."""
-    @staticmethod
-    def evaluate(state: 'IlludState', character: Character) -> None:  # pylint: disable=too-many-branches
+    name: str = 'Normal'
+
+    @classmethod
+    def evaluate(cls, state: 'IlludState', character: Character) -> None:  # pylint: disable=too-many-branches
         super(Normal, Normal).evaluate(state, character)
 
         if character.value == 'd':
@@ -51,9 +53,9 @@ class Normal(Mode):  # pylint: disable=too-few-public-methods
                 state.clipboard = Buffer(cursor_character)
             state.cursor.delete()
         elif character.value == 'i':
-            state.mode = Insert()
+            cls._change_mode(state, Insert())
         elif character.value == 's':
-            state.mode = Select()
+            cls._change_mode(state, Select())
             state.selection = Selection.from_cursor(state.cursor)
         elif character.value == 'p':
             if state.clipboard:

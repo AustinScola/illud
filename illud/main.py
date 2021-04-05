@@ -10,6 +10,7 @@ from illud.canvas import Canvas
 from illud.cursor import Cursor
 from illud.illud import Illud
 from illud.illud_state import IlludState
+from illud.modes.normal import Normal
 from illud.status_bar import StatusBar
 from illud.terminal import Terminal
 from illud.window import Window
@@ -49,7 +50,10 @@ def _run_illud(parsed_arguments: argparse.Namespace) -> None:
         status_bar_position = IntegerPosition2D(0, max(terminal_size.y - 1, 0))
         status_bar_size = IntegerSize2D(
             terminal_size.x, 1) if terminal_size.y > 1 else IntegerSize2D(terminal_size.x, 0)
-        status_bar: StatusBar = StatusBar(position=status_bar_position, size=status_bar_size)
+        status_bar_buffer = Buffer(Normal.name)
+        status_bar: StatusBar = StatusBar(position=status_bar_position,
+                                          size=status_bar_size,
+                                          buffer_=status_bar_buffer)
 
         canvas: Canvas = Canvas(terminal_size).fill(' ')
 
