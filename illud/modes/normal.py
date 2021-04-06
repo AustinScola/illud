@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Optional
 
 from illud.buffer import Buffer
 from illud.character import Character
+from illud.characters import BACKSPACE
 from illud.mode import Mode
 from illud.modes.insert import Insert
 from illud.modes.replace import Replace
@@ -63,3 +64,5 @@ class Normal(Mode):  # pylint: disable=too-few-public-methods
         elif character.value == 'p':
             if state.clipboard:
                 state.cursor.insert(state.clipboard.string)
+        elif character.value == BACKSPACE:
+            state.cursor.backspace()
