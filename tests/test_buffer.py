@@ -400,3 +400,22 @@ def test_delete(buffer_: Buffer, index: int, expected_exception: Optional[Buffer
         buffer_.delete(index)
 
         assert buffer_ == expected_buffer_after
+
+
+# yapf: disable
+@pytest.mark.parametrize('buffer_, row, expected_line, expected_buffer_after', [
+    (Buffer(), 0, '', Buffer()),
+    (Buffer('foo'), 0, 'foo', Buffer()),
+    (Buffer('foo\nbar'), 1, 'bar', Buffer('foo\n')),
+    (Buffer('foo\nbar\nbaz'), 0, 'foo\n', Buffer('bar\nbaz')),
+    (Buffer('foo\nbar\nbaz'), 1, 'bar\n', Buffer('foo\nbaz')),
+    (Buffer('foo\nbar\nbaz'), 2, 'baz', Buffer('foo\nbar\n')),
+])
+# yapf: enable
+def test_delete_row(buffer_: Buffer, row: int, expected_line: str,
+                    expected_buffer_after: Optional[Buffer]) -> None:
+    """Test illud.buffer.Buffer.delete_row."""
+    line: str = buffer_.delete_row(row)
+
+    assert line == expected_line
+    assert buffer_ == expected_buffer_after

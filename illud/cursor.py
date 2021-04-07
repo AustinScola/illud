@@ -123,6 +123,41 @@ class Cursor():
         if 0 < self.index > self.buffer.end:
             self.index = self.buffer.end
 
+    def delete_line(self) -> str:
+        """Delete the current line."""
+        row: int = self.buffer.get_row(self.index)
+        column: int = self.buffer.get_column(self.index)
+        line_end: int = self.buffer.get_line_end(self.index)
+
+        line_start: int = self.buffer.get_line_start(self.index)
+        new_line_start: int
+        new_column: int = 0
+        if line_end == len(self.buffer):
+            previous_line_start: int = 0
+            try:
+                previous_line_start = self.buffer.reverse_index('\n', start=line_start)
+            except ValueError:
+                previous_line_start = 0
+            new_line_start = previous_line_start
+            for new_column, character in enumerate(
+                    self.buffer[previous_line_start:previous_line_start + column + 1]):
+                if character == '\n':
+                    break
+        else:
+            new_line_start = line_start
+            next_line_start: int = line_end + 1
+            for new_column, character in enumerate(self.buffer[next_line_start:next_line_start +
+                                                               column + 1]):
+                if character == '\n':
+                    break
+
+        new_index: int = new_line_start + new_column
+        self.index = new_index
+
+        line: str = self.buffer.delete_row(row)
+
+        return line
+
     def next_word(self) -> None:
         """Move the cursor position to the start of the next word."""
         if not self.buffer:
