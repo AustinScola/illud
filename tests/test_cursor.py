@@ -222,6 +222,25 @@ def test_delete(cursor: Cursor, expected_cursor_after: Cursor) -> None:
 
 
 # yapf: disable
+@pytest.mark.parametrize('cursor, expected_line, expected_cursor_after', [
+    (Cursor(), '', Cursor()),
+    (Cursor(Buffer('foo')), 'foo', Cursor()),
+    (Cursor(Buffer('foo\n'), 2), 'foo\n', Cursor()),
+    (Cursor(Buffer('foo\nbar'), 2), 'foo\n', Cursor(Buffer('bar'), 2)),
+    (Cursor(Buffer('wobble\nbar\n'), 5), 'wobble\n', Cursor(Buffer('bar\n'), 3)),
+    (Cursor(Buffer('foo\nwibble'), 9), 'wibble', Cursor(Buffer('foo\n'), 3)),
+])
+# yapf: enable
+def test_delete_line(cursor: Cursor, expected_line: Optional[str],
+                     expected_cursor_after: Cursor) -> None:
+    """Test illud.cursor.Cursor.delete_line."""
+    line: Optional[str] = cursor.delete_line()
+
+    assert line == expected_line
+    assert cursor == expected_cursor_after
+
+
+# yapf: disable
 @pytest.mark.parametrize('cursor, expected_cursor_after', [
     (Cursor(), Cursor()),
     (Cursor(Buffer('a b')), Cursor(Buffer('a b'), 2)),
