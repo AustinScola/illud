@@ -129,3 +129,25 @@ class Buffer():
             raise BufferIndexException(index, len(self))
 
         self.string = self.string[:index] + self.string[index + 1:]
+
+    def delete_row(self, row: int) -> str:
+        """Delete the given row of the buffer."""
+        line_start: int
+        if row:
+            newline_index: int = self.index('\n')
+            for _ in range(row - 1):
+                newline_index = self.index('\n', start=newline_index + 1)
+            line_start = newline_index + 1
+        else:
+            line_start = 0
+
+        line_end: int
+        try:
+            line_end = self.index('\n', start=line_start)
+        except ValueError:
+            line_end = len(self)
+
+        line: str = self.string[line_start:line_end + 1]
+        self.string = self.string[:line_start] + self.string[line_end + 1:]
+
+        return line
