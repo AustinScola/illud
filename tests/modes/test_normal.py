@@ -12,6 +12,7 @@ from illud.cursor import Cursor
 from illud.exceptions.quit_exception import QuitException
 from illud.illud_state import IlludState
 from illud.mode import Mode
+from illud.modes.delete import Delete
 from illud.modes.insert import Insert
 from illud.modes.normal import Normal
 from illud.modes.replace import Replace
@@ -35,6 +36,7 @@ def test_inheritance() -> None:
 @pytest.mark.parametrize('state_before, character, expected_state_after, expect_exits', [
     (IlludState(), Character('i'), IlludState(mode=Insert(), status_bar=StatusBar(buffer_=Buffer('Insert'))), False),
     (IlludState(), Character('s'), IlludState(mode=Select(), status_bar=StatusBar(buffer_=Buffer('Select')), selection=Selection()), False),
+    (IlludState(), Character('X'), IlludState(mode=Delete(), status_bar=StatusBar(buffer_=Buffer('Delete'))), False),
     (IlludState(), Character('r'), IlludState(mode=Replace(), status_bar=StatusBar(buffer_=Buffer('Replace'))), False),
     (IlludState(cursor=Cursor(Buffer('foo'), 1)), Character('s'), IlludState(mode=Select(), cursor=Cursor(Buffer('foo'), 1), status_bar=StatusBar(buffer_=Buffer('Select')), selection=Selection(Buffer('foo'), 1, 1)), False),
     (IlludState(), Character('d'), IlludState(), False),
