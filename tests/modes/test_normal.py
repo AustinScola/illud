@@ -7,7 +7,7 @@ from seligimus.maths.integer_size_2d import IntegerSize2D
 
 from illud.buffer import Buffer
 from illud.character import Character
-from illud.characters import BACKSPACE, CONTROL_C
+from illud.characters import BACKSPACE, CARRIAGE_RETURN, CONTROL_C
 from illud.cursor import Cursor
 from illud.exceptions.quit_exception import QuitException
 from illud.illud_state import IlludState
@@ -30,6 +30,9 @@ def test_name() -> None:
 def test_inheritance() -> None:
     """Test illud.modes.normal.Normal inheritance."""
     assert issubclass(Normal, Mode)
+
+
+_BUFFER: Buffer = Buffer('foobar')
 
 
 # yapf: disable # pylint: disable=line-too-long
@@ -62,6 +65,7 @@ def test_inheritance() -> None:
     (IlludState(cursor=Cursor(Buffer('foo'))), Character('x'), IlludState(cursor=Cursor(Buffer('oo')), clipboard=Buffer('f')), False),
     (IlludState(cursor=Cursor(Buffer('foobaz'), 3), clipboard=Buffer('bar')), Character('p'), IlludState(cursor=Cursor(Buffer('foobarbaz'), 6), clipboard=Buffer('bar')), False),
     (IlludState(cursor=Cursor(Buffer('bar'), 3)), Character(BACKSPACE), IlludState(cursor=Cursor(Buffer('ba'), 2)), False),
+    (IlludState(cursor=Cursor(_BUFFER, 3), window=Window(buffer_=_BUFFER, size=IntegerSize2D(3, 1))), Character(CARRIAGE_RETURN), IlludState(cursor=Cursor(Buffer('foo\nbar'), 4), window=Window(buffer_=Buffer('foo\nbar'), size=IntegerSize2D(3, 1), offset=IntegerPosition2D(0, -1))), False),
     (IlludState(), Character(CONTROL_C), None, True),
 ])
 # yapf: enable # pylint: enable=line-too-long
