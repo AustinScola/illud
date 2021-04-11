@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Optional
 
 from illud.buffer import Buffer
 from illud.character import Character
-from illud.characters import BACKSPACE
+from illud.characters import BACKSPACE, CARRIAGE_RETURN, NEWLINE
 from illud.mode import Mode
 from illud.modes.delete import Delete
 from illud.modes.insert import Insert
@@ -20,7 +20,7 @@ class Normal(Mode):  # pylint: disable=too-few-public-methods
     name: str = 'Normal'
 
     @classmethod
-    def evaluate(cls, state: 'IlludState', character: Character) -> None:  # pylint: disable=too-many-branches
+    def evaluate(cls, state: 'IlludState', character: Character) -> None:  # pylint: disable=too-many-branches, too-many-statements
         super(Normal, Normal).evaluate(state, character)
 
         if character.value == 'd':
@@ -69,3 +69,6 @@ class Normal(Mode):  # pylint: disable=too-few-public-methods
                 state.cursor.insert(state.clipboard.string)
         elif character.value == BACKSPACE:
             state.cursor.backspace()
+        elif character.value == CARRIAGE_RETURN:
+            state.cursor.insert(NEWLINE)
+            state.window.adjust_view_to_include(state.cursor.index)
