@@ -18,6 +18,7 @@ from illud.illud import Illud
 from illud.illud_input import IlludInput
 from illud.illud_state import IlludState
 from illud.inputs.signal_listener import SignalListener
+from illud.inputs.standard_input import StandardInput
 from illud.modes.insert import Insert
 from illud.modes.select import Select
 from illud.outputs.standard_output import StandardOutput
@@ -166,12 +167,12 @@ def test_print(illud_state: IlludState, result: Any, expected_output: str) -> No
 def test_catch(exception: Exception, expect_reraises: bool, expect_exits: bool,
                expected_output: Optional[str]) -> None:
     """Test illud.illud.Illud.catch."""
+    terminal_mock = MagicMock(Terminal, reset_attributes=MagicMock())
+    type(terminal_mock)._standard_input = MagicMock(StandardInput)  # pylint: disable=protected-access
     standard_output_mock = MagicMock(StandardOutput)
-    with patch('illud.terminal.StandardInput'), \
-        patch('illud.terminal.StandardOutput', return_value=standard_output_mock):
-
-        terminal_mock = Terminal()
-        standard_output_mock.write.reset_mock()
+    type(terminal_mock)._standard_output = standard_output_mock  # pylint: disable=protected-access
+    type(terminal_mock).disable_alternative_screen = Terminal.disable_alternative_screen
+    type(terminal_mock).show_cursor = Terminal.show_cursor
 
     with patch('illud.illud.Terminal', return_value=terminal_mock):
         with patch('illud.terminal.Terminal.get_size'):
@@ -181,6 +182,7 @@ def test_catch(exception: Exception, expect_reraises: bool, expect_exits: bool,
     if expect_reraises:
         with pytest.raises(type(exception)):
             illud.catch(exception)
+        terminal_mock.reset_attributes.assert_called_once()
     elif expect_exits:
         with pytest.raises(SystemExit):
             illud.catch(exception)

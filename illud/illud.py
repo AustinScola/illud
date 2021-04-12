@@ -85,4 +85,5 @@ class Illud(REPL):
         if isinstance(exception, QuitException):
             sys.exit()
 
+        self._terminal.reset_attributes()
         raise exception
