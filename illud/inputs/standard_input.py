@@ -51,9 +51,10 @@ class StandardInput(Input):
         raise NotImplementedError
 
     def __del__(self) -> None:
-        self._reset_attributes()
+        self.reset_attributes()
 
-    def _reset_attributes(self) -> None:
+    def reset_attributes(self) -> None:
+        """Reset the terminal attributes."""
         termios.tcsetattr(self._stdin, termios.TCSADRAIN, self._attributes_before)
 
     def peek(self, length: int) -> str:

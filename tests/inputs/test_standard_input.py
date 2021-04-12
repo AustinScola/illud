@@ -120,7 +120,7 @@ def test_read(input_: str, buffer_before: str, length: int, expected_read_input:
     """Test illud.inputs.standard_input.StandardInput.read."""
     with patch('sys.stdin', StringIO(input_)), \
         patch.object(StandardInput, '_get_attributes'), \
-        patch('illud.inputs.standard_input.StandardInput._reset_attributes'), \
+        patch('illud.inputs.standard_input.StandardInput.reset_attributes'), \
         patch.object(StandardInput, '_use_raw_mode'):
 
         standard_input: StandardInput = StandardInput()
@@ -156,7 +156,7 @@ def test_del() -> None:
 
     StandardInput.__del__(standard_input_mock)
 
-    standard_input_mock._reset_attributes.assert_called_once()  # pylint: disable=protected-access
+    standard_input_mock.reset_attributes.assert_called_once()
 
 
 # yapf: disable
@@ -166,14 +166,14 @@ def test_del() -> None:
 # yapf: enable
 def test_reset_attributes(standard_input_file_number: int,
                           attributes_before: TeletypeAttributes) -> None:
-    """Test illud.inputs.standard_input.StandardInput._reset_attributes."""
+    """Test illud.inputs.standard_input.StandardInput.reset_attributes."""
     stdin_mock = MagicMock(sys.stdin, fileno=lambda: standard_input_file_number)
     standard_input_mock = MagicMock(StandardInput,
                                     _stdin=stdin_mock,
                                     _attributes_before=attributes_before)
 
     with patch('termios.tcsetattr', autospec=True) as tcsetattr_mock:
-        StandardInput._reset_attributes(standard_input_mock)  # pylint: disable=protected-access
+        StandardInput.reset_attributes(standard_input_mock)
 
         tcsetattr_mock.assert_called_once_with(stdin_mock, termios.TCSADRAIN, attributes_before)
 
@@ -197,7 +197,7 @@ def test_peek(input_: str, buffer_before: str, length: int, expected_peek: str,
     """Test illud.inputs.standard_input.StandardInput.peek."""
     with patch('sys.stdin', StringIO(input_)), \
         patch.object(StandardInput, '_get_attributes'), \
-        patch('illud.inputs.standard_input.StandardInput._reset_attributes'), \
+        patch('illud.inputs.standard_input.StandardInput.reset_attributes'), \
         patch.object(StandardInput, '_use_raw_mode'):
 
         standard_input: StandardInput = StandardInput()
@@ -228,7 +228,7 @@ def test_pop(input_: str, buffer_before: str, length: int, expected_buffer_after
     standard_input: StandardInput
     with patch('sys.stdin', StringIO(input_)), \
         patch.object(StandardInput, '_get_attributes'), \
-        patch.object(StandardInput, '_reset_attributes'), \
+        patch.object(StandardInput, 'reset_attributes'), \
         patch.object(StandardInput, '_use_raw_mode'):
 
         standard_input = StandardInput()
@@ -262,7 +262,7 @@ def test_expect(input_: str, buffer_before: str, string: str,
     standard_input: StandardInput
     with patch('sys.stdin', StringIO(input_)), \
         patch.object(StandardInput, '_get_attributes'), \
-        patch.object(StandardInput, '_reset_attributes'), \
+        patch.object(StandardInput, 'reset_attributes'), \
         patch.object(StandardInput, '_use_raw_mode'):
 
         standard_input = StandardInput()
@@ -293,7 +293,7 @@ def test_read_integer(peeked_input: List[str], expected_integer: int,
     with patch('sys.stdin'), \
         patch.object(StandardInput, '_get_attributes'), \
         patch.object(StandardInput, '_use_raw_mode'), \
-        patch.object(StandardInput, '_reset_attributes'), \
+        patch.object(StandardInput, 'reset_attributes'), \
         patch.object(StandardInput, 'peek', side_effect=peeked_input), \
         patch.object(StandardInput, 'pop') as pop_mock:
 
@@ -328,7 +328,7 @@ def test_maybe_read_integer(read_integer: Optional[int], read_exception: Type[Il
 
     with patch.object(StandardInput, '_get_attributes'), \
         patch.object(StandardInput, '_use_raw_mode'), \
-        patch.object(StandardInput, '_reset_attributes'), \
+        patch.object(StandardInput, 'reset_attributes'), \
         patch.object(StandardInput, 'read_integer', return_value=read_integer,
             side_effect=read_exception):
 
