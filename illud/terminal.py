@@ -44,6 +44,10 @@ class Terminal():
         self._standard_output.write(DISABLE_ALTERNATIVE_SCREEN)
         self._standard_output.flush()
 
+    def reset_attributes(self) -> None:
+        """Reset the standard input attributes."""
+        self._standard_input.reset_attributes()
+
     def clear_screen(self) -> None:
         """Clear the terminal of all characters."""
         self._standard_output.write(CLEAR_SCREEN)

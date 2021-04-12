@@ -99,6 +99,18 @@ def test_disable_alternative_screen() -> None:
     assert standard_output_mock.write.call_args[0] == (DISABLE_ALTERNATIVE_SCREEN, )
 
 
+def test_reset_attributes() -> None:
+    """Test illud.terminal.Terminal.reset_attributes."""
+    terminal: Terminal
+    standard_input_mock = MagicMock(StandardInput, reset_attributes=MagicMock())
+    with patch('illud.terminal.StandardInput', return_value=standard_input_mock):
+        terminal = Terminal()
+
+    terminal.reset_attributes()
+
+    standard_input_mock.reset_attributes.assert_called_once()
+
+
 def test_clear_screen() -> None:
     """Test illud.terminal.Terminal.clear_screen."""
     standard_output_mock = MagicMock(StandardOutput)
