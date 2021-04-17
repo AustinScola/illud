@@ -25,6 +25,9 @@ class Select(Mode):  # pylint: disable=too-few-public-methods
         elif character.value == 'f':
             if state.selection is not None:
                 state.selection.expand_right()
+        elif character.value == 'd':
+            if state.selection is not None:
+                state.selection.shrink_end_left()
         elif character.value == 'y':
             if state.selection is not None:
                 state.clipboard = state.selection.text
