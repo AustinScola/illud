@@ -49,6 +49,16 @@ class Selection():
         if self.buffer[self.end] != '\n':
             self.end += 1
 
+    def shrink_end_left(self) -> None:
+        """Shrink the end of the selection to the left."""
+        if self.end == self.start:
+            return
+
+        if self.buffer[self.end - 1] == '\n':
+            return
+
+        self.end -= 1
+
     def draw(self, canvas: Canvas, offset: IntegerPosition2D) -> None:
         """Draw the selection on the canvas."""
         if not self.buffer:

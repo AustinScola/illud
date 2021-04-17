@@ -109,6 +109,22 @@ def test_expand_right(selection: Selection, expected_selection_after: Selection)
 
 
 # yapf: disable # pylint: disable=line-too-long
+@pytest.mark.parametrize('selection, expected_selection_after', [
+    (Selection(), Selection()),
+    (Selection(Buffer('a')), Selection(Buffer('a'))),
+    (Selection(Buffer('foo'), 1), Selection(Buffer('foo'), 1)),
+    (Selection(Buffer('foo'), 1, 2), Selection(Buffer('foo'), 1)),
+    (Selection(Buffer('foo\nbar'), 2, 4), Selection(Buffer('foo\nbar'), 2, 4)),
+])
+# yapf: enable # pylint: enable=line-too-long
+def test_shrink_end_left(selection: Selection, expected_selection_after: Selection) -> None:
+    """Test illud.selection.Selection.shrink_end_left."""
+    selection.shrink_end_left()
+
+    assert selection == expected_selection_after
+
+
+# yapf: disable # pylint: disable=line-too-long
 @pytest.mark.parametrize('selection, canvas, offset, expected_canvas_after', [
     (Selection(), Canvas(), IntegerPosition2D(), Canvas()),
     (Selection(), Canvas(IntegerSize2D(1, 1)), IntegerPosition2D(0, 1), Canvas(IntegerSize2D(1, 1))),
